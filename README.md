@@ -38,4 +38,3 @@ This library is intended to be compatible with the original ESP32 BLE functions 
 2. Create documentation.
 3. Expose more NimBLE features.
 4. Add BLE Mesh code.
-
