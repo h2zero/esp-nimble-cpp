@@ -102,7 +102,16 @@ NimBLEDescriptor* NimBLECharacteristic::createDescriptor(const char* uuid, uint3
 NimBLEDescriptor* NimBLECharacteristic::createDescriptor(NimBLEUUID uuid, uint32_t properties, uint16_t max_len) {
 	NimBLEDescriptor* pDescriptor = nullptr;
 	if(uuid.equals(NimBLEUUID((uint16_t)0x2902))) {
-		pDescriptor = new NimBLE2902(this);
+        if(!(m_properties & BLE_GATT_CHR_F_NOTIFY) && !(m_properties & BLE_GATT_CHR_F_INDICATE)) {
+            assert(0 && "Cannot create 2902 descriptior without characteristic notification or indication property set");
+        }
+        // We cannot have more than one 2902 descriptor, if it's already been created just return a pointer to it.
+        pDescriptor = m_descriptorMap.getByUUID(uuid);
+        if(pDescriptor == nullptr) {
+            pDescriptor = new NimBLE2902(this);
+        } else {
+            return pDescriptor;
+        }
 		
 	} else if (uuid.equals(NimBLEUUID((uint16_t)0x2904))) {
 		pDescriptor = new NimBLE2904(this);
@@ -204,18 +213,34 @@ int NimBLECharacteristic::handleGapEvent(uint16_t conn_handle, uint16_t attr_han
 	if(ble_uuid_cmp(uuid, &pCharacteristic->getUUID().getNative()->u) == 0){
         switch(ctxt->op) {
             case BLE_GATT_ACCESS_OP_READ_CHR: {
-                pCharacteristic->m_pCallbacks->onRead(pCharacteristic);
+                //NIMBLE_LOGD(LOG_TAG, "read char pkthdr len:%d flags:%d", ctxt->om->om_pkthdr_len, ctxt->om->om_flags);
+				// If the packet header is only 8 bytes this is a follow up of a long read
+				// so we don't want to call the onRead() callback again.
+				if(ctxt->om->om_pkthdr_len > 8) {
+					pCharacteristic->m_pCallbacks->onRead(pCharacteristic);
+				}
                 rc = os_mbuf_append(ctxt->om, pCharacteristic->getData(), pCharacteristic->m_value.getLength());
                 return rc == 0 ? 0 : BLE_ATT_ERR_INSUFFICIENT_RES;
             }
             
             case BLE_GATT_ACCESS_OP_WRITE_CHR: {
+                //NIMBLE_LOGD(LOG_TAG, "write char pkthdr len:%d datalen:%d", ctxt->om->om_pkthdr_len, ctxt->om->om_len);
                 if (ctxt->om->om_len > BLE_ATT_ATTR_MAX_LEN) {
                     return BLE_ATT_ERR_INVALID_ATTR_VALUE_LEN;
                 }
                 
-                pCharacteristic->setValue(ctxt->om->om_data, ctxt->om->om_len);
+                //pCharacteristic->setValue(ctxt->om->om_data, ctxt->om->om_len);
+				pCharacteristic->m_value.addPart(ctxt->om->om_data, ctxt->om->om_len);
+				os_mbuf *next;
+				next = SLIST_NEXT(ctxt->om, om_next);
+				while(next != NULL){
+					//NIMBLE_LOGD(LOG_TAG, "Found long write data, len:%d", next->om_len);
+					pCharacteristic->m_value.addPart(next->om_data, next->om_len);
+					next = SLIST_NEXT(next, om_next);
+				}
+				pCharacteristic->m_value.commit();
                 pCharacteristic->m_pCallbacks->onWrite(pCharacteristic);
+
                 return 0;
             }
             default:

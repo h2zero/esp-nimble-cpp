@@ -59,7 +59,11 @@
 #define BLEEddystoneTLM                 NimBLEEddystoneTLM
 #define BLEEddystoneURL                 NimBLEEddystoneURL
 
+#ifdef CONFIG_BT_NIMBLE_MAX_CONNECTIONS
 #define NIMBLE_MAX_CONNECTIONS          CONFIG_BT_NIMBLE_MAX_CONNECTIONS
+#else 
+#define NIMBLE_MAX_CONNECTIONS          CONFIG_NIMBLE_MAX_CONNECTIONS
+#endif
     
 /**
  * @brief BLE functions.
@@ -81,7 +85,8 @@ public:
     static NimBLEClient*    createClient();
 	static NimBLEServer*    createServer();
     static bool             deleteClient(NimBLEClient* pClient);
-    static void             setPower(esp_power_level_t powerLevel);
+    static void             setPower(esp_power_level_t powerLevel, esp_ble_power_type_t powerType=ESP_BLE_PWR_TYPE_DEFAULT);
+	static int              getPower(esp_ble_power_type_t powerType=ESP_BLE_PWR_TYPE_DEFAULT);
     static void             setCustomGapHandler(gap_event_handler handler);
     static void             setSecurityAuth(bool bonding, bool mitm, bool sc);
     static void             setSecurityAuth(uint8_t auth_req);
@@ -110,6 +115,7 @@ private:
     friend class NimBLEClient;
     friend class NimBLEScan;
     friend class NimBLEAdvertising;
+    friend class NimBLECharacteristic;
     
     static void        onReset(int reason);
     static void        onSync(void);

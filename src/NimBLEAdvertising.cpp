@@ -34,12 +34,12 @@ NimBLEAdvertising::NimBLEAdvertising() {
 	memset(&m_scanData, 0, sizeof m_scanData);
 	memset(&m_advParams, 0, sizeof m_advParams);
     const char *name = ble_svc_gap_device_name();
-    
+
 	m_advData.name                   = (uint8_t *)name;
     m_advData.name_len               = strlen(name);
     m_advData.name_is_complete       = 1;
     m_scanData.tx_pwr_lvl_is_present = 1;
-    m_scanData.tx_pwr_lvl            = BLE_HS_ADV_TX_PWR_LVL_AUTO;
+    m_scanData.tx_pwr_lvl            = NimBLEDevice::getPower();
     m_advData.flags                  = (BLE_HS_ADV_F_DISC_GEN | BLE_HS_ADV_F_BREDR_UNSUP);
 	m_advData.appearance             = 0;
 	m_advData.appearance_is_present  = 0;
@@ -228,11 +228,6 @@ void NimBLEAdvertising::start() {
                             &m_serviceUUIDs[i].getNative()->u16.value, sizeof(uint16_t));
                             
                 m_advData.uuids16[m_advData.num_uuids16].u.type = BLE_UUID_TYPE_16;
-      /*          
-				char buf[BLE_UUID_STR_LEN];
-				ble_uuid_to_str(&m_advData.uuids16[m_advData.num_uuids16].u, buf);
-				NIMBLE_LOGI(LOG_TAG, "Advertising UUID: %s", buf);
-      */         
                 m_advData.uuids16_is_complete = 1;
                 m_advData.num_uuids16++;
 			}
@@ -253,12 +248,7 @@ void NimBLEAdvertising::start() {
                 memcpy(&m_advData.uuids32[m_advData.num_uuids32].value, 
                             &m_serviceUUIDs[i].getNative()->u32.value, sizeof(uint32_t));
                             
-                m_advData.uuids32[m_advData.num_uuids32].u.type = BLE_UUID_TYPE_32;
-      /*           
-				char buf[BLE_UUID_STR_LEN];
-				ble_uuid_to_str(&m_advData.uuids32[m_advData.num_uuids32].u, buf);
-				NIMBLE_LOGI(LOG_TAG, "Advertising UUID: %s", buf);
-      */         
+                m_advData.uuids32[m_advData.num_uuids32].u.type = BLE_UUID_TYPE_32;     
                 m_advData.uuids32_is_complete = 1;
                 m_advData.num_uuids32++;
 			}
@@ -278,12 +268,7 @@ void NimBLEAdvertising::start() {
                 memcpy(&m_advData.uuids128[m_advData.num_uuids128].value, 
                             &m_serviceUUIDs[i].getNative()->u128.value, 16);
                             
-                m_advData.uuids128[m_advData.num_uuids128].u.type = BLE_UUID_TYPE_128;
-      /*          
-				char buf[BLE_UUID_STR_LEN];
-				ble_uuid_to_str(&m_advData.uuids128[m_advData.num_uuids128].u, buf);
-				NIMBLE_LOGI(LOG_TAG, "Advertising UUID: %s", buf);
-      */         
+                m_advData.uuids128[m_advData.num_uuids128].u.type = BLE_UUID_TYPE_128; 
                 m_advData.uuids128_is_complete = 1;
                 m_advData.num_uuids128++;
 			}
@@ -331,7 +316,7 @@ void NimBLEAdvertising::start() {
 		// throw the tx power data into the advertisment
         } else if (payloadLen < 29) {
 			m_advData.tx_pwr_lvl_is_present = 1;
-			m_advData.tx_pwr_lvl = BLE_HS_ADV_TX_PWR_LVL_AUTO;
+			m_advData.tx_pwr_lvl = NimBLEDevice::getPower();
 		}
 			
         rc = ble_gap_adv_set_fields(&m_advData);
@@ -394,11 +379,15 @@ void NimBLEAdvertising::stop() {
 	NIMBLE_LOGD(LOG_TAG, "<< stop");
 } // stop
 
-/*
+
+/**
+ * Host reset seems to clear advertising data, 
+ * we need clear the flag so it reloads it.
+ */ 
 void NimBLEAdvertising::onHostReset() {
- //   m_advSvcsSet = false;
+    m_advSvcsSet = false;
 }
- */   
+  
 
 /**
  * @brief Add data to the payload to be advertised.

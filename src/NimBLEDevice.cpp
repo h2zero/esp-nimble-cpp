@@ -239,14 +239,38 @@ void NimBLEDevice::stopAdvertising() {
  * *   ESP_PWR_LVL_P9  = 7,                !< Corresponding to  +9dbm 
  * @param [in] powerLevel.
  */
-/* STATIC */ void NimBLEDevice::setPower(esp_power_level_t powerLevel) {
-    NIMBLE_LOGD(LOG_TAG, ">> setPower: %d", powerLevel);
-    esp_err_t errRc = ::esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_DEFAULT, powerLevel);
+/* STATIC */ void NimBLEDevice::setPower(esp_power_level_t powerLevel, esp_ble_power_type_t powerType) {
+    NIMBLE_LOGD(LOG_TAG, ">> setPower: %d (type: %d)", powerLevel, powerType);
+    esp_err_t errRc = esp_ble_tx_power_set(powerType, powerLevel);
     if (errRc != ESP_OK) {
-        //NIMBLE_LOGE(LOG_TAG, "esp_ble_tx_power_set: rc=%d %s", errRc, GeneralUtils::errorToString(errRc));
         NIMBLE_LOGE(LOG_TAG, "esp_ble_tx_power_set: rc=%d", errRc);
-    };
+    }
     NIMBLE_LOGD(LOG_TAG, "<< setPower");
+} // setPower
+
+
+/* STATIC */ int NimBLEDevice::getPower(esp_ble_power_type_t powerType) {
+
+	switch(esp_ble_tx_power_get(powerType)) {
+		case ESP_PWR_LVL_N12:
+			return -12;
+		case ESP_PWR_LVL_N9:
+			return -9;
+		case ESP_PWR_LVL_N6:
+			return -6;
+		case ESP_PWR_LVL_N3:
+			return -6;
+		case ESP_PWR_LVL_N0:
+			return 0;
+		case ESP_PWR_LVL_P3:
+			return 3;
+		case ESP_PWR_LVL_P6:
+			return 6;
+		case ESP_PWR_LVL_P9:
+			return 9;
+		default:
+			return BLE_HS_ADV_TX_PWR_LVL_AUTO;
+	}
 } // setPower
 
 
@@ -327,11 +351,11 @@ void NimBLEDevice::stopAdvertising() {
     for(auto it = m_cList.cbegin(); it != m_cList.cend(); ++it) {
         (*it)->onHostReset();
     }
-    
+*/    
     if(m_bleAdvertising != nullptr) {
         m_bleAdvertising->onHostReset();
     }
-*/    
+    
     NIMBLE_LOGC(LOG_TAG, "Resetting state; reason=%d, %s", reason, 
                         NimBLEUtils::returnCodeToString(reason));
 } // onReset
@@ -414,7 +438,7 @@ void NimBLEDevice::stopAdvertising() {
         ble_hs_cfg.sync_cb = NimBLEDevice::onSync;
         
         // Set initial security capabilities
-        ble_hs_cfg.sm_io_cap = BLE_SM_IO_CAP_NO_IO; 
+        ble_hs_cfg.sm_io_cap = BLE_HS_IO_NO_INPUT_OUTPUT; 
         ble_hs_cfg.sm_bonding = 0;
         ble_hs_cfg.sm_mitm = 0;
         ble_hs_cfg.sm_sc = 1;
