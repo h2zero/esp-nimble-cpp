@@ -139,9 +139,9 @@ bool NimBLEClient::connect(NimBLEAddress address, uint8_t type, bool refreshServ
     ble_addr_t peerAddrt;
     memcpy(&peerAddrt.val, address.getNative(),6);
     peerAddrt.type = type;
-    NIMBLE_LOGE(LOG_TAG, "taking connect semaphore");
+    
     m_semaphoreOpenEvt.take("connect");
-    NIMBLE_LOGE(LOG_TAG, "taken");
+    
     /** Try to connect the the advertiser.  Allow 30 seconds (30000 ms) for
      *  timeout (default value of m_connectTimeout). 
      *  Loop on BLE_HS_EBUSY if the scan hasn't stopped yet.
