@@ -1,13 +1,10 @@
 # *** UPDATE ***
-Server now handles long reads and writes, still work to do on client.
-
-NEW Client callback created - ```bool onConnParamsUpdateRequest(NimBLEClient* pClient, const ble_gap_upd_params* params)```   
-Called when the server wants to change the connection parameters, return true to accept them or false if not.   
-Check NimBLE_Client.ino example for a demonstration.   
+Client long read/write characteristics/descriptors now working.
+We are now nearing 100% replacement of the original cpp_utils BLE library :smile:
 
 
 # esp-nimble-cpp
-A fork of the NimBLE stack restructured for compilation in the Ardruino IDE with a CPP library for use with ESP32.
+NimBLE CPP library for use with ESP32 that attempts to maintain compatibility with the @nkolban cpp_uitls API.
 
 Why? Because the Bluedroid library is too bulky. 
 
@@ -18,12 +15,16 @@ Initial client code testing has resulted in code size reduction of ~115k and red
 
 Download as .zip and extract to components folder in your esp-idf project.
 
+Run menuconfig, go to `Component config->Bluetooth->` enable Bluetooth and select NimBLE host.
+
 `#include "NimBLEDevice.h"` in main.cpp.
 
 
 # Usage: 
 
-This library is intended to be compatible with the original ESP32 BLE functions and types with minor changes.
+This library is intended to be compatible with the original ESP32 BLE functions and types with minor changes.  
+
+Check [API_DIFFERENCES](https://github.com/h2zero/esp-nimble-cpp/blob/master/API_DIFFERENCES.md) for details.
 
 
 # Acknowledgments:
