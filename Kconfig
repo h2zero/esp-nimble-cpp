@@ -1,0 +1,27 @@
+menu "ESP-NimBLE-CPP configuration"
+
+config NIMBLE_CPP_ENABLE_RETURN_CODE_TEXT
+    bool "Show NimBLE return codes as text in debug log."
+    default "n"
+    help
+        Enabling this option will display return code values as text
+        messages in the debug log. This will use approximately 8kB
+        of flash memory.
+        
+config NIMBLE_CPP_ENABLE_GAP_EVENT_CODE_TEXT
+    bool "Show NimBLE gap events as text in debug log."
+    default "n"
+    help
+        Enabling this option will display gap event codes as text
+        messages in the debug log. This will use approximately 1kB
+        of flash memory.
+
+config NIMBLE_CPP_ENABLE_ADVERTISMENT_TYPE_TEXT
+    bool "Show advertisment types as text in debug log."
+    default "n"
+    help
+        Enabling this option will display advertisment types recieved
+        while scanning as text messages in the debug log. 
+        This will use approximately 250 bytes of flash memory.
+        
+endmenu
