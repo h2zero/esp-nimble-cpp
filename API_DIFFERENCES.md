@@ -100,7 +100,7 @@ The `BLEAdvertisedDeviceCallbacks` class `onResult()` method now receives a poin
 Defined as:
 ```
 bool connect(NimBLEAdvertisedDevice* device, bool refreshServices = true);
-bool connect(NimBLEAddress address, uint8_t type = BLE_ADDR_TYPE_PUBLIC, bool refreshServices = true);
+bool connect(NimBLEAddress address, uint8_t type = BLE_ADDR_PUBLIC, bool refreshServices = true);
 ```
 If set to false the client will use the services database it retrieved from the peripheral last time it connected.    
 This allows for faster connections and power saving if the devices just dropped connection and want to reconnect.
@@ -110,6 +110,17 @@ NimBLERemoteCharacteristic::writeValue();
 NimBLERemoteCharacteristic::registerForNotify();
 ```
 Now return true or false to indicate success or failure so you can choose to disconnect or try again.
+
+```
+NimBLEClient::getServices()   
+NimBLERemoteService::getCharacteristics()
+```
+Now return a pointer to a `std::vector` of the respective object database instead of `std::map`.
+
+`NimBLERemoteService::getCharacteristicsByHandle()`
+Has been removed from the API as it is no longer maintained in the library.   
+
+The last two above changes reduce the heap usage significantly with minimal application code adjustments.   
 
 #### Client Security:
 The client will automatically initiate security when the peripheral responds that it's required.    
