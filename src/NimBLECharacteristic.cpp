@@ -137,7 +137,7 @@ uint16_t NimBLECharacteristic::getHandle() {
 } // getHandle
 
 
-uint8_t NimBLECharacteristic::getProperties() {
+uint16_t NimBLECharacteristic::getProperties() {
     return m_properties;
 } // getProperties
 

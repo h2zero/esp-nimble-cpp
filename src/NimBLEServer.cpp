@@ -230,7 +230,6 @@ size_t NimBLEServer::getConnectedCount() {
             else {
                 server->m_connectedPeersVec.push_back(event->connect.conn_handle);
 
-                ble_gap_conn_desc desc;
                 rc = ble_gap_conn_find(event->connect.conn_handle, &desc);
                 assert(rc == 0);
 
@@ -276,6 +275,17 @@ size_t NimBLEServer::getConnectedCount() {
 
             for(auto &it : server->m_notifyChrVec) {
                 if(it->getHandle() == event->subscribe.attr_handle) {
+                    if((it->getProperties() & BLE_GATT_CHR_F_READ_AUTHEN) ||
+                       (it->getProperties() & BLE_GATT_CHR_F_READ_ENC))
+                    {
+                        rc = ble_gap_conn_find(event->subscribe.conn_handle, &desc);
+                        assert(rc == 0);
+
+                        if(!desc.sec_state.encrypted) {
+                            NimBLEDevice::startSecurity(event->subscribe.conn_handle);
+                        }
+                    }
+
                     it->setSubscribe(event);
                     break;
                 }
