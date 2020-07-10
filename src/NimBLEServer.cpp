@@ -463,6 +463,8 @@ void NimBLEServer::removeService(NimBLEService* service) {
         return;
     }
 
+    ble_svc_gatt_changed(service->getHandle(), 0xffff);
+
     for(auto it = m_svcVec.begin(); it != m_svcVec.end(); ++it) {
         if ((*it)->getHandle() == service->getHandle()) {
             delete *it;
@@ -471,7 +473,7 @@ void NimBLEServer::removeService(NimBLEService* service) {
         }
     }
 
-    ble_svc_gatt_changed(0x0001, 0xffff);
+
 }
 
 

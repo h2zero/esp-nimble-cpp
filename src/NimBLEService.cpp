@@ -49,12 +49,29 @@ NimBLEService::NimBLEService(const char* uuid, uint16_t numHandles, NimBLEServer
  * @param [in] a pointer to the server instance that this service belongs to.
  */
 NimBLEService::NimBLEService(const NimBLEUUID &uuid, uint16_t numHandles, NimBLEServer* pServer) {
-    m_uuid       = uuid;
-    m_handle     = NULL_HANDLE;
-    m_pServer    = pServer;
-    m_numHandles = numHandles;
+    m_uuid         = uuid;
+    m_handle       = NULL_HANDLE;
+    m_pServer      = pServer;
+    m_numHandles   = numHandles;
+    m_pSvcDef      = nullptr;
+
 } // NimBLEService
 
+
+NimBLEService::~NimBLEService() {
+    if(m_pSvcDef != nullptr) {
+        if(m_pSvcDef->characteristics != nullptr) {
+            for(int i=0; m_pSvcDef->characteristics[i].uuid != NULL; ++i) {
+                if(m_pSvcDef->characteristics[i].descriptors) {
+                    delete(m_pSvcDef->characteristics[i].descriptors);
+                }
+            }
+            delete(m_pSvcDef->characteristics);
+        }
+
+        delete(m_pSvcDef);
+    }
+}
 
 /**
  * @brief Dump details of this BLE GATT service.
@@ -178,6 +195,7 @@ bool NimBLEService::start() {
 
     // end of services must indicate to api with type = 0
     svc[1].type = 0;
+    m_pSvcDef = svc;
 
     rc = ble_gatts_count_cfg((const ble_gatt_svc_def*)svc);
     if (rc != 0) {
