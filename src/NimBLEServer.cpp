@@ -22,6 +22,8 @@
 #include "NimBLEDevice.h"
 #include "NimBLELog.h"
 
+#include "services/gatt/ble_svc_gatt.h"
+
 static const char* LOG_TAG = "NimBLEServer";
 static NimBLEServerCallbacks defaultCallbacks;
 
@@ -146,7 +148,7 @@ void NimBLEServer::start() {
 
     NIMBLE_LOGI(LOG_TAG, "Service changed characterisic handle: %d", m_svcChgChrHdl);
 */
-    // Get the assigned service handles and build a vector of characteristics 
+    // Get the assigned service handles and build a vector of characteristics
     // with Notify / Indicate capabilities for event handling
     for(auto &svc : m_svcVec) {
         rc = ble_gatts_find_svc(&svc->getUUID().getNative()->u, &svc->m_handle);
@@ -449,6 +451,28 @@ void NimBLEServer::setCallbacks(NimBLEServerCallbacks* pCallbacks) {
         m_pServerCallbacks = &defaultCallbacks;
     }
 } // setCallbacks
+
+
+/**
+ * @brief Remove a service from the server.
+ * @param [in] service The service object to remove.
+ */
+void NimBLEServer::removeService(NimBLEService* service) {
+    int rc = ble_gatts_svc_set_visibility(service->getHandle(), 0);
+    if(rc !=0) {
+        return;
+    }
+
+    for(auto it = m_svcVec.begin(); it != m_svcVec.end(); ++it) {
+        if ((*it)->getHandle() == service->getHandle()) {
+            delete *it;
+            m_svcVec.erase(it);
+            break;
+        }
+    }
+
+    ble_svc_gatt_changed(0x0001, 0xffff);
+}
 
 
 /**

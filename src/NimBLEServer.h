@@ -41,6 +41,7 @@ public:
     NimBLEService*         createService(const char* uuid);
     NimBLEService*         createService(const NimBLEUUID &uuid, uint32_t numHandles=15,
                                          uint8_t inst_id=0);
+    void                   removeService(NimBLEService* service);
     NimBLEAdvertising*     getAdvertising();
     void                   setCallbacks(NimBLEServerCallbacks* pCallbacks);
     void                   startAdvertising();
