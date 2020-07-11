@@ -66,6 +66,7 @@ private:
 
     bool                   m_gattsStarted;
     bool                   m_advertiseOnDisconnect;
+    bool                   m_svcChanged;
     NimBLEServerCallbacks* m_pServerCallbacks;
     std::vector<uint16_t>  m_connectedPeersVec;
 

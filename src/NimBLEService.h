@@ -67,6 +67,7 @@ private:
     NimBLEUUID            m_uuid;
     uint16_t              m_numHandles;
     ble_gatt_svc_def*     m_pSvcDef;
+    bool                  m_removed;
     std::vector<NimBLECharacteristic*> m_chrVec;
 
 }; // NimBLEService
