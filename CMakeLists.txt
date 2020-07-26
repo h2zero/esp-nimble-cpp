@@ -5,7 +5,6 @@ cmake_minimum_required(VERSION 3.5)
 set(SUPPORTED_TARGETS esp32)
 
 idf_component_register(SRCS "src/FreeRTOS.cpp"
-                            "src/NimBLE2902.cpp"
                             "src/NimBLE2904.cpp"
                             "src/NimBLEAddress.cpp"
                             "src/NimBLEAdvertisedDevice.cpp"
