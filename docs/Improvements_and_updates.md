@@ -45,14 +45,10 @@ A new method `NimBLEServer::advertiseOnDisconnect(bool)` has been implemented to
 
 `NimBLEServer::removeService` takes an additional parameter `bool deleteSvc` that if true will delete the service  
 and all characteristics / descriptors belonging to it and invalidating any pointers to them.  
+
 If false the service is only removed from visibility by clients. The pointers to the service and  
 it's characteristics / descriptors will remain valid and the service can be re-added in the future  
 using `NimBLEServer::addService`.  
-<br/>
-
-New characteristic read/write callbacks added to NimBLECharacteristicCallbacks that receive a pointer to the connection  
-description of the client reading/writing.  
-This is useful when connected to multiple clients to discern which client is performing the operation.
 <br/>
 
 # Client  
@@ -90,6 +86,9 @@ the time the last value was recieved.
 NimBLEClient::getService will now retrieve only the service specified and not the full database, this preserves resources  
 otherwise wasted retrieving and allocating attributes the user application is not interested in.  
 <br/>
+
+NimBLEClient::connect() can now be called without an address or advertised device parameter. This will connect to the  
+device with the address previously set when last connected or set with NimBLEDevice::setPeerAddress(). 
 
 # General  
 To reduce resource use all instances of std::map have been replaced with std::vector.  
