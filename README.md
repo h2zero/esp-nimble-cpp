@@ -45,6 +45,8 @@ This library is intended to be compatible with the original ESP32 BLE functions 
 See: [Breaking API Changes vs Original](docs/BREAKING_API_CHANGES.md) for details.  
 
 Also see [Improvements_and_updates](docs/Improvements_and_updates.md) for information about non-breaking changes.  
+
+Full API documentation and class list is can be [found here.](h2zero.github.io/esp-nimble-cpp)  
 <br/>  
 
 # Acknowledgments
