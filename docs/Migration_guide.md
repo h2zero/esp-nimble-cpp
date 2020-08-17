@@ -2,7 +2,7 @@
 
 This guide describes the required changes to existing projects migrating from the original bluedroid API to NimBLE.  
 
-The changes listed here are only some of the many that have been made, this is only a small overview for migrating existing applications.  
+The changes listed here are only some of the many that have been made, this is a short overview for migrating existing applications.  
 
 For more information on the improvements and additions please refer to the [class documentation](https://h2zero.github.io/esp-nimble-cpp/annotated.html) and [Improvements and updates](docs/Improvements_and_updates.md)  
 <br/>
@@ -17,7 +17,7 @@ These macros are used the same way as the `ESP_LOGx` macros.
 <br/>
 
 ### Class Names
-Class names remain the same as the original with the addition of "Nim" added to the beginning of the name.  
+Class names remain the same as the original with the addition of a "Nim" prefix.  
 For example `BLEDevice` is now `NimBLEDevice` and `BLEServer` is now `NimBLEServer` etc.  
 
 For convienience definitions have been added to allow applications to use either name for all classes  
@@ -100,7 +100,7 @@ BLECharacteristic *pCharacteristic = pService->createCharacteristic(
 ### Descriptors
 The previous method `BLECharacteristic::addDescriptor()` has been removed.  
 
-Descriptors are now created using the `NimBLECharacteristic::createDescriptor()` method.
+Descriptors are now created using the `NimBLECharacteristic::createDescriptor` method.
  
 BLE2902 or NimBLE2902 class has been removed.  
 NimBLE automatically creates the 0x2902 descriptor if a characteristic has a notification or indication property assigned to it.  
@@ -111,7 +111,7 @@ to handle callback functionality and the client subscription status is handled i
 **Note:** Attempting to create a 0x2902 descriptor will trigger an assert to notify the error, 
 allowing the creation of it would cause a fault in the NimBLE stack.
 
-All other descriptors are now created just as characteristics are by using the `NimBLECharacteristic::createDescriptor()` method (except 0x2904, see below).   
+All other descriptors are now created just as characteristics are by using the `NimBLECharacteristic::createDescriptor` method (except 0x2904, see below).   
 Which are defined as:
 ```
 NimBLEDescriptor* createDescriptor(const char* uuid,

@@ -46,7 +46,7 @@ See: [The migration guide](docs/Migration_guide.md) for details.
 
 Also see [Improvements_and_updates](docs/Improvements_and_updates.md) for information about non-breaking changes.  
 
-Full API documentation and class list is can be [found here.](h2zero.github.io/esp-nimble-cpp)  
+[Full API documentation and class list can be found here.](h2zero.github.io/esp-nimble-cpp)  
 <br/>  
 
 # Acknowledgments
