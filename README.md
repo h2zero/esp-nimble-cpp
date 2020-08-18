@@ -46,7 +46,7 @@ See: [The migration guide](docs/Migration_guide.md) for details.
 
 Also see [Improvements_and_updates](docs/Improvements_and_updates.md) for information about non-breaking changes.  
 
-[Full API documentation and class list can be found here.](h2zero.github.io/esp-nimble-cpp)  
+[Full API documentation and class list can be found here.](https://h2zero.github.io/esp-nimble-cpp/)  
 <br/>  
 
 # Acknowledgments
@@ -62,4 +62,3 @@ Also see [Improvements_and_updates](docs/Improvements_and_updates.md) for inform
 4. Document nimconfig.
 5. Add BLE Mesh code.  
 <br/>  
-
