@@ -44,9 +44,9 @@ Call `NimBLEDevice::init("");` in `app_main`.
 # Using
 This library is intended to be compatible with the original ESP32 BLE functions and types with minor changes.  
 
-See: [The migration guide](docs/Migration_guide.md) for details.  
+See: [The migration guide](Migration_guide.md) for details.  
 
-Also see [Improvements_and_updates](docs/Improvements_and_updates.md) for information about non-breaking changes.  
+Also see [Improvements_and_updates](Improvements_and_updates.md) for information about non-breaking changes.  
 
 ### Arduino specific:
 See the Refactored_original_examples in the examples folder for highlights of the differences with the original library.  

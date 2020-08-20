@@ -39,10 +39,12 @@ Configure settings in `main menu -> NimBLE Options`.
 Call `NimBLEDevice::init("");` in `app_main`.  
 <br/>  
 
-# Using
+# Using 
 This library is intended to be compatible with the original ESP32 BLE functions and types with minor changes.  
 
-See: [The migration guide](docs/Migration_guide.md) for details.  
+If you have not used the original Bluedroid library please refer to the [New user guide](docs/New_user_guide.md).  
+
+If you are familiar with the original library, see: [The migration guide](docs/Migration_guide.md) for details about breaking changes and migration.  
 
 Also see [Improvements_and_updates](docs/Improvements_and_updates.md) for information about non-breaking changes.  
 
@@ -57,8 +59,5 @@ Also see [Improvements_and_updates](docs/Improvements_and_updates.md) for inform
 
 # Todo
 1. Implement random addresses.
-2. Implement NimBLEServer::removeService
-3. Implement extra fields in NimBLEAdvertisedDevice.
-4. Document nimconfig.
-5. Add BLE Mesh code.  
+2. Add BLE Mesh code.  
 <br/>  
