@@ -20,7 +20,7 @@ It is more suited to resource constrained devices than bluedroid and has now bee
 
 # Development Status
 [Latest release ![Release Version](https://img.shields.io/github/release/h2zero/esp-nimble-cpp.svg?style=plastic) 
-![Release Date](https://img.shields.io/github/release-date/h2zero/esp-nimble-cpp.svg?style=plastic)](https://github.com/h2zero/NimBLE-Arduino/releases/latest/) 
+![Release Date](https://img.shields.io/github/release-date/h2zero/esp-nimble-cpp.svg?style=plastic)](https://github.com/h2zero/esp-nimble-cpp/releases/latest/) 
 ![Downloads](https://img.shields.io/github/downloads/h2zero/esp-nimble-cpp/latest/total.svg?style=plastic)  
 <br/>
 
