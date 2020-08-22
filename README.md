@@ -18,6 +18,12 @@ NimBLE is a completely open source Bluetooth Low Energy stack produced by [Apach
 It is more suited to resource constrained devices than bluedroid and has now been ported to the ESP32 by Espressif.  
 <br/>
 
+# Development Status
+[Latest release ![Release Version](https://img.shields.io/github/release/h2zero/esp-nimble-cpp.svg?style=plastic) 
+![Release Date](https://img.shields.io/github/release-date/h2zero/esp-nimble-cpp.svg?style=plastic)](https://github.com/h2zero/NimBLE-Arduino/releases/latest/) 
+![Downloads](https://img.shields.io/github/downloads/h2zero/esp-nimble-cpp/latest/total.svg?style=plastic)  
+<br/>
+
 # Installation
 
 ### ESP-IDF v4.0+
