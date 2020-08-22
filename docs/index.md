@@ -18,7 +18,7 @@ Download as .zip and extract to Arduino/libraries folder, or in Arduino IDE from
 
 `#include "NimBLEDevice.h"` at the beginning of your sketch.
 
-Tested and working with esp32-arduino v1.0.2 and 1.0.4 in Arduino IDE v1.8.12 and platform IO.  
+Tested and working with esp32-arduino Arduino IDE and platform IO.  
 <br/>  
 
 # ESP-IDF Installation
@@ -44,7 +44,9 @@ Call `NimBLEDevice::init("");` in `app_main`.
 # Using
 This library is intended to be compatible with the original ESP32 BLE functions and types with minor changes.  
 
-See: [The migration guide](Migration_guide.md) for details.  
+If you have not used the original Bluedroid library please refer to the [New user guide](New_user_guide.md).
+
+If you are familiar with the original library, see: [The migration guide](Migration_guide.md) for details.  
 
 Also see [Improvements_and_updates](Improvements_and_updates.md) for information about non-breaking changes.  
 

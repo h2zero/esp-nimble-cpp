@@ -1,5 +1,14 @@
 # Improvements and updates
 
+Many improvements have been made to this library vs the original, this is a brief overview of the most significant changes.  
+Refer to the [class documentation](https://h2zero.github.io/esp-nimble-cpp/annotated.html) for futher information on class specifics.  
+
+* [Server](#server)
+* [Client](#client)
+* [General](#general)  
+<br/>
+
+<a name="server"></a>
 # Server  
 
 `NimBLECharacteristic::setValue(const T &s)`  
@@ -51,6 +60,7 @@ it's characteristics / descriptors will remain valid and the service can be re-a
 using `NimBLEServer::addService`.  
 <br/>
 
+<a name="client"></a>
 # Client  
 
 `NimBLERemoteCharacteristic::readValue(time_t\*, bool)`   
@@ -96,8 +106,9 @@ These changes allow more control for the user to manage the resources used for t
 `NimBLEClient::connect()` can now be called without an address or advertised device parameter. This will connect to the  
 device with the address previously set when last connected or set with `NimBLEDevice::setPeerAddress()`. 
 
+<a name="general"></a>
 # General  
-To reduce resource use all instances of std::map have been replaced with std::vector.  
+To reduce resource use all instances of `std::map` have been replaced with `std::vector`.  
 
 Use of `FreeRTOS::Semaphore` has been removed as it was consuming too much ram, the related files have been left in place to accomodate application use.  
 
@@ -110,7 +121,5 @@ Security/pairing operations are now handled in the respective `NimBLEClientCallb
 Configuration options have been added to add or remove debugging information, when disabled (default) significatly reduces binary size.  
 In ESP-IDF the options are in menuconfig: `Main menu -> ESP-NimBLE-cpp configuration`.  
 For Arduino the options must be commented / uncommented in nimconfig.h.   
-
-Many more internal improvements have been made as well, this is a brief overview. Refer to the class docs for futher information on class specifics.  
 <br/>  
 
