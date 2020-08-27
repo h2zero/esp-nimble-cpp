@@ -84,6 +84,7 @@
 /** @brief Un-comment to use external PSRAM for the NimBLE host */
 #define CONFIG_BT_NIMBLE_MEM_ALLOC_MODE_EXTERNAL 1
 
+
 /** @brief Un-comment to change the core NimBLE host runs on */
 #define CONFIG_BT_NIMBLE_PINNED_TO_CORE 0
 

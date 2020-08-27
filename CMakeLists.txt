@@ -55,4 +55,3 @@ idf_component_register(
   PRIV_REQUIRES
     ${ESP_NIMBLE_PRIV_REQUIRES}
 )
-
