@@ -22,7 +22,7 @@ class onOffSrvModelCallbacks : public NimBLEMeshModelCallbacks {
     }
 
     uint8_t getOnOff() {
-        printf("on/off get val %d", onOffVal);
+        printf("on/off get val %d\n", onOffVal);
         return onOffVal;
     }
 };
@@ -31,11 +31,6 @@ class levelSrvModelCallbacks : public NimBLEMeshModelCallbacks {
     void setLevel(int16_t val) {
         printf("Level set val %d\n", val);
         levelVal = val;
-    }
-
-    void setDelta(int16_t val) {
-        printf("Level set delta %d\n", val);
-        levelVal += val;
     }
 
     int16_t getLevel() {
