@@ -1,3 +1,7 @@
+[Latest release ![Release Version](https://img.shields.io/github/release/h2zero/esp-nimble-cpp.svg?style=plastic)
+![Release Date](https://img.shields.io/github/release-date/h2zero/esp-nimble-cpp.svg?style=plastic)](https://github.com/h2zero/esp-nimble-cpp/releases/latest/)  
+<br/>
+
 # esp-nimble-cpp
 
 NimBLE CPP library for use with ESP32 that attempts to maintain compatibility with the [nkolban cpp_uitls BLE API](https://github.com/nkolban/esp32-snippets/tree/master/cpp_utils).
@@ -16,12 +20,6 @@ to provide improved capabilites and stability over the original.
 ### What is NimBLE?
 NimBLE is a completely open source Bluetooth Low Energy stack produced by [Apache](https://github.com/apache/mynewt-nimble).  
 It is more suited to resource constrained devices than bluedroid and has now been ported to the ESP32 by Espressif.  
-<br/>
-
-# Development Status
-[Latest release ![Release Version](https://img.shields.io/github/release/h2zero/esp-nimble-cpp.svg?style=plastic) 
-![Release Date](https://img.shields.io/github/release-date/h2zero/esp-nimble-cpp.svg?style=plastic)](https://github.com/h2zero/esp-nimble-cpp/releases/latest/) 
-![Downloads](https://img.shields.io/github/downloads/h2zero/esp-nimble-cpp/latest/total.svg?style=plastic)  
 <br/>
 
 # Installation
@@ -64,6 +62,8 @@ Also see [Improvements_and_updates](docs/Improvements_and_updates.md) for inform
 <br/>  
 
 # Todo
-1. Implement random addresses.
-2. Add BLE Mesh code.  
+- Improve host reset handler
+- Implement random address handling
+- Implement bond management
+- Add Bluetooth Mesh
 <br/>  
