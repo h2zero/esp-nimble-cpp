@@ -15,25 +15,25 @@ static uint8_t onOffVal = 0;
 static int16_t levelVal = 0; 
 
 class onOffSrvModelCallbacks : public NimBLEMeshModelCallbacks {
-    void setOnOff(uint8_t val) {
-        printf("on/off set val %d\n", val);
+    void setOnOff(NimBLEMeshModel *pModel, uint8_t val) {
+        printf("on/off set val %d, transition time: %dms\n", val, pModel->getTransTime());
         onOffVal = val;
         gpio_set_level(LEDG, !onOffVal);
     }
 
-    uint8_t getOnOff() {
+    uint8_t getOnOff(NimBLEMeshModel *pModel) {
         printf("on/off get val %d\n", onOffVal);
         return onOffVal;
     }
 };
 
 class levelSrvModelCallbacks : public NimBLEMeshModelCallbacks {
-    void setLevel(int16_t val) {
-        printf("Level set val %d\n", val);
+    void setLevel(NimBLEMeshModel *pModel, int16_t val) {
+        printf("Level set val %d, transition time: %dms\n", val, pModel->getTransTime());
         levelVal = val;
     }
 
-    int16_t getLevel() {
+    int16_t getLevel(NimBLEMeshModel *pModel) {
         printf("Level get val %d\n", levelVal);
         return levelVal;
     }
@@ -47,15 +47,18 @@ void app_main(void) {
     io_conf.pin_bit_mask = OUTPUT_PIN;
     io_conf.pull_down_en = (gpio_pulldown_t)0;
     io_conf.pull_up_en = (gpio_pullup_t)0;
-    gpio_config(&io_conf);
-    
+    gpio_config(&io_conf); 
     gpio_set_level(LEDG, 1);
-  
+
     NimBLEDevice::init("");
     NimBLEMeshNode *pMesh = NimBLEDevice::createMeshNode(NimBLEUUID(SERVICE_UUID),0);
     NimBLEMeshElement* pElem = pMesh->getElement();
-    pElem->createModel(BT_MESH_MODEL_ID_GEN_ONOFF_SRV, new onOffSrvModelCallbacks());
+    NimBLEMeshModel* pModel = pElem->createModel(BT_MESH_MODEL_ID_GEN_ONOFF_SRV, new onOffSrvModelCallbacks());
+    pModel->setValue(onOffVal);
+
     //pElem = pMesh->createElement();
-    pElem->createModel(BT_MESH_MODEL_ID_GEN_LEVEL_SRV, new levelSrvModelCallbacks());
+    pModel = pElem->createModel(BT_MESH_MODEL_ID_GEN_LEVEL_SRV, new levelSrvModelCallbacks());
+    pModel->setValue(levelVal);
     pMesh->start();
+    printf("Mesh Started");
 }
