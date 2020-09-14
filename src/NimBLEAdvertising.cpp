@@ -178,6 +178,9 @@ void NimBLEAdvertising::setScanFilter(bool scanRequestWhitelistOnly, bool connec
 /**
  * @brief Set the advertisement data that is to be published in a regular advertisement.
  * @param [in] advertisementData The data to be advertised.
+ * @details The use of this function will replace any data set with addServiceUUID\n
+ * or setAppearance. If you wish for these to be advertised you must include them\n
+ * in the advertisementData parameter sent.
  */
 
 void NimBLEAdvertising::setAdvertisementData(NimBLEAdvertisementData& advertisementData) {
@@ -196,6 +199,8 @@ void NimBLEAdvertising::setAdvertisementData(NimBLEAdvertisementData& advertisem
 /**
  * @brief Set the advertisement data that is to be published in a scan response.
  * @param [in] advertisementData The data to be advertised.
+ * @details Calling this without also using setAdvertisementData will have no effect.\n
+ * When using custom scan response data you must also use custom advertisement data.
  */
 void NimBLEAdvertising::setScanResponseData(NimBLEAdvertisementData& advertisementData) {
     NIMBLE_LOGD(LOG_TAG, ">> setScanResponseData");
@@ -227,11 +232,6 @@ void NimBLEAdvertising::start() {
     if(pServer != nullptr) {
         if(!pServer->m_gattsStarted){
             pServer->start();
-            // When the server instance is created it resets GATT which
-            // seems to put the controller in a sleep loop? This causes a delay when
-            // advertising is started the first time. To avoid this we call ble_gap_adv_stop
-            // to get the controller ready.
-            ble_gap_adv_stop();
         } else if(pServer->getConnectedCount() >= NIMBLE_MAX_CONNECTIONS) {
             NIMBLE_LOGW(LOG_TAG, "Max connections reached - not advertising");
             return;
