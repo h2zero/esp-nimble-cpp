@@ -2,11 +2,11 @@ sudo: false
 
 before_install:
  - cd ${TMPDIR-/tmp}
- - wget -q http://doxygen.nl/files/doxygen-1.8.19.src.tar.gz
- - tar -xzvf doxygen-1.8.19.src.tar.gz
+ - wget -q http://doxygen.nl/files/doxygen-1.9.0.src.tar.gz
+ - tar -xzvf doxygen-1.9.0.src.tar.gz
  - mkdir doxygen_build
  - cd doxygen_build
- - cmake ../doxygen-1.8.19/
+ - cmake ../doxygen-1.9.0/
  - make
  - export PATH="${TMPDIR-/tmp}/doxygen_build/bin:$PATH"
  - cd ${TRAVIS_BUILD_DIR}
