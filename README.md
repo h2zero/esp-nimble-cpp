@@ -55,6 +55,11 @@ Also see [Improvements_and_updates](docs/Improvements_and_updates.md) for inform
 [Full API documentation and class list can be found here.](https://h2zero.github.io/esp-nimble-cpp/)  
 <br/>  
 
+## Using with Arduino as an IDF component and CMake
+When using this library along with Arduino and compiling with *CMake* you must add `add_compile_definitions(ARDUINO_ARCH_ESP32=1)`  
+in your project/CMakeLists.txt after the line `include($ENV{IDF_PATH}/tools/cmake/project.cmake)` to prevent Arduino from releasing BLE memory.
+<br>
+
 # Acknowledgments
 * [nkolban](https://github.com/nkolban) and [chegewara](https://github.com/chegewara) for the [original esp32 BLE library](https://github.com/nkolban/esp32-snippets/tree/master/cpp_utils) this project was derived from.
 * [beegee-tokyo](https://github.com/beegee-tokyo) for contributing your time to test/debug and contributing the beacon examples.
