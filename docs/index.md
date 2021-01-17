@@ -48,7 +48,9 @@ If you have not used the original Bluedroid library please refer to the [New use
 
 If you are familiar with the original library, see: [The migration guide](Migration_guide.md) for details.  
 
-Also see [Improvements_and_updates](Improvements_and_updates.md) for information about non-breaking changes.  
+Also see [Improvements and updates](Improvements_and_updates.md) for information about non-breaking changes.  
+
+For more advanced usage see [Usage tips](Usage_tips.md) for more performance and optimization.
 
 ### Arduino specific
 See the Refactored_original_examples in the examples folder for highlights of the differences with the original library.  
@@ -61,7 +63,7 @@ Change the settings in the nimconfig.h file to customize NimBLE to your project,
 <br/>  
 
 ### Command line and platformio
-See the command line configuration options available in [Command_line_config](Command_line_config.md).  
+See the command line configuration options available in [Command line config](Command_line_config.md).  
 <br/>  
 
 # Acknowledgments
