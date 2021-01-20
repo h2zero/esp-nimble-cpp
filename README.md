@@ -1,5 +1,7 @@
 [Latest release ![Release Version](https://img.shields.io/github/release/h2zero/esp-nimble-cpp.svg?style=plastic)
 ![Release Date](https://img.shields.io/github/release-date/h2zero/esp-nimble-cpp.svg?style=plastic)](https://github.com/h2zero/esp-nimble-cpp/releases/latest/)  
+
+Need help? Have questions or suggestions? Join the [![Gitter](https://badges.gitter.im/NimBLE-Arduino/community.svg)](https://gitter.im/NimBLE-Arduino/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)  
 <br/>
 
 # esp-nimble-cpp
@@ -17,7 +19,7 @@ to provide improved capabilites and stability over the original.
 *Your results may vary*  
 <br/>
 
-### What is NimBLE?
+# What is NimBLE?
 NimBLE is a completely open source Bluetooth Low Energy stack produced by [Apache](https://github.com/apache/mynewt-nimble).  
 It is more suited to resource constrained devices than bluedroid and has now been ported to the ESP32 by Espressif.  
 <br/>
@@ -34,7 +36,7 @@ Call `NimBLEDevice::init("");` in `app_main`.
 <br/>
 
 ### ESP-IDF v3.2 & v3.3
-The NimBLE component does not come with these versions of IDF.  
+The NimBLE component does not come with these versions of IDF (now included in 3.3.2 and above).  
 A backport that works in these versions has been created and is [available here](https://github.com/h2zero/esp-nimble-component).  
 Download or clone that repo into your project/components folder and run menuconfig.
 Configure settings in `main menu -> NimBLE Options`.  
