@@ -285,7 +285,7 @@ NimBLECharacteristic *NimBLEService::getCharacteristicByHandle(uint16_t handle) 
     return nullptr;
 }
 
-std::vector<NimBLECharacteristic *> NimBLEService::getAllCharacteristics() {
+std::vector<NimBLECharacteristic *> NimBLEService::getCharacteristics() {
     return m_chrVec;
 }
 
