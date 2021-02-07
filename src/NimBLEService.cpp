@@ -272,6 +272,10 @@ NimBLECharacteristic* NimBLEService::getCharacteristic(const NimBLEUUID &uuid) {
 }
 
 
+std::vector<NimBLECharacteristic *> NimBLEService::getAllCharacteristics() {
+    return m_chrVec;
+}
+
 /**
  * @brief Return a string representation of this service.
  * A service is defined by:

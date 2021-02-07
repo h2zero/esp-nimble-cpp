@@ -48,6 +48,7 @@ public:
     void                  dump();
     NimBLECharacteristic* getCharacteristic(const char* uuid);
     NimBLECharacteristic* getCharacteristic(const NimBLEUUID &uuid);
+    std::vector<NimBLECharacteristic*> getAllCharacteristics();
     NimBLEUUID            getUUID();
     NimBLEServer*         getServer();
     bool                  start();
