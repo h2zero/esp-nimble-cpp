@@ -51,6 +51,7 @@ public:
     void                   start();
     NimBLEService*         getServiceByUUID(const char* uuid);
     NimBLEService*         getServiceByUUID(const NimBLEUUID &uuid);
+    NimBLEService*         getServiceByHandle(uint16_t handle);
     int                    disconnect(uint16_t connID,
                                       uint8_t reason = BLE_ERR_REM_USER_CONN_TERM);
     void                   updateConnParams(uint16_t conn_handle,

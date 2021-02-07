@@ -104,8 +104,8 @@ NimBLEService* NimBLEServer::createService(const NimBLEUUID &uuid, uint32_t numH
 
 /**
  * @brief Get a %BLE Service by its UUID
- * @param [in] uuid The UUID of the new service.
- * @return A reference to the service object.
+ * @param [in] uuid The UUID of the service.
+ * @return A pointer to the service object or nullptr if not found.
  */
 NimBLEService* NimBLEServer::getServiceByUUID(const char* uuid) {
     return getServiceByUUID(NimBLEUUID(uuid));
@@ -114,8 +114,8 @@ NimBLEService* NimBLEServer::getServiceByUUID(const char* uuid) {
 
 /**
  * @brief Get a %BLE Service by its UUID
- * @param [in] uuid The UUID of the new service.
- * @return A reference to the service object.
+ * @param [in] uuid The UUID of the service.
+ * @return A pointer to the service object or nullptr if not found.
  */
 NimBLEService* NimBLEServer::getServiceByUUID(const NimBLEUUID &uuid) {
     for (auto &it : m_svcVec) {
@@ -126,6 +126,19 @@ NimBLEService* NimBLEServer::getServiceByUUID(const NimBLEUUID &uuid) {
     return nullptr;
 } // getServiceByUUID
 
+/**
+ * @brief Get a %BLE Service by its handle
+ * @param handle The handle of the service.
+ * @return A pointer to the service object or nullptr if not found.
+ */
+NimBLEService *NimBLEServer::getServiceByHandle(uint16_t handle) {
+    for (auto &it : m_svcVec) {
+        if (it->getHandle() == handle) {
+            return it;
+        }
+    }
+    return nullptr;
+}
 
 /**
  * @brief Retrieve the advertising object that can be used to advertise the existence of the server.
@@ -646,7 +659,7 @@ void NimBLEServer::updateConnParams(uint16_t conn_handle,
     if(rc != 0) {
         NIMBLE_LOGE(LOG_TAG, "Update params error: %d, %s", rc, NimBLEUtils::returnCodeToString(rc));
     }
-} // updateConnParams
+}// updateConnParams
 
 
 /** Default callback handlers */

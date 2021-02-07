@@ -271,6 +271,19 @@ NimBLECharacteristic* NimBLEService::getCharacteristic(const NimBLEUUID &uuid) {
     return nullptr;
 }
 
+/**
+ * @brief Get a pointer to the characteristic object with the specified handle.
+ * @param handle The handle of the characteristic.
+ * @return A pointer to the characteristic object or nullptr if not found.
+ */
+NimBLECharacteristic *NimBLEService::getCharacteristicByHandle(uint16_t handle) {
+    for (auto &it : m_chrVec) {
+        if (it->getHandle() == handle) {
+            return it;
+        }
+    }
+    return nullptr;
+}
 
 std::vector<NimBLECharacteristic *> NimBLEService::getAllCharacteristics() {
     return m_chrVec;
@@ -299,7 +312,7 @@ std::string NimBLEService::toString() {
  */
 NimBLEServer* NimBLEService::getServer() {
     return m_pServer;
-} // getServer
+}// getServer
 
 #endif // #if defined(CONFIG_BT_NIMBLE_ROLE_PERIPHERAL)
 #endif // CONFIG_BT_ENABLED

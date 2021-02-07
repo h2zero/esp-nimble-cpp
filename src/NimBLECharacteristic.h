@@ -72,6 +72,7 @@ public:
 
     NimBLEDescriptor* getDescriptorByUUID(const char* uuid);
     NimBLEDescriptor* getDescriptorByUUID(const NimBLEUUID &uuid);
+    NimBLEDescriptor* getDescriptorByHandle(uint16_t handle);
     NimBLEUUID        getUUID();
     std::string       getValue(time_t *timestamp = nullptr);
 
