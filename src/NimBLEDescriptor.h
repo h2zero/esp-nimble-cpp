@@ -50,6 +50,7 @@ public:
     void         setCallbacks(NimBLEDescriptorCallbacks* pCallbacks);
     void         setValue(const uint8_t* data, size_t size);
     void         setValue(const std::string &value);
+    std::string  getStringValue();
     std::string  toString();
 
     /**

@@ -123,10 +123,14 @@ uint8_t* NimBLEDescriptor::getValue() {
 } // getValue
 
 
+std::string NimBLEDescriptor::getStringValue() {
+    auto data = (char *) getValue();
+    return std::string(data);
+}
+
 int NimBLEDescriptor::handleGapEvent(uint16_t conn_handle, uint16_t attr_handle,
                              struct ble_gatt_access_ctxt *ctxt,
-                             void *arg)
-{
+                                     void *arg) {
     const ble_uuid_t *uuid;
     int rc;
     NimBLEDescriptor* pDescriptor = (NimBLEDescriptor*)arg;
