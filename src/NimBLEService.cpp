@@ -233,9 +233,9 @@ NimBLECharacteristic* NimBLEService::createCharacteristic(const char* uuid, uint
  */
 NimBLECharacteristic* NimBLEService::createCharacteristic(const NimBLEUUID &uuid, uint32_t properties) {
     NimBLECharacteristic* pCharacteristic = new NimBLECharacteristic(uuid, properties, this);
-    // Check that we don't add the same characteristic twice.
+
     if (getCharacteristic(uuid) != nullptr) {
-        NIMBLE_LOGW(LOG_TAG, "<< Adding a duplicate characteristic with UUID: %s",
+        NIMBLE_LOGD(LOG_TAG, "<< Adding a duplicate characteristic with UUID: %s",
                              std::string(uuid).c_str());
     }
 
