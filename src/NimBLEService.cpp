@@ -285,8 +285,31 @@ NimBLECharacteristic *NimBLEService::getCharacteristicByHandle(uint16_t handle) 
     return nullptr;
 }
 
+/**
+ * @return A vector containing pointers to each characteristic associated with this service.
+ */
 std::vector<NimBLECharacteristic *> NimBLEService::getCharacteristics() {
     return m_chrVec;
+}
+
+/**
+ * @return A vector containing pointers to each characteristic with the provided UUID associated with this service.
+ */
+std::vector<NimBLECharacteristic *> NimBLEService::getCharacteristics(const char *uuid) {
+    return getCharacteristics(NimBLEUUID(uuid));
+}
+
+/**
+ * @return A vector containing pointers to each characteristic with the provided UUID associated with this service.
+ */
+std::vector<NimBLECharacteristic *> NimBLEService::getCharacteristics(const NimBLEUUID &uuid) {
+    std::vector<NimBLECharacteristic*> result;
+    for (auto &it : m_chrVec) {
+        if (it->getUUID() == uuid) {
+            result.push_back(it);
+        }
+    }
+    return result;
 }
 
 /**

@@ -58,8 +58,11 @@ public:
     NimBLECharacteristic* getCharacteristic(const char* uuid);
     NimBLECharacteristic* getCharacteristic(const NimBLEUUID &uuid);
     NimBLECharacteristic* getCharacteristicByHandle(uint16_t handle);
+
     std::vector<NimBLECharacteristic*> getCharacteristics();
-    
+    std::vector<NimBLECharacteristic*> getCharacteristics(const char* uuid);
+    std::vector<NimBLECharacteristic*> getCharacteristics(const NimBLEUUID &uuid);
+
 
 private:
     NimBLEService(const char* uuid, uint16_t numHandles, NimBLEServer* pServer);
