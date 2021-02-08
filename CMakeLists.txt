@@ -17,6 +17,7 @@ set(COMPONENT_SRCS
     "src/NimBLEDevice.cpp"
     "src/NimBLEEddystoneTLM.cpp"
     "src/NimBLEEddystoneURL.cpp"
+    "src/NimBLEHIDDevice.cpp"
     "src/NimBLERemoteCharacteristic.cpp"
     "src/NimBLERemoteDescriptor.cpp"
     "src/NimBLERemoteService.cpp"
