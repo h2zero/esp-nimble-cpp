@@ -105,22 +105,28 @@ NimBLEService* NimBLEServer::createService(const NimBLEUUID &uuid, uint32_t numH
 /**
  * @brief Get a %BLE Service by its UUID
  * @param [in] uuid The UUID of the service.
+ * @param instanceId The index of the service to return (used when multiple services have the same UUID).
  * @return A pointer to the service object or nullptr if not found.
  */
-NimBLEService* NimBLEServer::getServiceByUUID(const char* uuid) {
-    return getServiceByUUID(NimBLEUUID(uuid));
+NimBLEService* NimBLEServer::getServiceByUUID(const char* uuid, uint16_t instanceId) {
+    return getServiceByUUID(NimBLEUUID(uuid), instanceId);
 } // getServiceByUUID
 
 
 /**
  * @brief Get a %BLE Service by its UUID
  * @param [in] uuid The UUID of the service.
+ * @param instanceId The index of the service to return (used when multiple services have the same UUID).
  * @return A pointer to the service object or nullptr if not found.
  */
-NimBLEService* NimBLEServer::getServiceByUUID(const NimBLEUUID &uuid) {
+NimBLEService* NimBLEServer::getServiceByUUID(const NimBLEUUID &uuid, uint16_t instanceId) {
+    uint16_t position = 0;
     for (auto &it : m_svcVec) {
         if (it->getUUID() == uuid) {
-            return it;
+            if (position == instanceId){
+                return it;
+            }
+            position++;
         }
     }
     return nullptr;

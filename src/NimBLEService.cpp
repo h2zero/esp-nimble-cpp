@@ -249,25 +249,29 @@ NimBLECharacteristic* NimBLEService::createCharacteristic(const NimBLEUUID &uuid
 /**
  * @brief Get a pointer to the characteristic object with the specified UUID.
  * @param [in] uuid The UUID of the characteristic.
+ * @param instanceId The index of the characteristic to return (used when multiple characteristics have the same UUID).
  * @return A pointer to the characteristic object or nullptr if not found.
  */
-NimBLECharacteristic* NimBLEService::getCharacteristic(const char* uuid) {
-    return getCharacteristic(NimBLEUUID(uuid));
+NimBLECharacteristic* NimBLEService::getCharacteristic(const char* uuid, uint16_t instanceId) {
+    return getCharacteristic(NimBLEUUID(uuid), instanceId);
 }
-
 
 /**
  * @brief Get a pointer to the characteristic object with the specified UUID.
  * @param [in] uuid The UUID of the characteristic.
+ * @param instanceId The index of the characteristic to return (used when multiple characteristics have the same UUID).
  * @return A pointer to the characteristic object or nullptr if not found.
  */
-NimBLECharacteristic* NimBLEService::getCharacteristic(const NimBLEUUID &uuid) {
+NimBLECharacteristic* NimBLEService::getCharacteristic(const NimBLEUUID &uuid, uint16_t instanceId) {
+    uint16_t position = 0;
     for (auto &it : m_chrVec) {
         if (it->getUUID() == uuid) {
-            return it;
+            if (position == instanceId) {
+                return it;
+            }
+            position++;
         }
     }
-
     return nullptr;
 }
 

@@ -55,8 +55,8 @@ public:
                                                NIMBLE_PROPERTY::READ |
                                                NIMBLE_PROPERTY::WRITE);
 
-    NimBLECharacteristic* getCharacteristic(const char* uuid);
-    NimBLECharacteristic* getCharacteristic(const NimBLEUUID &uuid);
+    NimBLECharacteristic* getCharacteristic(const char* uuid, uint16_t instanceId = 0);
+    NimBLECharacteristic* getCharacteristic(const NimBLEUUID &uuid, uint16_t instanceId = 0);
     NimBLECharacteristic* getCharacteristicByHandle(uint16_t handle);
 
     std::vector<NimBLECharacteristic*> getCharacteristics();
