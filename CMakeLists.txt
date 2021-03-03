@@ -2,9 +2,40 @@
 # CMakeLists in this exact order for cmake to work correctly
 cmake_minimum_required(VERSION 3.5)
 
-set(SUPPORTED_TARGETS esp32)
+idf_build_get_property(__hack_component_targets __COMPONENT_TARGETS)
+#file(GLOB _component_dirs RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/.." ${CMAKE_CURRENT_SOURCE_DIR}/../*)
+#list(APPEND __hack_component_targets ${_component_dirs})
+#get_cmake_property(_variableNames VARIABLES)
+#list (SORT _variableNames)
+#foreach (_variableName ${_variableNames})
+#string(APPEND namesContent "${_variableName}=${${_variableName}}\n")
+#endforeach()
+#file(APPEND "tmpvars.txt" "\n\n---------------------------------------\n\n${namesContent}\n")
 
-set(COMPONENT_SRCS
+if("esp-nimble-component" IN_LIST BUILD_COMPONENTS OR "__esp-nimble-component" IN_LIST __hack_component_targets)
+    list(APPEND ESP_NIMBLE_PRIV_REQUIRES
+        esp-nimble-component
+    )
+elseif("nimble" IN_LIST BUILD_COMPONENTS OR "__nimble" IN_LIST __hack_component_targets)
+    list(APPEND ESP_NIMBLE_PRIV_REQUIRES
+        nimble
+    )
+endif()
+
+if("arduino" IN_LIST BUILD_COMPONENTS OR __hack_component_targets MATCHES "__idf_arduino")
+    list(APPEND ESP_NIMBLE_PRIV_REQUIRES
+        arduino
+    )
+endif()
+
+idf_component_register(
+  REQUIRED_IDF_TARGETS
+    "esp32"
+    "esp32s3"
+    "esp32c3"
+  INCLUDE_DIRS
+    "src"
+  SRCS
     "src/FreeRTOS.cpp"
     "src/NimBLE2904.cpp"
     "src/NimBLEAddress.cpp"
@@ -27,31 +58,10 @@ set(COMPONENT_SRCS
     "src/NimBLEService.cpp"
     "src/NimBLEUtils.cpp"
     "src/NimBLEUUID.cpp"
-)
-
-set(COMPONENT_ADD_INCLUDEDIRS
-    src
-)
-
-set(COMPONENT_PRIV_REQUIRES
-    nvs_flash
+  REQUIRES
     bt
+    nvs_flash
+  PRIV_REQUIRES
+    ${ESP_NIMBLE_PRIV_REQUIRES}
 )
 
-if(COMPONENTS MATCHES "esp-nimble-component")
-    list(APPEND COMPONENT_PRIV_REQUIRES
-        esp-nimble-component
-    )
-elseif(COMPONENTS MATCHES "nimble")
-    list(APPEND COMPONENT_PRIV_REQUIRES
-        nimble
-    )
-endif()
-
-if(COMPONENTS MATCHES "arduino")
-    list(APPEND COMPONENT_PRIV_REQUIRES
-        arduino
-    )
-endif()
-
-register_component()
