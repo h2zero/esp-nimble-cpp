@@ -3,14 +3,6 @@
 cmake_minimum_required(VERSION 3.5)
 
 idf_build_get_property(__hack_component_targets __COMPONENT_TARGETS)
-#file(GLOB _component_dirs RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/.." ${CMAKE_CURRENT_SOURCE_DIR}/../*)
-#list(APPEND __hack_component_targets ${_component_dirs})
-#get_cmake_property(_variableNames VARIABLES)
-#list (SORT _variableNames)
-#foreach (_variableName ${_variableNames})
-#string(APPEND namesContent "${_variableName}=${${_variableName}}\n")
-#endforeach()
-#file(APPEND "tmpvars.txt" "\n\n---------------------------------------\n\n${namesContent}\n")
 
 if("esp-nimble-component" IN_LIST BUILD_COMPONENTS OR "__esp-nimble-component" IN_LIST __hack_component_targets)
     list(APPEND ESP_NIMBLE_PRIV_REQUIRES
