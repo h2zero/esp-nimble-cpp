@@ -30,7 +30,7 @@
 #include "services/gap/ble_svc_gap.h"
 #include "services/gatt/ble_svc_gatt.h"
 
-#ifdef ARDUINO_ARCH_ESP32
+#ifdef CONFIG_ENABLE_ARDUINO_DEPENDS
 #include "esp32-hal-bt.h"
 #endif
 
@@ -534,7 +534,7 @@ void NimBLEDevice::setScanFilterMode(uint8_t mode) {
         int rc=0;
         esp_err_t errRc = ESP_OK;
 
-#ifdef ARDUINO_ARCH_ESP32
+#ifdef CONFIG_ENABLE_ARDUINO_DEPENDS
         // make sure the linker includes esp32-hal-bt.c so ardruino init doesn't release BLE memory.
         btStarted();
 #endif
