@@ -68,9 +68,3 @@ in your project/CMakeLists.txt after the line `include($ENV{IDF_PATH}/tools/cmak
 * [Jeroen88](https://github.com/Jeroen88) for the amazing help debugging and improving the client code.  
 <br/>  
 
-# Todo
-- Improve host reset handler
-- Implement random address handling
-- Implement bond management
-- Add Bluetooth Mesh
-<br/>  
