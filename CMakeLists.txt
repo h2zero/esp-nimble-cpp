@@ -28,7 +28,6 @@ idf_component_register(
   INCLUDE_DIRS
     "src"
   SRCS
-    "src/FreeRTOS.cpp"
     "src/NimBLE2904.cpp"
     "src/NimBLEAddress.cpp"
     "src/NimBLEAdvertisedDevice.cpp"
