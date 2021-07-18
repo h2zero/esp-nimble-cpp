@@ -41,6 +41,9 @@ class ServerCallbacks: public NimBLEServerCallbacks {
         printf("Client disconnected - start advertising\n");
         NimBLEDevice::startAdvertising();
     };
+    void onMTUChange(uint16_t MTU, ble_gap_conn_desc* desc) {
+        printf("MTU updated: %u for connection ID: %u\n", MTU, desc->conn_handle);
+    };
     
 /********************* Security handled here **********************
 ****** Note: these are the same return values as defaults ********/
