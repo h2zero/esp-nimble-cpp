@@ -10,6 +10,23 @@
 #include "sdkconfig.h"
 #include "nimconfig_rename.h"
 
+#if defined(CONFIG_BT_ENABLED)
+
+// Allows cpp wrapper to select the correct include paths when using esp-idf
+#define CONFIG_NIMBLE_CPP_IDF
+
+/* Cannot use client without scan */
+#if defined(CONFIG_BT_NIMBLE_ROLE_CENTRAL) && !defined(CONFIG_BT_NIMBLE_ROLE_OBSERVER)
+#define CONFIG_BT_NIMBLE_ROLE_OBSERVER
+#endif
+
+/* Cannot use server without advertise */
+#if defined(CONFIG_BT_NIMBLE_ROLE_PERIPHERAL) && !defined(CONFIG_BT_NIMBLE_ROLE_BROADCASTER)
+#define CONFIG_BT_NIMBLE_ROLE_BROADCASTER
+#endif
+
+#endif /* CONFIG_BT_ENABLED */
+
 #ifdef _DOXYGEN_
 
 /** @brief Un-comment to change the number of simultaneous connections (esp controller max is 9) */
@@ -21,10 +38,11 @@
 /** @brief Un-comment to change default device name */
 #define CONFIG_BT_NIMBLE_SVC_GAP_DEVICE_NAME "nimble"
 
-/** @brief Un-comment to see debug log messages from the NimBLE host
+/** @brief Un-comment to set the debug log messages level from the NimBLE host stack.\n
+ *  Values: 0 = DEBUG, 1 = INFO, 2 = WARNING, 3 = ERROR, 4 = CRITICAL, 5+ = NONE\n
  *  Uses approx. 32kB of flash memory.
  */
-#define CONFIG_BT_NIMBLE_DEBUG
+#define CONFIG_BT_NIMBLE_LOG_LEVEL 5
 
 /** @brief Un-comment to see NimBLE host return codes as text debug log messages.
  *  Uses approx. 7kB of flash memory.
