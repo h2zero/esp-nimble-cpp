@@ -52,6 +52,7 @@ NimBLEService::NimBLEService(const NimBLEUUID &uuid, uint16_t numHandles, NimBLE
     m_numHandles   = numHandles;
     m_pSvcDef      = nullptr;
     m_removed      = 0;
+    m_secondary    = false;
 
 } // NimBLEService
 
@@ -130,7 +131,7 @@ bool NimBLEService::start() {
         ble_gatt_chr_def* pChr_a = nullptr;
         ble_gatt_dsc_def* pDsc_a = nullptr;
 
-        svc[0].type = BLE_GATT_SVC_TYPE_PRIMARY;
+        svc[0].type = m_secondary ? BLE_GATT_SVC_TYPE_SECONDARY : BLE_GATT_SVC_TYPE_PRIMARY;
         svc[0].uuid = &m_uuid.getNative()->u;
         svc[0].includes = NULL;
 
@@ -237,6 +238,12 @@ bool NimBLEService::start() {
 
     }
 
+    if(m_secSvcVec.size() > 0){
+        for(auto& it : m_secSvcVec) {
+            it->start();
+        }
+    }
+
     NIMBLE_LOGD(LOG_TAG, "<< start()");
     return true;
 } // start
@@ -249,6 +256,44 @@ bool NimBLEService::start() {
 uint16_t NimBLEService::getHandle() {
     return m_handle;
 } // getHandle
+
+
+/**
+ * @brief Creates a BLE service as a secondary service to the service this was called from.
+ * @param [in] uuid The UUID of the secondary service.
+ * @return A reference to the new secondary service object.
+ */
+NimBLEService* NimBLEService::createService(const NimBLEUUID &uuid) {
+    NIMBLE_LOGD(LOG_TAG, ">> createService - %s", uuid.toString().c_str());
+
+    NimBLEServer* pServer = getServer();
+    NimBLEService* pService = new NimBLEService(uuid, 0, pServer);
+    m_secSvcVec.push_back(pService);
+    pService->m_secondary = true;
+    pServer->serviceChanged();
+
+    NIMBLE_LOGD(LOG_TAG, "<< createService");
+    return pService;
+}
+
+
+/**
+ * @brief Adds a secondary service to this service which was either already created but removed from availability,\n
+ * or created and later added.
+ * @param [in] service The secondary service object to add.
+ */
+void NimBLEService::addService(NimBLEService* service) {
+    // If adding a service that was not removed add it and return.
+    // Else reset GATT and send service changed notification.
+    if(service->m_removed == 0) {
+        m_secSvcVec.push_back(service);
+        return;
+    }
+
+    service->m_secondary = true;
+    service->m_removed = 0;
+    getServer()->serviceChanged();
+}
 
 
 /**

@@ -67,6 +67,9 @@ public:
     std::vector<NimBLECharacteristic*> getCharacteristics(const char* uuid);
     std::vector<NimBLECharacteristic*> getCharacteristics(const NimBLEUUID &uuid);
 
+    void                  addService(NimBLEService* service);
+    NimBLEService*        createService(const NimBLEUUID &uuid);
+
 
 private:
 
@@ -79,7 +82,9 @@ private:
     uint16_t              m_numHandles;
     ble_gatt_svc_def*     m_pSvcDef;
     uint8_t               m_removed;
+    bool                  m_secondary;
     std::vector<NimBLECharacteristic*> m_chrVec;
+    std::vector<NimBLEService*> m_secSvcVec;
 
 }; // NimBLEService
 
