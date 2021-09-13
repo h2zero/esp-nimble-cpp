@@ -53,6 +53,7 @@ NimBLEService::NimBLEService(const NimBLEUUID &uuid, uint16_t numHandles, NimBLE
     m_pSvcDef      = nullptr;
     m_removed      = 0;
     m_secondary    = false;
+    m_pSecSvcDef   = nullptr;
 
 } // NimBLEService
 
@@ -69,6 +70,13 @@ NimBLEService::~NimBLEService() {
         }
 
         delete(m_pSvcDef);
+    }
+
+    if(m_pSecSvcDef != nullptr) {
+        for(auto &it : m_secSvcVec) {
+            delete it;
+        }
+        delete m_pSecSvcDef;
     }
 
     for(auto &it : m_chrVec) {
@@ -223,6 +231,19 @@ bool NimBLEService::start() {
         // end of services must indicate to api with type = 0
         svc[1].type = 0;
         m_pSvcDef = svc;
+
+        if(m_secSvcVec.size() > 0){
+            size_t numSecSvcs = m_secSvcVec.size();
+            ble_gatt_svc_def** m_pSecSvcDef = new ble_gatt_svc_def*[numSecSvcs + 1];
+            int i = 0;
+            for(auto& it : m_secSvcVec) {
+                it->start();
+                m_pSecSvcDef[i] = it->m_pSvcDef;
+                ++i;
+            }
+            m_pSecSvcDef[numSecSvcs] = nullptr;
+            m_pSvcDef->includes = (const ble_gatt_svc_def**)m_pSecSvcDef;
+        }
     }
 
     int rc = ble_gatts_count_cfg((const ble_gatt_svc_def*)m_pSvcDef);
@@ -235,13 +256,6 @@ bool NimBLEService::start() {
     if (rc != 0) {
         NIMBLE_LOGE(LOG_TAG, "ble_gatts_add_svcs, rc= %d, %s", rc, NimBLEUtils::returnCodeToString(rc));
         return false;
-
-    }
-
-    if(m_secSvcVec.size() > 0){
-        for(auto& it : m_secSvcVec) {
-            it->start();
-        }
     }
 
     NIMBLE_LOGD(LOG_TAG, "<< start()");

@@ -83,6 +83,7 @@ private:
     ble_gatt_svc_def*     m_pSvcDef;
     uint8_t               m_removed;
     bool                  m_secondary;
+    ble_gatt_svc_def**    m_pSecSvcDef;
     std::vector<NimBLECharacteristic*> m_chrVec;
     std::vector<NimBLEService*> m_secSvcVec;
 
