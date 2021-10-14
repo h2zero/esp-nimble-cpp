@@ -48,7 +48,7 @@ NimBLECharacteristic::NimBLECharacteristic(const NimBLEUUID &uuid, uint16_t prop
     m_properties  = properties;
     m_pCallbacks  = &defaultCallback;
     m_pService    = pService;
-    m_value       = "";
+    m_value       = std::vector<uint8_t>(BLE_ATT_ATTR_MAX_LEN);
     m_valMux      = portMUX_INITIALIZER_UNLOCKED;
     m_timestamp   = 0;
     m_removed     = 0;
@@ -234,17 +234,34 @@ NimBLEUUID NimBLECharacteristic::getUUID() {
  * @brief Retrieve the current value of the characteristic.
  * @return A std::string containing the current characteristic value.
  */
-std::string NimBLECharacteristic::getValue(time_t *timestamp) {
+std::vector<uint8_t> NimBLECharacteristic::getValue(time_t *timestamp) {
     portENTER_CRITICAL(&m_valMux);
-    std::string retVal = m_value;
+    std::vector<uint8_t> retVal = m_value;
+
     if(timestamp != nullptr) {
         *timestamp = m_timestamp;
     }
     portEXIT_CRITICAL(&m_valMux);
-
     return retVal;
 } // getValue
 
+/**
+ * @brief Retrieve the current value of the characteristic, copy to designated buffer to avoid excessive heap allocation
+ * @return A std::string containing the current characteristic value.
+ */
+void NimBLECharacteristic::getValue(uint8_t *bufOut, size_t *lenOut, size_t bufSize, time_t *timestamp) {
+    if (bufOut == nullptr || lenOut == nullptr) return;
+
+    portENTER_CRITICAL(&m_valMux);
+    size_t len = std::min(m_value.size(), bufSize);
+    memcpy(bufOut, &m_value[0], len);
+    *lenOut = len;
+
+    if(timestamp != nullptr) {
+        *timestamp = m_timestamp;
+    }
+    portEXIT_CRITICAL(&m_valMux);
+}
 
 /**
  * @brief Retrieve the the current data length of the characteristic.
@@ -252,7 +269,7 @@ std::string NimBLECharacteristic::getValue(time_t *timestamp) {
  */
 size_t NimBLECharacteristic::getDataLength() {
     portENTER_CRITICAL(&m_valMux);
-    size_t len = m_value.length();
+    size_t len = m_value.size();
     portEXIT_CRITICAL(&m_valMux);
 
     return len;
@@ -289,7 +306,7 @@ int NimBLECharacteristic::handleGapEvent(uint16_t conn_handle, uint16_t attr_han
 
                 portENTER_CRITICAL(&pCharacteristic->m_valMux);
                 rc = os_mbuf_append(ctxt->om, (uint8_t*)pCharacteristic->m_value.data(),
-                                    pCharacteristic->m_value.length());
+                                    pCharacteristic->m_value.size());
                 portEXIT_CRITICAL(&pCharacteristic->m_valMux);
 
                 return rc == 0 ? 0 : BLE_ATT_ERR_INSUFFICIENT_RES;
@@ -422,8 +439,8 @@ void NimBLECharacteristic::notify(bool is_notification) {
 
     m_pCallbacks->onNotify(this);
 
-    std::string value = getValue();
-    size_t length = value.length();
+    std::vector<uint8_t> value = getValue();
+    size_t length = value.size();
     bool reqSec = (m_properties & BLE_GATT_CHR_F_READ_AUTHEN) ||
                   (m_properties & BLE_GATT_CHR_F_READ_AUTHOR) ||
                   (m_properties & BLE_GATT_CHR_F_READ_ENC);
@@ -527,7 +544,8 @@ void NimBLECharacteristic::setValue(const uint8_t* data, size_t length) {
 
     time_t t = time(nullptr);
     portENTER_CRITICAL(&m_valMux);
-    m_value = std::string((char*)data, length);
+    m_value.resize(length);
+    memcpy(&m_value[0], data, length);
     m_timestamp = t;
     portEXIT_CRITICAL(&m_valMux);
 
@@ -562,7 +580,9 @@ std::string NimBLECharacteristic::toString() {
     if (m_properties & BLE_GATT_CHR_PROP_NOTIFY) res += "Notify ";
     if (m_properties & BLE_GATT_CHR_PROP_INDICATE) res += "Indicate ";
     return res;
-} // toString
+}
+
+// toString
 
 
 NimBLECharacteristicCallbacks::~NimBLECharacteristicCallbacks() {}

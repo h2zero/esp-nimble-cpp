@@ -103,8 +103,9 @@ public:
     NimBLEDescriptor* getDescriptorByHandle(uint16_t handle);
     void              removeDescriptor(NimBLEDescriptor *pDescriptor, bool deleteDsc = false);
 
-    std::string       getValue(time_t *timestamp = nullptr);
-    size_t            getDataLength();
+    std::vector<uint8_t>      getValue(time_t *timestamp = nullptr);
+    void                      getValue(uint8_t *bufOut, size_t *lenOut, size_t bufSize, time_t *timestamp = nullptr);
+    size_t                    getDataLength();
     /**
      * @brief A template to convert the characteristic data to <type\>.
      * @tparam T The type to convert the data to.
@@ -151,7 +152,7 @@ private:
     uint16_t                       m_properties;
     NimBLECharacteristicCallbacks* m_pCallbacks;
     NimBLEService*                 m_pService;
-    std::string                    m_value;
+    std::vector<uint8_t>           m_value;
     std::vector<NimBLEDescriptor*> m_dscVec;
     portMUX_TYPE                   m_valMux;
     time_t                         m_timestamp;
