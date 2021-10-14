@@ -247,7 +247,6 @@ std::vector<uint8_t> NimBLECharacteristic::getValue(time_t *timestamp) {
 
 /**
  * @brief Retrieve the current value of the characteristic, copy to designated buffer to avoid excessive heap allocation
- * @return A std::string containing the current characteristic value.
  */
 void NimBLECharacteristic::getValue(uint8_t *bufOut, size_t *lenOut, size_t bufSize, time_t *timestamp) {
     if (bufOut == nullptr || lenOut == nullptr) return;
