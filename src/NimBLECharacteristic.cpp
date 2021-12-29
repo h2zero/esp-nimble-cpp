@@ -439,7 +439,7 @@ void NimBLECharacteristic::notify(std::string value, bool is_notification) {
     int rc = 0;
 
     for (auto &it : m_subscribedVec) {
-        uint16_t _mtu = getService()->getServer()->getPeerMTU(it.first);
+        uint16_t _mtu = getService()->getServer()->getPeerMTU(it.first) - 3;
 
         // check if connected and subscribed
         if(_mtu == 0 || it.second == 0) {
@@ -455,8 +455,8 @@ void NimBLECharacteristic::notify(std::string value, bool is_notification) {
             }
         }
 
-        if (length > _mtu - 3) {
-            NIMBLE_LOGW(LOG_TAG, "- Truncating to %d bytes (maximum notify size)", _mtu - 3);
+        if (length > _mtu) {
+            NIMBLE_LOGW(LOG_TAG, "- Truncating to %d bytes (maximum notify size)", _mtu);
         }
 
         if(is_notification && (!(it.second & NIMBLE_SUB_NOTIFY))) {

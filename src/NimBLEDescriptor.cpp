@@ -143,6 +143,9 @@ NimBLECharacteristic* NimBLEDescriptor::getCharacteristic() {
 
 int NimBLEDescriptor::handleGapEvent(uint16_t conn_handle, uint16_t attr_handle,
                                      struct ble_gatt_access_ctxt *ctxt, void *arg) {
+    (void)conn_handle;
+    (void)attr_handle;
+
     const ble_uuid_t *uuid;
     int rc;
     NimBLEDescriptor* pDescriptor = (NimBLEDescriptor*)arg;
@@ -236,6 +239,7 @@ void NimBLEDescriptor::setValue(const uint8_t* data, size_t length) {
     m_value.attr_len = length;
     memcpy(m_value.attr_value, data, length);
     portEXIT_CRITICAL(&m_valMux);
+
 } // setValue
 
 
@@ -275,6 +279,7 @@ NimBLEDescriptorCallbacks::~NimBLEDescriptorCallbacks() {}
  * @param [in] pDescriptor The descriptor that is the source of the event.
  */
 void NimBLEDescriptorCallbacks::onRead(NimBLEDescriptor* pDescriptor) {
+    (void)pDescriptor;
     NIMBLE_LOGD("NimBLEDescriptorCallbacks", "onRead: default");
 } // onRead
 
@@ -284,6 +289,7 @@ void NimBLEDescriptorCallbacks::onRead(NimBLEDescriptor* pDescriptor) {
  * @param [in] pDescriptor The descriptor that is the source of the event.
  */
 void NimBLEDescriptorCallbacks::onWrite(NimBLEDescriptor* pDescriptor) {
+    (void)pDescriptor;
     NIMBLE_LOGD("NimBLEDescriptorCallbacks", "onWrite: default");
 } // onWrite
 
