@@ -90,7 +90,6 @@ private:
     NimBLECharacteristic*      m_pCharacteristic;
     uint8_t                    m_properties;
     attr_value_t               m_value;
-    portMUX_TYPE               m_valMux;
     uint8_t                    m_removed;
 }; // NimBLEDescriptor
 

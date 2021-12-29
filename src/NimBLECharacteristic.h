@@ -155,7 +155,6 @@ private:
     NimBLEService*                 m_pService;
     std::string                    m_value;
     std::vector<NimBLEDescriptor*> m_dscVec;
-    portMUX_TYPE                   m_valMux;
     time_t                         m_timestamp;
     uint8_t                        m_removed;
 
