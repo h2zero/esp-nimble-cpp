@@ -1,6 +1,25 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.  
+All notable changes to this project will be documented in this file.
+
+## Unreleased changes.
+
+### Fixed
+- Initialize advertising complete callback in NimBLEAdvertising constructor.
+- Clear client disconnect timer in constructor before initializing.
+- Fix missing data when reading large values.
+- Fix missing data in notifications when using a large MTU size and more than 270 bytes of data are sent.
+- Workaround fix added for cases when the task notification value is not cleared, causing various functions that should block not to block.
+
+### Added
+- `NimBLEClient::getLastError` : Gets the error code of the last function call that produces a return code from the stack.
+- `NimBLECharacteristic::notify` : Overload method to send notifications/indications with custom values.
+- Added conditional checks for ESP32 specific functions/values to support use of the library on non-esp32 devices.
+- Added an alias to use the callback name from the original library `onMtuChanged`.
+
+### Changed
+- Critical section calls now use the NimBLE API instead of FreeRTOS directly. This removes the need for a `portMUX_TYPE` variable in the class definitions.
+- Removed unnecessary variables in `NimBLEService` and changed the constructor no no longer accept `numHandles` and `inst_id` parameters.
 
 ## [1.3.1] - 2021-08-04
 
