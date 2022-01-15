@@ -1,5 +1,31 @@
 menu "ESP-NimBLE-CPP configuration"
 
+choice NIMBLE_CPP_LOG_LEVEL
+    prompt "NimBLE CPP log verbosity"
+    default NIMBLE_CPP_LOG_LEVEL_NONE
+    help
+        Select NimBLE CPP log verbosity level.
+
+    config NIMBLE_CPP_LOG_LEVEL_NONE
+        bool "No logs"
+    config NIMBLE_CPP_LOG_LEVEL_ERROR
+        bool "Error logs"
+    config NIMBLE_CPP_LOG_LEVEL_WARNING
+        bool "Warning logs"
+    config NIMBLE_CPP_LOG_LEVEL_INFO
+        bool "Info logs"
+    config NIMBLE_CPP_LOG_LEVEL_DEBUG
+        bool "Debug logs"
+endchoice #NIMBLE_CPP_LOG_LEVEL
+
+config NIMBLE_CPP_LOG_LEVEL
+    int
+    default 0 if NIMBLE_CPP_LOG_LEVEL_NONE
+    default 1 if NIMBLE_CPP_LOG_LEVEL_ERROR
+    default 2 if NIMBLE_CPP_LOG_LEVEL_WARNING
+    default 3 if NIMBLE_CPP_LOG_LEVEL_INFO
+    default 4 if NIMBLE_CPP_LOG_LEVEL_DEBUG
+
 config NIMBLE_CPP_ENABLE_RETURN_CODE_TEXT
     bool "Show NimBLE return codes as text in debug log."
     default "n"
