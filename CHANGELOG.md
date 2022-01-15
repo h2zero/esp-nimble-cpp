@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased changes.
+## [1.3.2] - 2022-01-15
 
 ### Fixed
 - Initialize advertising complete callback in NimBLEAdvertising constructor.
@@ -16,6 +16,8 @@ All notable changes to this project will be documented in this file.
 - `NimBLECharacteristic::notify` : Overload method to send notifications/indications with custom values.
 - Added conditional checks for ESP32 specific functions/values to support use of the library on non-esp32 devices.
 - Added an alias to use the callback name from the original library `onMtuChanged`.
+- `NimBLEClient::setDataLen` and `NimBLEServer::setDataLen`:  Data length extension support (IDF version >= 4.3.2 only)
+- Config option to set logging level for esp-nimble-cpp
 
 ### Changed
 - Critical section calls now use the NimBLE API instead of FreeRTOS directly. This removes the need for a `portMUX_TYPE` variable in the class definitions.
