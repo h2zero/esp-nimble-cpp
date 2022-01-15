@@ -1,7 +1,7 @@
 var class_nim_b_l_e_service =
 [
-    [ "NimBLEService", "class_nim_b_l_e_service.html#a2f21520dead11ac352562c7b232bc854", null ],
-    [ "NimBLEService", "class_nim_b_l_e_service.html#a66b3bc41ed067ea7f5f00a8af53dd1ef", null ],
+    [ "NimBLEService", "class_nim_b_l_e_service.html#a5084a6db9c9b5ddb4f3e9261606b1e65", null ],
+    [ "NimBLEService", "class_nim_b_l_e_service.html#af4e9e030046352a6ff3d9ba67fe872e3", null ],
     [ "addCharacteristic", "class_nim_b_l_e_service.html#af8215dbfdaf7ced32d6158f8ff5116e8", null ],
     [ "createCharacteristic", "class_nim_b_l_e_service.html#adab5552c080b9cb88095af262d326309", null ],
     [ "createCharacteristic", "class_nim_b_l_e_service.html#a80fe6bca60d0db69ea3ae689a3947c19", null ],

@@ -10,5 +10,5 @@ var searchData=
   ['advcompletecb_7',['advCompleteCB',['../class_nim_b_l_e_advertising.html#a4de7bf016a086a2d3f6f14ae134678f2',1,'NimBLEAdvertising']]],
   ['advertiseondisconnect_8',['advertiseOnDisconnect',['../class_nim_b_l_e_server.html#a6bfd923ecd0ea06d5564343ab7209122',1,'NimBLEServer']]],
   ['advtypetostring_9',['advTypeToString',['../class_nim_b_l_e_utils.html#a6de9354eeba9f126aa14cfa7ed43cda4',1,'NimBLEUtils']]],
-  ['arduino_20command_20line_20and_20platformio_20config_20options_10',['Arduino command line and platformio config options',['../md_docs__command_line_config.html',1,'']]]
+  ['arduino_20command_20line_20and_20platformio_20config_20options_10',['Arduino command line and platformio config options',['../md__command_line_config.html',1,'']]]
 ];

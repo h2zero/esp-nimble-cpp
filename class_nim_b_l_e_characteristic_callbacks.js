@@ -1,8 +1,8 @@
 var class_nim_b_l_e_characteristic_callbacks =
 [
     [ "Status", "class_nim_b_l_e_characteristic_callbacks.html#a104baba3c4bbdee7aa28273d265e4c6f", [
-      [ "Example", "md_docs__migration_guide.html#autotoc_md51", null ],
-      [ "Example", "md_docs__migration_guide.html#autotoc_md52", null ]
+      [ "Example", "md__migration_guide.html#autotoc_md55", null ],
+      [ "Example", "md__migration_guide.html#autotoc_md56", null ]
     ] ],
     [ "onNotify", "class_nim_b_l_e_characteristic_callbacks.html#a185eb5298cc042f1aceeba21caf0dcc9", null ],
     [ "onRead", "class_nim_b_l_e_characteristic_callbacks.html#a523904b8d39e364db094f623403bad93", null ],

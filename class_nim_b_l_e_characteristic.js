@@ -20,6 +20,7 @@ var class_nim_b_l_e_characteristic =
     [ "getValue", "class_nim_b_l_e_characteristic.html#a7d09c29b26362f6ddcaf51a9c9dc8be4", null ],
     [ "indicate", "class_nim_b_l_e_characteristic.html#a2ce9f62ecc3d1644ef4d58efe7a3c434", null ],
     [ "notify", "class_nim_b_l_e_characteristic.html#aa45461059e1992c816e32c371d17e813", null ],
+    [ "notify", "class_nim_b_l_e_characteristic.html#ad44ce481c0341abe32b1e0f823c520d4", null ],
     [ "removeDescriptor", "class_nim_b_l_e_characteristic.html#a2c0ed8932ee257a8632e3d72e353489b", null ],
     [ "setCallbacks", "class_nim_b_l_e_characteristic.html#a29dc2505e1d3b4a7d6800d1547965d17", null ],
     [ "setValue", "class_nim_b_l_e_characteristic.html#a3e77647e4c9bd02c96b761639c4d206f", null ],

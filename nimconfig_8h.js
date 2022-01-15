@@ -1,7 +1,7 @@
 var nimconfig_8h =
 [
     [ "CONFIG_BT_NIMBLE_ATT_PREFERRED_MTU", "nimconfig_8h.html#a8fa28ebea6e979630359a2acde3ae578", null ],
-    [ "CONFIG_BT_NIMBLE_DEBUG", "nimconfig_8h.html#aeebbc5c476d2a6de28f2d9ebf2948cb5", null ],
+    [ "CONFIG_BT_NIMBLE_LOG_LEVEL", "nimconfig_8h.html#a1cfe4f7cfbce0d842fad09e4b668d3df", null ],
     [ "CONFIG_BT_NIMBLE_MAX_BONDS", "nimconfig_8h.html#a11ebe4c94e55f9e710be03169b91f964", null ],
     [ "CONFIG_BT_NIMBLE_MAX_CCCDS", "nimconfig_8h.html#abdc3219ca772a22427beed33477ea252", null ],
     [ "CONFIG_BT_NIMBLE_MAX_CONNECTIONS", "nimconfig_8h.html#a2ea633774bbf41ac57b314875f16d5f9", null ],
@@ -18,5 +18,6 @@ var nimconfig_8h =
     [ "CONFIG_BT_NIMBLE_TASK_STACK_SIZE", "nimconfig_8h.html#a227a536958a284235daf409b2b3d1766", null ],
     [ "CONFIG_NIMBLE_CPP_ENABLE_ADVERTISMENT_TYPE_TEXT", "nimconfig_8h.html#a07c0fd3908c3466e9f4835f85d913880", null ],
     [ "CONFIG_NIMBLE_CPP_ENABLE_GAP_EVENT_CODE_TEXT", "nimconfig_8h.html#a97b51f4248845f6225806eadbab3bcdb", null ],
-    [ "CONFIG_NIMBLE_CPP_ENABLE_RETURN_CODE_TEXT", "nimconfig_8h.html#a136a5d626ac04aa780c6ec07ee88d242", null ]
+    [ "CONFIG_NIMBLE_CPP_ENABLE_RETURN_CODE_TEXT", "nimconfig_8h.html#a136a5d626ac04aa780c6ec07ee88d242", null ],
+    [ "CONFIG_NIMBLE_CPP_LOG_LEVEL", "nimconfig_8h.html#a3966debed5a599b8cabff3c50b9fae4f", null ]
 ];
