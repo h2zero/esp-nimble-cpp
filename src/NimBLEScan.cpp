@@ -61,13 +61,22 @@ NimBLEScan::~NimBLEScan() {
 
     switch(event->type) {
 
+        case BLE_GAP_EVENT_EXT_DISC:
         case BLE_GAP_EVENT_DISC: {
             if(pScan->m_ignoreResults) {
                 NIMBLE_LOGI(LOG_TAG, "Scan op in progress - ignoring results");
                 return 0;
             }
+#if MYNEWT_VAL(BLE_EXT_ADV)
+            const auto& disc = event->ext_disc;
+            const auto event_type = disc.legacy_event_type;
+#else
+            const auto& disc = event->disc;
+            const auto event_type = disc.event_type;
+#endif
 
-            NimBLEAddress advertisedAddress(event->disc.addr);
+            NimBLEAddress advertisedAddress(disc.addr);
+            
 
             // Examine our list of ignored addresses and stop processing if we don't want to see it or are already connected
             if(NimBLEDevice::isIgnored(advertisedAddress)) {
@@ -87,7 +96,7 @@ NimBLEScan::~NimBLEScan() {
 
             // If we haven't seen this device before; create a new instance and insert it in the vector.
             // Otherwise just update the relevant parameters of the already known device.
-            if(advertisedDevice == nullptr && event->disc.event_type != BLE_HCI_ADV_RPT_EVTYPE_SCAN_RSP){
+            if(advertisedDevice == nullptr && event_type != BLE_HCI_ADV_RPT_EVTYPE_SCAN_RSP){
                 // Check if we have reach the scan results limit, ignore this one if so.
                 // We still need to store each device when maxResults is 0 to be able to append the scan results
                 if(pScan->m_maxResults > 0 && pScan->m_maxResults < 0xFF &&
@@ -97,7 +106,7 @@ NimBLEScan::~NimBLEScan() {
                 }
                 advertisedDevice = new NimBLEAdvertisedDevice();
                 advertisedDevice->setAddress(advertisedAddress);
-                advertisedDevice->setAdvType(event->disc.event_type);
+                advertisedDevice->setAdvType(event_type);
                 pScan->m_scanResults.m_advertisedDevicesVector.push_back(advertisedDevice);
                 NIMBLE_LOGI(LOG_TAG, "New advertiser: %s", advertisedAddress.toString().c_str());
             } else if(advertisedDevice != nullptr) {
@@ -108,9 +117,9 @@ NimBLEScan::~NimBLEScan() {
             }
 
             advertisedDevice->m_timestamp = time(nullptr);
-            advertisedDevice->setRSSI(event->disc.rssi);
-            advertisedDevice->setPayload(event->disc.data, event->disc.length_data,
-            event->disc.event_type == BLE_HCI_ADV_RPT_EVTYPE_SCAN_RSP);
+            advertisedDevice->setRSSI(disc.rssi);
+            advertisedDevice->setPayload(disc.data, disc.length_data,
+            event_type == BLE_HCI_ADV_RPT_EVTYPE_SCAN_RSP);
 
             if (pScan->m_pAdvertisedDeviceCallbacks) {
                 // If not active scanning or scan response is not available
@@ -123,7 +132,7 @@ NimBLEScan::~NimBLEScan() {
                     pScan->m_pAdvertisedDeviceCallbacks->onResult(advertisedDevice);
 
                 // Otherwise, wait for the scan response so we can report the complete data.
-                } else if (event->disc.event_type == BLE_HCI_ADV_RPT_EVTYPE_SCAN_RSP) {
+                } else if (event_type == BLE_HCI_ADV_RPT_EVTYPE_SCAN_RSP) {
                     advertisedDevice->m_callbackSent = true;
                     pScan->m_pAdvertisedDeviceCallbacks->onResult(advertisedDevice);
                 }
@@ -304,9 +313,18 @@ bool NimBLEScan::start(uint32_t duration, void (*scanCompleteCB)(NimBLEScanResul
         m_ignoreResults = true;
     }
 
+    
+#if MYNEWT_VAL(BLE_EXT_ADV)
+    ble_gap_ext_disc_params                 scan_params;
+    scan_params.passive            = m_scan_params.passive;
+    scan_params.itvl               = m_scan_params.itvl;
+    scan_params.window             = m_scan_params.window;
+    int rc = ble_gap_ext_disc(NimBLEDevice::m_own_addr_type, duration/10, 0, m_scan_params.filter_duplicates, m_scan_params.filter_policy, m_scan_params.limited, &scan_params, &scan_params,
+                          NimBLEScan::handleGapEvent, this);
+#else
     int rc = ble_gap_disc(NimBLEDevice::m_own_addr_type, duration, &m_scan_params,
                           NimBLEScan::handleGapEvent, this);
-
+#endif
     switch(rc) {
         case 0:
             if(!is_continue) {
