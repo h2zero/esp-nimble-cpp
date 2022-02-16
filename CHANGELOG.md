@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.3] - 2022-02-15
+
+### Changed
+- If attribute retrieval fails with a "not found" try again with the 16 bit version if a 128 bit base uuid is used.
+
+### Fixed
+- Memory leak when deleting client instance.
+- IDf version check for data length extension.
+- Memory leak when server services changed.
+- Compiler warnings for non-esp32 devices.
+
 ## [1.3.2] - 2022-01-15
 
 ### Fixed
