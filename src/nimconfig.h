@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#ifdef ESP_PLATFORM
 
 #include "sdkconfig.h"
 #include "nimconfig_rename.h"
@@ -138,3 +139,15 @@
 #define CONFIG_BT_NIMBLE_TASK_STACK_SIZE 4096
 
 #endif // _DOXYGEN_
+
+#else
+#include "syscfg/syscfg.h"
+#define CONFIG_BT_ENABLED
+#define CONFIG_BT_NIMBLE_ROLE_OBSERVER
+#define CONFIG_BT_NIMBLE_ROLE_BROADCASTER
+#define CONFIG_BT_NIMBLE_ROLE_CENTRAL
+#define CONFIG_BT_NIMBLE_ROLE_PERIPHERAL
+#define CONFIG_NIMBLE_CPP_IDF
+#define CONFIG_BT_NIMBLE_MAX_CONNECTIONS 3
+#define CONFIG_NIMBLE_CPP_LOG_LEVEL 0
+#endif

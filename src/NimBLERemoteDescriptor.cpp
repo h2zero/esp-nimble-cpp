@@ -16,6 +16,7 @@
 #if defined(CONFIG_BT_ENABLED) && defined(CONFIG_BT_NIMBLE_ROLE_CENTRAL)
 
 #include "NimBLERemoteDescriptor.h"
+#include "NimBLEDevice.h"
 #include "NimBLEUtils.h"
 #include "NimBLELog.h"
 
@@ -127,10 +128,10 @@ NimBLEAttValue NimBLERemoteDescriptor::readValue() {
 
     int rc = 0;
     int retryCount = 1;
-    TaskHandle_t cur_task = xTaskGetCurrentTaskHandle();
-    ble_task_data_t taskData = {this, cur_task, 0, &value};
 
     do {
+        ble_task_data_t taskData = {this, nullptr, -1, &value};
+
         rc = ble_gattc_read_long(pClient->getConnId(), m_handle, 0,
                                  NimBLERemoteDescriptor::onReadCB,
                                  &taskData);
@@ -140,11 +141,11 @@ NimBLEAttValue NimBLERemoteDescriptor::readValue() {
             return value;
         }
 
-#ifdef ulTaskNotifyValueClear
-        // Clear the task notification value to ensure we block
-        ulTaskNotifyValueClear(cur_task, ULONG_MAX);
-#endif
-        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+        if (!NimBLEDevice::taskWait(&taskData, 10 * 1000)) {
+            NIMBLE_LOGE(LOG_TAG, "Read desc value timeout");
+            return false;
+        }
+
         rc = taskData.rc;
 
         switch(rc){
@@ -208,9 +209,7 @@ int NimBLERemoteDescriptor::onReadCB(uint16_t conn_handle,
         }
     }
 
-    pTaskData->rc = rc;
-    xTaskNotifyGive(pTaskData->task);
-
+    NimBLEDevice::taskComplete(pTaskData, rc);
     return rc;
 }
 
@@ -247,8 +246,7 @@ int NimBLERemoteDescriptor::onWriteCB(uint16_t conn_handle,
 
     NIMBLE_LOGI(LOG_TAG, "Write complete; status=%d conn_handle=%d", error->status, conn_handle);
 
-    pTaskData->rc = error->status;
-    xTaskNotifyGive(pTaskData->task);
+    NimBLEDevice::taskComplete(pTaskData, error->status);
 
     return 0;
 }
@@ -306,10 +304,9 @@ bool NimBLERemoteDescriptor::writeValue(const uint8_t* data, size_t length, bool
         return (rc == 0);
     }
 
-    TaskHandle_t cur_task = xTaskGetCurrentTaskHandle();
-    ble_task_data_t taskData = {this, cur_task, 0, nullptr};
-
     do {
+        ble_task_data_t taskData = {this, nullptr, -1, nullptr};
+
         if(length > mtu) {
             NIMBLE_LOGI(LOG_TAG,"long write %d bytes", length);
             os_mbuf *om = ble_hs_mbuf_from_flat(data, length);
@@ -328,11 +325,11 @@ bool NimBLERemoteDescriptor::writeValue(const uint8_t* data, size_t length, bool
             return false;
         }
 
-#ifdef ulTaskNotifyValueClear
-        // Clear the task notification value to ensure we block
-        ulTaskNotifyValueClear(cur_task, ULONG_MAX);
-#endif
-        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+        if (!NimBLEDevice::taskWait(&taskData, 10 * 1000)) {
+            NIMBLE_LOGE(LOG_TAG, "Desc write value timeout");
+            return false;
+        }
+
         rc = taskData.rc;
 
         switch(rc) {

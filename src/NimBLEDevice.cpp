@@ -35,7 +35,15 @@
 #    include "nimble/esp_port/esp-hci/include/esp_nimble_hci.h"
 #  endif
 #else
-#  include "nimble/nimble/controller/include/controller/ble_phy.h"
+#  include "controller/ble_phy.h"
+#    include "host/ble_hs.h"
+#    include "host/util/util.h"
+#    include "services/gap/ble_svc_gap.h"
+#    include "services/gatt/ble_svc_gatt.h"
+//#include "porting/nimble/include/nimble/nimble_port.h"
+#include "os/os.h"
+
+
 #endif
 
 #ifndef CONFIG_NIMBLE_CPP_IDF
@@ -249,7 +257,7 @@ bool NimBLEDevice::deleteClient(NimBLEClient* pClient) {
         }
 
         while(pClient->isConnected()) {
-            taskYIELD();
+            os_time_delay(1);
         }
         // Since we set the flag to false the app will not get a callback
         // in the disconnect event so we call it here for good measure.
@@ -261,7 +269,7 @@ bool NimBLEDevice::deleteClient(NimBLEClient* pClient) {
             return false;
         }
         while(pClient->m_pTaskData != nullptr) {
-            taskYIELD();
+            os_time_delay(1);
         }
     }
 
@@ -424,12 +432,13 @@ int NimBLEDevice::getPower(esp_ble_power_type_t powerType) {
 #else
 
 void NimBLEDevice::setPower(int dbm) {
-    ble_phy_txpwr_set(dbm);
+    //ble_phy_txpwr_set(dbm);
 }
 
 
 int NimBLEDevice::getPower() {
-    return ble_phy_txpwr_get();
+   // return ble_phy_txpwr_get();
+   return 0;
 }
 #endif
 
@@ -804,7 +813,8 @@ void NimBLEDevice::onSync(void)
 
     // Yield for houskeeping before returning to operations.
     // Occasionally triggers exception without.
-    taskYIELD();
+    //taskYIELD();
+    os_time_delay(1);
 
     m_synced = true;
 
@@ -823,7 +833,6 @@ void NimBLEDevice::onSync(void)
     }
 } // onSync
 
-
 /**
  * @brief The main host task.
  */
@@ -833,11 +842,20 @@ void NimBLEDevice::host_task(void *param)
     NIMBLE_LOGI(LOG_TAG, "BLE Host Task Started");
 
     /* This function will return only when nimble_port_stop() is executed */
+#ifndef MYNEWT
     nimble_port_run();
 
     nimble_port_freertos_deinit();
+#else
+    while (1) {
+        os_eventq_run(os_eventq_dflt_get());
+    }
+#endif
 } // host_task
 
+
+static struct os_task ble_nimble_task;
+static os_stack_t ble_nimble_stack[1024];
 
 /**
  * @brief Initialize the %BLE environment.
@@ -880,7 +898,10 @@ void NimBLEDevice::init(const std::string &deviceName) {
         ESP_ERROR_CHECK(esp_bt_controller_enable(ESP_BT_MODE_BLE));
         ESP_ERROR_CHECK(esp_nimble_hci_init());
 #endif
+
+#ifndef MYNEWT
         nimble_port_init();
+#endif
 
         // Setup callbacks for host events
         ble_hs_cfg.reset_cb = NimBLEDevice::onReset;
@@ -899,15 +920,18 @@ void NimBLEDevice::init(const std::string &deviceName) {
         // Set the device name.
         rc = ble_svc_gap_device_name_set(deviceName.c_str());
         assert(rc == 0);
-
+#ifndef MYNEWT
         ble_store_config_init();
-
         nimble_port_freertos_init(NimBLEDevice::host_task);
+#else
+        os_task_init(&ble_nimble_task, "ble_nimble_task", NimBLEDevice::host_task, NULL, 8,
+                     OS_WAIT_FOREVER, ble_nimble_stack, 1024);
+#endif
     }
 
     // Wait for host and controller to sync before returning and accepting new tasks
     while(!m_synced){
-        taskYIELD();
+        os_time_delay(1);
     }
 
     initialized = true; // Set the initialization flag to ensure we are only initialized once.
@@ -921,9 +945,14 @@ void NimBLEDevice::init(const std::string &deviceName) {
  */
 /* STATIC */
 void NimBLEDevice::deinit(bool clearAll) {
+#ifndef MYNEWT
     int ret = nimble_port_stop();
     if (ret == 0) {
         nimble_port_deinit();
+#else
+    int ret = ble_hs_shutdown(0);
+    if (ret == 0) {
+#endif
 #ifdef ESP_PLATFORM
         ret = esp_nimble_hci_and_controller_deinit();
         if (ret != ESP_OK) {

@@ -12,7 +12,7 @@
 
 #if defined(CONFIG_BT_ENABLED)
 
-#if defined(CONFIG_NIMBLE_CPP_IDF) // using esp-idf
+#if 0  // using esp-idf
 #  include "esp_log.h"
 #  ifndef CONFIG_NIMBLE_CPP_LOG_LEVEL
 #    define CONFIG_NIMBLE_CPP_LOG_LEVEL 0
@@ -39,8 +39,8 @@
      NIMBLE_CPP_LOG_PRINT(ESP_LOG_ERROR, tag, format, ##__VA_ARGS__)
 
 #else // using Arduino
-#  include "nimble/porting/nimble/include/syscfg/syscfg.h"
-#  include "nimble/console/console.h"
+#  include "syscfg/syscfg.h"
+#  include "console/console.h"
 #  ifndef CONFIG_NIMBLE_CPP_LOG_LEVEL
 #    if defined(ARDUINO_ARCH_ESP32) && defined(CORE_DEBUG_LEVEL)
 #      define CONFIG_NIMBLE_CPP_LOG_LEVEL CORE_DEBUG_LEVEL

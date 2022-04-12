@@ -27,7 +27,7 @@
 
 typedef struct {
     void *pATT;
-    TaskHandle_t task;
+    void * task;
     int rc;
     void *buf;
 } ble_task_data_t;

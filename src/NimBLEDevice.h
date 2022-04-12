@@ -175,6 +175,31 @@ public:
     static NimBLEAddress    getBondedAddress(int index);
 #endif
 
+    static bool taskWait(ble_task_data_t* td, uint32_t waitms ) {
+#if 0 //defined INC_FREERTOS_H
+       td->task = xTaskGetCurrentTaskHandle();
+#  ifdef ulTaskNotifyValueClear
+        // Clear the task notification value to ensure we block
+        ulTaskNotifyValueClear(td->task, ULONG_MAX);
+#  endif
+        // Wait for the connect timeout time +1 second for the connection to complete
+        return ulTaskNotifyTake(pdTRUE, pdMS_TO_TICKS(waitms));
+#else
+        ble_npl_time_t ticks = ble_npl_time_ms_to_ticks32(waitms);
+        while(td->rc < 0 && --ticks){
+            ble_npl_time_delay(1);
+        }
+        return (ticks > 0);
+#endif
+    }
+
+    static void taskComplete(ble_task_data_t* td, int rc) {
+        td->rc = rc;
+#if 0 //defined INC_FREERTOS_H
+        xTaskNotifyGive(td->task);
+#endif
+    }
+
 private:
 #if defined( CONFIG_BT_NIMBLE_ROLE_CENTRAL)
     friend class NimBLEClient;

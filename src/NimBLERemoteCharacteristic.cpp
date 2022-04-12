@@ -16,6 +16,7 @@
 #if defined(CONFIG_BT_ENABLED) && defined(CONFIG_BT_NIMBLE_ROLE_CENTRAL)
 
 #include "NimBLERemoteCharacteristic.h"
+#include "NimBLEDevice.h"
 #include "NimBLEUtils.h"
 #include "NimBLELog.h"
 
@@ -179,14 +180,7 @@ int NimBLERemoteCharacteristic::descriptorDiscCB(uint16_t conn_handle,
      *  Else if rc == 0, just return 0 to continue the discovery until we get BLE_HS_EDONE.
      *  If we get any other error code tell the application to abort by returning non-zero in the rc.
      */
-    if (rc == BLE_HS_EDONE) {
-        pTaskData->rc = 0;
-        xTaskNotifyGive(pTaskData->task);
-    } else if(rc != 0) {
-        // Error; abort discovery.
-        pTaskData->rc = rc;
-        xTaskNotifyGive(pTaskData->task);
-    }
+    NimBLEDevice::taskComplete(pTaskData, rc == BLE_HS_EDONE ? 0 : rc);
 
     NIMBLE_LOGD(LOG_TAG,"<< Descriptor Discovered. status: %d", pTaskData->rc);
     return rc;
@@ -216,11 +210,9 @@ int NimBLERemoteCharacteristic::nextCharCB(uint16_t conn_handle,
         rc = BLE_HS_EDONE;
     } else if (rc == BLE_HS_EDONE) {
         pChar->m_endHandle = pChar->getRemoteService()->getEndHandle();
-    } else {
-        pTaskData->rc = rc;
     }
 
-    xTaskNotifyGive(pTaskData->task);
+    NimBLEDevice::taskComplete(pTaskData, rc == BLE_HS_EDONE ? 0 : rc);
     return rc;
 }
 
@@ -238,8 +230,7 @@ bool NimBLERemoteCharacteristic::retrieveDescriptors(const NimBLEUUID *uuid_filt
     }
 
     int rc = 0;
-    TaskHandle_t cur_task = xTaskGetCurrentTaskHandle();
-    ble_task_data_t taskData = {this, cur_task, 0, nullptr};
+    ble_task_data_t taskData = {this, nullptr, -1, nullptr};
 
     // If we don't know the end handle of this characteristic retrieve the next one in the service
     // The end handle is the next characteristic definition handle -1.
@@ -254,11 +245,10 @@ bool NimBLERemoteCharacteristic::retrieveDescriptors(const NimBLEUUID *uuid_filt
             return false;
         }
 
-#ifdef ulTaskNotifyValueClear
-        // Clear the task notification value to ensure we block
-        ulTaskNotifyValueClear(cur_task, ULONG_MAX);
-#endif
-        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+        if (!NimBLEDevice::taskWait(&taskData, 10 * 1000)) {
+            NIMBLE_LOGE(LOG_TAG, "Find end handle timeout");
+            return false;
+        }
 
         if (taskData.rc != 0) {
             NIMBLE_LOGE(LOG_TAG, "Could not retrieve end handle rc=%d", taskData.rc);
@@ -270,6 +260,7 @@ bool NimBLERemoteCharacteristic::retrieveDescriptors(const NimBLEUUID *uuid_filt
         return true;
     }
 
+    taskData.rc = -1;
     desc_filter_t filter = {uuid_filter, &taskData};
 
     rc = ble_gattc_disc_all_dscs(getRemoteService()->getClient()->getConnId(),
@@ -283,11 +274,10 @@ bool NimBLERemoteCharacteristic::retrieveDescriptors(const NimBLEUUID *uuid_filt
         return false;
     }
 
-#ifdef ulTaskNotifyValueClear
-    // Clear the task notification value to ensure we block
-    ulTaskNotifyValueClear(cur_task, ULONG_MAX);
-#endif
-    ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+    if (!NimBLEDevice::taskWait(&taskData, 10 * 1000)) {
+        NIMBLE_LOGE(LOG_TAG, "Discover Descriptors timeout");
+        return false;
+    }
 
     if (taskData.rc != 0) {
         NIMBLE_LOGE(LOG_TAG, "Failed to retrieve descriptors; startHandle:%d endHandle:%d taskData.rc=%d",
@@ -501,10 +491,8 @@ NimBLEAttValue NimBLERemoteCharacteristic::readValue(time_t *timestamp) {
 
     int rc = 0;
     int retryCount = 1;
-    TaskHandle_t cur_task = xTaskGetCurrentTaskHandle();
-    ble_task_data_t taskData = {this, cur_task, 0, &value};
-
     do {
+        ble_task_data_t taskData = {this, nullptr, -1, &value};
         rc = ble_gattc_read_long(pClient->getConnId(), m_handle, 0,
                                  NimBLERemoteCharacteristic::onReadCB,
                                  &taskData);
@@ -514,11 +502,10 @@ NimBLEAttValue NimBLERemoteCharacteristic::readValue(time_t *timestamp) {
             return value;
         }
 
-#ifdef ulTaskNotifyValueClear
-        // Clear the task notification value to ensure we block
-        ulTaskNotifyValueClear(cur_task, ULONG_MAX);
-#endif
-        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+        if (!NimBLEDevice::taskWait(&taskData, 10 * 1000)) {
+            NIMBLE_LOGE(LOG_TAG, "readValue timeout");
+            return value;
+        }
         rc = taskData.rc;
 
         switch(rc){
@@ -588,9 +575,7 @@ int NimBLERemoteCharacteristic::onReadCB(uint16_t conn_handle,
         }
     }
 
-    pTaskData->rc = rc;
-    xTaskNotifyGive(pTaskData->task);
-
+    NimBLEDevice::taskComplete(pTaskData, rc);
     return rc;
 }
 
@@ -783,10 +768,8 @@ bool NimBLERemoteCharacteristic::writeValue(const uint8_t* data, size_t length, 
         return (rc==0);
     }
 
-    TaskHandle_t cur_task = xTaskGetCurrentTaskHandle();
-    ble_task_data_t taskData = {this, cur_task, 0, nullptr};
-
     do {
+        ble_task_data_t taskData = {this, nullptr, -1, nullptr};
         if(length > mtu) {
             NIMBLE_LOGI(LOG_TAG,"long write %d bytes", length);
             os_mbuf *om = ble_hs_mbuf_from_flat(data, length);
@@ -799,16 +782,17 @@ bool NimBLERemoteCharacteristic::writeValue(const uint8_t* data, size_t length, 
                                       NimBLERemoteCharacteristic::onWriteCB,
                                       &taskData);
         }
+
         if (rc != 0) {
             NIMBLE_LOGE(LOG_TAG, "Error: Failed to write characteristic; rc=%d", rc);
             return false;
         }
 
-#ifdef ulTaskNotifyValueClear
-        // Clear the task notification value to ensure we block
-        ulTaskNotifyValueClear(cur_task, ULONG_MAX);
-#endif
-        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+        if (!NimBLEDevice::taskWait(&taskData, 10 * 1000)) {
+            NIMBLE_LOGE(LOG_TAG, "Write value timeout");
+            return false;
+        }
+
         rc = taskData.rc;
 
         switch(rc){
@@ -854,11 +838,10 @@ int NimBLERemoteCharacteristic::onWriteCB(uint16_t conn_handle,
         return 0;
     }
 
-    NIMBLE_LOGI(LOG_TAG, "Write complete; status=%d conn_handle=%d", error->status, conn_handle);
+    int rc = error->status;
+    NIMBLE_LOGI(LOG_TAG, "Write complete; status=%d conn_handle=%d", rc, conn_handle);
 
-    pTaskData->rc = error->status;
-    xTaskNotifyGive(pTaskData->task);
-
+    NimBLEDevice::taskComplete(pTaskData, rc == BLE_HS_EDONE ? 0 : rc);
     return 0;
 }
 
