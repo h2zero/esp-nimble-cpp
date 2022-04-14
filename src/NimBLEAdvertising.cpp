@@ -13,13 +13,16 @@
  *      Author: kolban
  *
  */
-#include "sdkconfig.h"
-#if defined(CONFIG_BT_ENABLED)
-
 #include "nimconfig.h"
-#if defined(CONFIG_BT_NIMBLE_ROLE_BROADCASTER)
+#if (defined(CONFIG_BT_ENABLED) && \
+    defined(CONFIG_BT_NIMBLE_ROLE_BROADCASTER) && \
+    !CONFIG_BT_NIMBLE_EXT_ADV) || defined(_DOXYGEN_)
 
+#if defined(CONFIG_NIMBLE_CPP_IDF)
 #include "services/gap/ble_svc_gap.h"
+#else
+#include "nimble/nimble/host/services/gap/include/services/gap/ble_svc_gap.h"
+#endif
 #include "NimBLEAdvertising.h"
 #include "NimBLEDevice.h"
 #include "NimBLEServer.h"
@@ -68,6 +71,7 @@ void NimBLEAdvertising::reset() {
     m_advDataSet                     = false;
     // Set this to non-zero to prevent auto start if host reset before started by app.
     m_duration                       = BLE_HS_FOREVER;
+    m_advCompCB                      = nullptr;
 } // reset
 
 
@@ -410,7 +414,7 @@ bool NimBLEAdvertising::start(uint32_t duration, void (*advCompleteCB)(NimBLEAdv
     // If already advertising just return
     if(ble_gap_adv_active()) {
         NIMBLE_LOGW(LOG_TAG, "Advertising already active");
-        return false;
+        return true;
     }
 
     // Save the duration incase of host reset so we can restart with the same params
@@ -623,13 +627,17 @@ bool NimBLEAdvertising::start(uint32_t duration, void (*advCompleteCB)(NimBLEAdv
                            &m_advParams,
                            (pServer != nullptr) ? NimBLEServer::handleGapEvent :
                                                   NimBLEAdvertising::handleGapEvent,
-                           (pServer != nullptr) ? (void*)pServer : (void*)this);
+                           (void*)this);
 #else
     rc = ble_gap_adv_start(NimBLEDevice::m_own_addr_type, NULL, duration,
                            &m_advParams, NimBLEAdvertising::handleGapEvent, this);
 #endif
     switch(rc) {
         case 0:
+             break;
+
+        case BLE_HS_EALREADY:
+             NIMBLE_LOGI(LOG_TAG, "Advertisement Already active");
              break;
 
         case BLE_HS_EINVAL:
@@ -653,29 +661,27 @@ bool NimBLEAdvertising::start(uint32_t duration, void (*advCompleteCB)(NimBLEAdv
             break;
     }
 
-    if(rc != 0) {
-        return false;
-    }
-
     NIMBLE_LOGD(LOG_TAG, "<< Advertising start");
-    return true;
+    return (rc == 0 || rc == BLE_HS_EALREADY);
 } // start
 
 
 /**
  * @brief Stop advertising.
+ * @return True if advertising stopped successfully.
  */
-void NimBLEAdvertising::stop() {
+bool NimBLEAdvertising::stop() {
     NIMBLE_LOGD(LOG_TAG, ">> stop");
 
     int rc = ble_gap_adv_stop();
     if (rc != 0 && rc != BLE_HS_EALREADY) {
         NIMBLE_LOGE(LOG_TAG, "ble_gap_adv_stop rc=%d %s",
                     rc, NimBLEUtils::returnCodeToString(rc));
-        return;
+        return false;
     }
 
     NIMBLE_LOGD(LOG_TAG, "<< stop");
+    return true;
 } // stop
 
 
@@ -1028,5 +1034,4 @@ std::string NimBLEAdvertisementData::getPayload() {
     return m_payload;
 } // getPayload
 
-#endif // #if defined(CONFIG_BT_NIMBLE_ROLE_PERIPHERAL)
-#endif /* CONFIG_BT_ENABLED */
+#endif /* CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_BROADCASTER  && !CONFIG_BT_NIMBLE_EXT_ADV */
