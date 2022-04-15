@@ -41,6 +41,7 @@ idf_component_register(
     "src/NimBLEEddystoneURL.cpp"
     "src/NimBLEExtAdvertising.cpp"
     "src/NimBLEHIDDevice.cpp"
+    "src/NimBLEMeshCreateModel.c"
     "src/NimBLEMeshElement.cpp"
     "src/NimBLEMeshModel.cpp"
     "src/NimBLEMeshNode.cpp"
