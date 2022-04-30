@@ -16,7 +16,7 @@ void scanEndedCB(NimBLEScanResults results);
 static NimBLEAdvertisedDevice* advDevice;
 
 static bool doConnect = false;
-static uint32_t scanTime = 0; /** 0 = scan forever */
+static uint32_t scanTime = 0; /** scan time in milliseconds, 0 = scan forever */
 
 
 /**  None of these are required as they will be handled by the library with defaults. **
