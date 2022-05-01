@@ -358,13 +358,13 @@ int NimBLEServer::handleGapEvent(struct ble_gap_event *event, void *arg) {
             else {
                 server->m_connectedPeersVec.push_back(event->connect.conn_handle);
 
-                rc = ble_gap_conn_find(event->connect.conn_handle, &desc);
+                NimBLEConnInfo peerInfo;
+                rc = ble_gap_conn_find(event->connect.conn_handle, &peerInfo.m_desc);
                 if (rc != 0) {
                     return 0;
                 }
 
-                server->m_pServerCallbacks->onConnect(server);
-                server->m_pServerCallbacks->onConnect(server, &desc);
+                server->m_pServerCallbacks->onConnect(server, peerInfo);
             }
 
             return 0;
@@ -395,8 +395,8 @@ int NimBLEServer::handleGapEvent(struct ble_gap_event *event, void *arg) {
                 server->resetGATT();
             }
 
-            server->m_pServerCallbacks->onDisconnect(server);
-            server->m_pServerCallbacks->onDisconnect(server, &event->disconnect.conn);
+            NimBLEConnInfo peerInfo(event->disconnect.conn);
+            server->m_pServerCallbacks->onDisconnect(server, peerInfo, event->disconnect.reason);
 
 #if !CONFIG_BT_NIMBLE_EXT_ADV
             if(server->m_advertiseOnDisconnect) {
@@ -439,12 +439,13 @@ int NimBLEServer::handleGapEvent(struct ble_gap_event *event, void *arg) {
             NIMBLE_LOGI(LOG_TAG, "mtu update event; conn_handle=%d mtu=%d",
                         event->mtu.conn_handle,
                         event->mtu.value);
-            rc = ble_gap_conn_find(event->mtu.conn_handle, &desc);
+            NimBLEConnInfo peerInfo;
+            rc = ble_gap_conn_find(event->mtu.conn_handle, &peerInfo.m_desc);
             if (rc != 0) {
                 return 0;
             }
 
-            server->m_pServerCallbacks->onMTUChange(event->mtu.value, &desc);
+            server->m_pServerCallbacks->onMTUChange(event->mtu.value, peerInfo);
             return 0;
         } // BLE_GAP_EVENT_MTU
 
@@ -526,7 +527,8 @@ int NimBLEServer::handleGapEvent(struct ble_gap_event *event, void *arg) {
         } // BLE_GAP_EVENT_REPEAT_PAIRING
 
         case BLE_GAP_EVENT_ENC_CHANGE: {
-            rc = ble_gap_conn_find(event->enc_change.conn_handle, &desc);
+            NimBLEConnInfo peerInfo;
+            rc = ble_gap_conn_find(event->enc_change.conn_handle, &peerInfo.m_desc);
             if(rc != 0) {
                 return BLE_ATT_ERR_INVALID_HANDLE;
             }
@@ -535,7 +537,7 @@ int NimBLEServer::handleGapEvent(struct ble_gap_event *event, void *arg) {
                 NimBLEDevice::m_securityCallbacks->onAuthenticationComplete(&desc);
             /////////////////////////////////////////////
             } else {
-                server->m_pServerCallbacks->onAuthenticationComplete(&desc);
+                server->m_pServerCallbacks->onAuthenticationComplete(peerInfo);
             }
 
             return 0;
@@ -873,49 +875,31 @@ void NimBLEServer::clearIndicateWait(uint16_t conn_handle) {
 
 
 /** Default callback handlers */
-
-void NimBLEServerCallbacks::onConnect(NimBLEServer* pServer) {
+void NimBLEServerCallbacks::onConnect(NimBLEServer* pServer, NimBLEConnInfo& connInfo) {
     NIMBLE_LOGD("NimBLEServerCallbacks", "onConnect(): Default");
 } // onConnect
 
-
-void NimBLEServerCallbacks::onConnect(NimBLEServer* pServer, ble_gap_conn_desc* desc) {
-    NIMBLE_LOGD("NimBLEServerCallbacks", "onConnect(): Default");
-} // onConnect
-
-
-void NimBLEServerCallbacks::onDisconnect(NimBLEServer* pServer) {
+void NimBLEServerCallbacks::onDisconnect(NimBLEServer* pServer,
+                                         NimBLEConnInfo& connInfo, int reason) {
     NIMBLE_LOGD("NimBLEServerCallbacks", "onDisconnect(): Default");
 } // onDisconnect
 
-void NimBLEServerCallbacks::onDisconnect(NimBLEServer* pServer, ble_gap_conn_desc* desc) {
-    NIMBLE_LOGD("NimBLEServerCallbacks", "onDisconnect(): Default");
-} // onDisconnect
-
-void NimBLEServerCallbacks::onMTUChange(uint16_t MTU, ble_gap_conn_desc* desc) {
+void NimBLEServerCallbacks::onMTUChange(uint16_t MTU, NimBLEConnInfo& connInfo) {
     NIMBLE_LOGD("NimBLEServerCallbacks", "onMTUChange(): Default");
 } // onMTUChange
 
 uint32_t NimBLEServerCallbacks::onPassKeyRequest(){
     NIMBLE_LOGD("NimBLEServerCallbacks", "onPassKeyRequest: default: 123456");
     return 123456;
-}
-/*
-void NimBLEServerCallbacks::onPassKeyNotify(uint32_t pass_key){
-    NIMBLE_LOGD("NimBLEServerCallbacks", "onPassKeyNotify: default: %d", pass_key);
-}
+} //onPassKeyRequest
 
-bool NimBLEServerCallbacks::onSecurityRequest(){
-    NIMBLE_LOGD("NimBLEServerCallbacks", "onSecurityRequest: default: true");
-    return true;
-}
-*/
-void NimBLEServerCallbacks::onAuthenticationComplete(ble_gap_conn_desc*){
+void NimBLEServerCallbacks::onAuthenticationComplete(NimBLEConnInfo& connInfo){
     NIMBLE_LOGD("NimBLEServerCallbacks", "onAuthenticationComplete: default");
-}
+} // onAuthenticationComplete
+
 bool NimBLEServerCallbacks::onConfirmPIN(uint32_t pin){
     NIMBLE_LOGD("NimBLEServerCallbacks", "onConfirmPIN: default: true");
     return true;
-}
+} // onConfirmPIN
 
 #endif /* CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_PERIPHERAL */
