@@ -12,6 +12,10 @@ elseif("nimble" IN_LIST BUILD_COMPONENTS OR "__nimble" IN_LIST __hack_component_
     list(APPEND ESP_NIMBLE_PRIV_REQUIRES
         nimble
     )
+elseif("bt" IN_LIST BUILD_COMPONENTS OR "__bt" IN_LIST __hack_component_targets)
+    list(APPEND ESP_NIMBLE_PRIV_REQUIRES
+        bt
+    )
 endif()
 
 if("arduino" IN_LIST BUILD_COMPONENTS OR __hack_component_targets MATCHES "__idf_arduino")
@@ -20,15 +24,7 @@ if("arduino" IN_LIST BUILD_COMPONENTS OR __hack_component_targets MATCHES "__idf
     )
 endif()
 
-idf_component_register(
-  REQUIRED_IDF_TARGETS
-    "esp32"
-    "esp32s3"
-    "esp32c3"
-  INCLUDE_DIRS
-    "src"
-  SRCS
-    "src/NimBLE2904.cpp"
+set(srcs "src/NimBLE2904.cpp"
     "src/NimBLEAddress.cpp"
     "src/NimBLEAdvertisedDevice.cpp"
     "src/NimBLEAdvertising.cpp"
@@ -41,10 +37,6 @@ idf_component_register(
     "src/NimBLEEddystoneURL.cpp"
     "src/NimBLEExtAdvertising.cpp"
     "src/NimBLEHIDDevice.cpp"
-    "src/NimBLEMeshCreateModel.c"
-    "src/NimBLEMeshElement.cpp"
-    "src/NimBLEMeshModel.cpp"
-    "src/NimBLEMeshNode.cpp"
     "src/NimBLERemoteCharacteristic.cpp"
     "src/NimBLERemoteDescriptor.cpp"
     "src/NimBLERemoteService.cpp"
@@ -53,10 +45,33 @@ idf_component_register(
     "src/NimBLEServer.cpp"
     "src/NimBLEService.cpp"
     "src/NimBLEUtils.cpp"
-    "src/NimBLEUUID.cpp"
+    "src/NimBLEUUID.cpp")
+
+if(CONFIG_BT_NIMBLE_MESH)
+    list(APPEND srcs "src/mesh_config_store/config/config_store.c"
+    "src/NimBLEMeshCreateModel.c"
+    "src/NimBLEMeshElement.cpp"
+    "src/NimBLEMeshModel.cpp"
+    "src/NimBLEMeshNode.cpp")
+endif()
+
+idf_component_register(
+  REQUIRED_IDF_TARGETS
+    "esp32"
+    "esp32s3"
+    "esp32c3"
+  INCLUDE_DIRS
+    "src"
+  SRCS "${srcs}"
+
   REQUIRES
     bt
     nvs_flash
   PRIV_REQUIRES
     ${ESP_NIMBLE_PRIV_REQUIRES}
 )
+
+if(CONFIG_BT_NIMBLE_MESH)
+  idf_build_set_property(COMPILE_OPTIONS "-DMYNEWT_VAL_BLE_MESH_SETTINGS=1" APPEND)
+  idf_build_set_property(COMPILE_OPTIONS "-I${COMPONENT_DIR}/src/mesh_config_store" APPEND)
+endif()
