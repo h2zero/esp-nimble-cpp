@@ -13,18 +13,6 @@ NimBLE is a completely open source Bluetooth Low Energy stack produced by [Apach
 It is more suited to resource constrained devices than bluedroid and has now been ported to the ESP32 by Espressif.  
 <br/>
 
-# Arduino Installation
-**Arduino Library manager:** Go to `sketch` -> `Include Library` -> `Manage Libraries` and search for NimBLE and install.  
-
-**Alternatively:** Download as .zip and extract to Arduino/libraries folder, or in Arduino IDE from Sketch menu -> Include library -> Add .Zip library.  
-
-`#include "NimBLEDevice.h"` at the beginning of your sketch.  
-
-Call `NimBLEDevice::init` in `setup`.
-
-Tested and working with esp32-arduino in Arduino IDE and platform IO.  
-<br/>  
-
 # ESP-IDF Installation
 ### v4.0+
 Download as .zip and extract or clone into the components folder in your esp-idf project.
@@ -56,21 +44,6 @@ Also see [Improvements and updates](Improvements_and_updates.md) for information
 
 For more advanced usage see [Usage tips](Usage_tips.md) for more performance and optimization.  
 <br/>
-
-### Arduino specific
-See the Refactored_original_examples in the examples folder for highlights of the differences with the original library.  
-
-More advanced examples highlighting many available features are in examples/NimBLE_Server, NimBLE_Client.  
-    
-Beacon examples provided by [beegee-tokyo](https://github.com/beegee-tokyo) are in examples/BLE_Beacon_Scanner, BLE_EddystoneTLM_Beacon, BLE_EddystoneURL_Beacon.  
-
-Change the settings in the nimconfig.h file to customize NimBLE to your project, such as increasing max connections (default is 3).  
-<br/>
-
-### Arduino command line and platformio
-As an alternative to changing the configuration in nimconfig.h, Arduino command line and platformio.ini options are available.  
-See the command line configuration options available in [Command line config](Command_line_config.md).  
-<br/>  
 
 # Need help? Have a question or suggestion?
 Come chat on [gitter](https://gitter.im/NimBLE-Arduino/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link) or open an issue at [NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino/issues) or [esp-nimble-cpp](https://github.com/h2zero/esp-nimble-cpp/issues)  

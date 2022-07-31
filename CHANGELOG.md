@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.0] - 2022-07-31
+
+### Fixed
+- Fixed missing data from long notification values.
+- Fixed NimbleCharacteristicCallbacks::onRead not being called when a non-long read command is received.
+- Prevent a potential crash when retrieving characteristics from a service if the result was successful but no characteristics found.
+- logs/typos.
+
+### Changed
+- AD flags are no longer set in the advertisements of non-connectable beacons, freeing up 3 bytes of advertisement room.
+- Save resources when retrieving descriptors if the characteristic handle is the same as the end handle (no descriptors).
+- Subscribing to characteristic notifications/indications will now always use write with response, as per BLE specifications.
+- `NimBLEClient::discoverAttributes` now returns a bool value to indicate success/failure.
+- Scan result callbacks are no longer called when the scan response data is updated in order to reduce duplicates.
+
+### Added
+- Preliminary support for non-esp devices, NRF51 and NRF52 devices supported with [n-able arduino core](https://github.com/h2zero/n-able-Arduino)
+- Alias added for  `NimBLEServerCallbacks::onMTUChange` to `onMtuChanged` in order to support porting code from original library.
+- `NimBLEAttValue` Class added to reduce and control RAM footprint of characteristic/descriptor values and support conversions from Arduino Strings and many other data types.
+- Bluetooth 5 extended advertising support for capable devices. CODED Phy, 2M Phy, extended advertising data, and multi-advertising are supported, periodic advertising will be implemented in the future.
+
 ## [1.3.3] - 2022-02-15
 
 ### Changed
