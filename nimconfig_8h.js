@@ -16,6 +16,8 @@ var nimconfig_8h =
     [ "CONFIG_BT_NIMBLE_SVC_GAP_APPEARANCE", "nimconfig_8h.html#a300d3f8ff48d217a1a2b6608454dfadb", null ],
     [ "CONFIG_BT_NIMBLE_SVC_GAP_DEVICE_NAME", "nimconfig_8h.html#a7b98160e6904e45e99e28a7fcc6b2a3a", null ],
     [ "CONFIG_BT_NIMBLE_TASK_STACK_SIZE", "nimconfig_8h.html#a227a536958a284235daf409b2b3d1766", null ],
+    [ "CONFIG_NIMBLE_CPP_ATT_VALUE_INIT_LENGTH", "nimconfig_8h.html#a4d4ea715325f75455b43c7dbaa69d7a0", null ],
+    [ "CONFIG_NIMBLE_CPP_ATT_VALUE_TIMESTAMP_ENABLED", "nimconfig_8h.html#abe2e5c7dbca929d3ed6cf70a73aced23", null ],
     [ "CONFIG_NIMBLE_CPP_ENABLE_ADVERTISMENT_TYPE_TEXT", "nimconfig_8h.html#a07c0fd3908c3466e9f4835f85d913880", null ],
     [ "CONFIG_NIMBLE_CPP_ENABLE_GAP_EVENT_CODE_TEXT", "nimconfig_8h.html#a97b51f4248845f6225806eadbab3bcdb", null ],
     [ "CONFIG_NIMBLE_CPP_ENABLE_RETURN_CODE_TEXT", "nimconfig_8h.html#a136a5d626ac04aa780c6ec07ee88d242", null ],

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>esp-nimble-cpp: K:/Users/Ryan/Desktop/thermo-git/components/esp-nimble-cpp/src/nimconfig.h File Reference</title>
+<title>esp-nimble-cpp: K:/Users/Ryan/Desktop/test_idf/components/esp-nimble-cpp/src/nimconfig.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">esp-nimble-cpp
-   &#160;<span id="projectnumber">1.3.2</span>
+   &#160;<span id="projectnumber">1.4.0</span>
    </div>
   </td>
  </tr>
@@ -97,6 +97,22 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nimconfig_8h.html#a2ea633774bbf41ac57b314875f16d5f9">CONFIG_BT_NIMBLE_MAX_CONNECTIONS</a>&#160;&#160;&#160;3</td></tr>
 <tr class="memdesc:a2ea633774bbf41ac57b314875f16d5f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Un-comment to change the number of simultaneous connections (esp controller max is 9) <br /></td></tr>
 <tr class="separator:a2ea633774bbf41ac57b314875f16d5f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe2e5c7dbca929d3ed6cf70a73aced23"><td class="memItemLeft" align="right" valign="top"><a id="abe2e5c7dbca929d3ed6cf70a73aced23"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nimconfig_8h.html#abe2e5c7dbca929d3ed6cf70a73aced23">CONFIG_NIMBLE_CPP_ATT_VALUE_TIMESTAMP_ENABLED</a>&#160;&#160;&#160;0</td></tr>
+<tr class="memdesc:abe2e5c7dbca929d3ed6cf70a73aced23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Un-comment to enable storing the timestamp when an attribute value is updated<br  />
+This allows for checking the last update time using getTimeStamp() or getValue(time_t*)<br  />
+If disabled, the timestamp returned from these functions will be 0.<br  />
+Disabling timestamps will reduce the memory used for each value.<br  />
+1 = Enabled, 0 = Disabled; Default = Disabled. <br /></td></tr>
+<tr class="separator:abe2e5c7dbca929d3ed6cf70a73aced23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d4ea715325f75455b43c7dbaa69d7a0"><td class="memItemLeft" align="right" valign="top"><a id="a4d4ea715325f75455b43c7dbaa69d7a0"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nimconfig_8h.html#a4d4ea715325f75455b43c7dbaa69d7a0">CONFIG_NIMBLE_CPP_ATT_VALUE_INIT_LENGTH</a>&#160;&#160;&#160;20</td></tr>
+<tr class="memdesc:a4d4ea715325f75455b43c7dbaa69d7a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uncomment to set the default allocation size (bytes) for each attribute if<br  />
+not specified when the constructor is called. This is also the size used when a remote<br  />
+characteristic or descriptor is constructed before a value is read/notifed.<br  />
+Increasing this will reduce reallocations but increase memory footprint.<br  />
+Default value is 20. Range: 1 : 512 (BLE_ATT_ATTR_MAX_LEN) <br /></td></tr>
+<tr class="separator:a4d4ea715325f75455b43c7dbaa69d7a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8fa28ebea6e979630359a2acde3ae578"><td class="memItemLeft" align="right" valign="top"><a id="a8fa28ebea6e979630359a2acde3ae578"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nimconfig_8h.html#a8fa28ebea6e979630359a2acde3ae578">CONFIG_BT_NIMBLE_ATT_PREFERRED_MTU</a>&#160;&#160;&#160;255</td></tr>
 <tr class="memdesc:a8fa28ebea6e979630359a2acde3ae578"><td class="mdescLeft">&#160;</td><td class="mdescRight">Un-comment to change the default MTU size. <br /></td></tr>
