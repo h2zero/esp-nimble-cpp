@@ -86,6 +86,7 @@ class CharacteristicCallbacks: public NimBLECharacteristicCallbacks {
                             pCharacteristic->getUUID().toString().c_str(),
                             pCharacteristic->getValue().c_str());
     };
+
     /** Called before notification or indication is sent, 
      *  the value can be changed here before sending if desired.
      */
@@ -94,21 +95,38 @@ class CharacteristicCallbacks: public NimBLECharacteristicCallbacks {
     };
 
 
-    /** The status returned in status is defined in NimBLECharacteristic.h.
+    /**
      *  The value returned in code is the NimBLE host return code.
      */
-    void onStatus(NimBLECharacteristic* pCharacteristic, Status status, int code) {
-        printf("Notification/Indication status code: %d , return code: %d, %s\n",
-                            status,
-                            code,
-                            NimBLEUtils::returnCodeToString(code));
+    void onStatus(NimBLECharacteristic* pCharacteristic, int code) {
+        printf("Notification/Indication return code: %d, %s\n",
+               code, NimBLEUtils::returnCodeToString(code));
+    };
+
+    void onSubscribe(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo, uint16_t subValue) {
+        std::string str = "Client ID: ";
+        str += connInfo.getConnHandle();
+        str += " Address: ";
+        str += connInfo.getAddress().toString();
+        if(subValue == 0) {
+            str += " Unsubscribed to ";
+        }else if(subValue == 1) {
+            str += " Subscribed to notfications for ";
+        } else if(subValue == 2) {
+            str += " Subscribed to indications for ";
+        } else if(subValue == 3) {
+            str += " Subscribed to notifications and indications for ";
+        }
+        str += std::string(pCharacteristic->getUUID());
+
+        printf("%s\n", str.c_str());
     };
 };
     
 /** Handler class for descriptor actions */    
 class DescriptorCallbacks : public NimBLEDescriptorCallbacks {
     void onWrite(NimBLEDescriptor* pDescriptor) {
-        std::string dscVal((char*)pDescriptor->getValue(), pDescriptor->getLength());
+        std::string dscVal = pDescriptor->getValue();
         printf("Descriptor witten value: %s\n", dscVal.c_str());
     };
 
