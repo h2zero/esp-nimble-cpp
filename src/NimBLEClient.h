@@ -130,6 +130,7 @@ public:
     /**
      * @brief Called when disconnected from the server.
      * @param [in] pClient A pointer to the calling client object.
+     * @param [in] reason Contains the reason code for the disconnection.
      */
     virtual void onDisconnect(NimBLEClient* pClient);
 
@@ -152,7 +153,7 @@ public:
 
     /**
      * @brief Called when the pairing procedure is complete.
-     * @param [in] desc A pointer to the struct containing the connection information.\n
+     * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.\n
      * This can be used to check the status of the connection encryption/pairing.
      */
     virtual void onAuthenticationComplete(ble_gap_conn_desc* desc);

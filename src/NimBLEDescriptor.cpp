@@ -285,6 +285,7 @@ NimBLEDescriptorCallbacks::~NimBLEDescriptorCallbacks() {}
 /**
  * @brief Callback function to support a read request.
  * @param [in] pDescriptor The descriptor that is the source of the event.
+ * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
  */
 void NimBLEDescriptorCallbacks::onRead(NimBLEDescriptor* pDescriptor) {
     (void)pDescriptor;
@@ -295,6 +296,7 @@ void NimBLEDescriptorCallbacks::onRead(NimBLEDescriptor* pDescriptor) {
 /**
  * @brief Callback function to support a write request.
  * @param [in] pDescriptor The descriptor that is the source of the event.
+ * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
  */
 void NimBLEDescriptorCallbacks::onWrite(NimBLEDescriptor* pDescriptor) {
     (void)pDescriptor;
