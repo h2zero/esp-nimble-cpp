@@ -19,15 +19,9 @@ static NimBLEServer* pServer;
 /**  None of these are required as they will be handled by the library with defaults. **
  **                       Remove as you see fit for your needs                        */  
 class ServerCallbacks: public NimBLEServerCallbacks {
-    void onConnect(NimBLEServer* pServer) {
-        printf("Client connected\n");
-        NimBLEDevice::startAdvertising();
-    };
-    /** Alternative onConnect() method to extract details of the connection. 
-     *  See: src/ble_gap.h for the details of the ble_gap_conn_desc struct.
-     */  
-    void onConnect(NimBLEServer* pServer, ble_gap_conn_desc* desc) {
-        printf("Client address: %s\n", NimBLEAddress(desc->peer_ota_addr).toString().c_str());
+    void onConnect(NimBLEServer* pServer, NimBLEConnInfo& connInfo) {
+        printf("Client address: %s\n", connInfo.getAddress().toString().c_str());
+        
         /** We can use the connection handle here to ask for different connection parameters.
          *  Args: connection handle, min connection interval, max connection interval
          *  latency, supervision timeout.
@@ -35,14 +29,17 @@ class ServerCallbacks: public NimBLEServerCallbacks {
          *  Latency: number of intervals allowed to skip.
          *  Timeout: 10 millisecond increments, try for 3x interval time for best results.  
          */
-        pServer->updateConnParams(desc->conn_handle, 24, 48, 0, 18);
+        pServer->updateConnParams(connInfo.getConnHandle(), 24, 48, 0, 18);
     };
-    void onDisconnect(NimBLEServer* pServer) {
+    
+    void onDisconnect(NimBLEServer* pServer, NimBLEConnInfo& connInfo, int reason) {
         printf("Client disconnected - start advertising\n");
         NimBLEDevice::startAdvertising();
     };
-    void onMTUChange(uint16_t MTU, ble_gap_conn_desc* desc) {
-        printf("MTU updated: %u for connection ID: %u\n", MTU, desc->conn_handle);
+
+    void onMTUChange(uint16_t MTU, NimBLEConnInfo& connInfo) {
+        printf("MTU updated: %u for connection ID: %u\n", MTU, connInfo.getConnHandle());
+        pServer->updateConnParams(connInfo.getConnHandle(), 24, 48, 0, 60);
     };
     
 /********************* Security handled here **********************
@@ -61,11 +58,10 @@ class ServerCallbacks: public NimBLEServerCallbacks {
         return true; 
     };
 
-    void onAuthenticationComplete(ble_gap_conn_desc* desc){
+    void onAuthenticationComplete(NimBLEConnInfo& connInfo){
         /** Check that encryption was successful, if not we disconnect the client */  
-        if(!desc->sec_state.encrypted) {
-            /** NOTE: createServer returns the current server reference unless one is not already created */
-            NimBLEDevice::createServer()->disconnect(desc->conn_handle);
+        if(!connInfo.isEncrypted()) {
+            NimBLEDevice::getServer()->disconnect(connInfo.getConnHandle());
             printf("Encrypt connection failed - disconnecting client\n");
             return;
         }
@@ -75,25 +71,24 @@ class ServerCallbacks: public NimBLEServerCallbacks {
 
 /** Handler class for characteristic actions */
 class CharacteristicCallbacks: public NimBLECharacteristicCallbacks {
-    void onRead(NimBLECharacteristic* pCharacteristic){
+    void onRead(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo) {
         printf("%s : onRead(), value: %s\n", 
-                            pCharacteristic->getUUID().toString().c_str(),
-                            pCharacteristic->getValue().c_str());
-    };
+               pCharacteristic->getUUID().toString().c_str(),
+               pCharacteristic->getValue().c_str());
+    }
 
-    void onWrite(NimBLECharacteristic* pCharacteristic) {
+    void onWrite(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo) {
         printf("%s : onWrite(), value: %s\n", 
-                            pCharacteristic->getUUID().toString().c_str(),
-                            pCharacteristic->getValue().c_str());
-    };
+               pCharacteristic->getUUID().toString().c_str(),
+               pCharacteristic->getValue().c_str());
+    }
 
     /** Called before notification or indication is sent, 
      *  the value can be changed here before sending if desired.
      */
     void onNotify(NimBLECharacteristic* pCharacteristic) {
         printf("Sending notification to clients\n");
-    };
-
+    }
 
     /**
      *  The value returned in code is the NimBLE host return code.
@@ -101,7 +96,7 @@ class CharacteristicCallbacks: public NimBLECharacteristicCallbacks {
     void onStatus(NimBLECharacteristic* pCharacteristic, int code) {
         printf("Notification/Indication return code: %d, %s\n",
                code, NimBLEUtils::returnCodeToString(code));
-    };
+    }
 
     void onSubscribe(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo, uint16_t subValue) {
         std::string str = "Client ID: ";
@@ -120,17 +115,17 @@ class CharacteristicCallbacks: public NimBLECharacteristicCallbacks {
         str += std::string(pCharacteristic->getUUID());
 
         printf("%s\n", str.c_str());
-    };
+    }
 };
     
 /** Handler class for descriptor actions */    
 class DescriptorCallbacks : public NimBLEDescriptorCallbacks {
-    void onWrite(NimBLEDescriptor* pDescriptor) {
+    void onWrite(NimBLEDescriptor* pDescriptor, NimBLEConnInfo& connInfo) {
         std::string dscVal = pDescriptor->getValue();
         printf("Descriptor witten value: %s\n", dscVal.c_str());
     };
 
-    void onRead(NimBLEDescriptor* pDescriptor) {
+    void onRead(NimBLEDescriptor* pDescriptor, NimBLEConnInfo& connInfo) {
         printf("%s Descriptor read\n", pDescriptor->getUUID().toString().c_str());
     };;
 };
