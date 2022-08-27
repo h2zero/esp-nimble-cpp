@@ -47,3 +47,12 @@ jobs:
           . ${IDF_PATH}/export.sh
           cp -r components/esp-nimble-cpp/examples/* .
           idf.py -C ${{ matrix.example }} -DEXTRA_COMPONENT_DIRS=$PWD/components build
+
+  build_docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Doxygen Action
+        uses: mattnotmitt/doxygen-action@v1.9.1
+        with:
+          working-directory: 'docs/'
