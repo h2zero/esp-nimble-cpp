@@ -11,8 +11,6 @@
 
 extern "C" void app_main(void);
 
-void scanEndedCB(NimBLEScanResults results);
-
 #define SERVICE_UUID        "ABCD"
 #define CHARACTERISTIC_UUID "1234"
 
@@ -32,14 +30,13 @@ class ClientCallbacks : public NimBLEClientCallbacks {
     void onDisconnect(NimBLEClient* pClient, int reason) {
         printf("%s Disconnected, reason = %d - Starting scan\n",
                       pClient->getPeerAddress().toString().c_str(), reason);
-        NimBLEDevice::getScan()->start(scanTime, scanEndedCB);
+        NimBLEDevice::getScan()->start(scanTime);
     };
 };
 
 
 /* Define a class to handle the callbacks when advertisements are received */
-class AdvertisedDeviceCallbacks: public NimBLEAdvertisedDeviceCallbacks {
-
+class scanCallbacks: public NimBLEScanCallbacks {
     void onResult(NimBLEAdvertisedDevice* advertisedDevice) {
         printf("Advertised Device found: %s\n", advertisedDevice->toString().c_str());
         if(advertisedDevice->isAdvertisingService(NimBLEUUID("ABCD")))
@@ -52,17 +49,13 @@ class AdvertisedDeviceCallbacks: public NimBLEAdvertisedDeviceCallbacks {
             /* stop scan before connecting */
             NimBLEDevice::getScan()->stop();
         }
-    };
-};
-
-
-/* Callback to process the results of the last scan or restart it */
-void scanEndedCB(NimBLEScanResults results){
-    printf("Scan Ended\n");
-    if (!doConnect) { /* Don't start the scan while connecting */
-        NimBLEDevice::getScan()->start(scanTime, scanEndedCB);
     }
-}
+
+    /** Callback to process the results of the completed scan or restart it */
+    void onScanEnd(NimBLEScanResults results) {
+        printf("Scan Ended\n");
+    }
+};
 
 
 /* Handles the provisioning of clients and connects / interfaces with the server */
@@ -132,7 +125,7 @@ void connectTask (void * parameter){
             }
 
             doConnect = false;
-            NimBLEDevice::getScan()->start(scanTime, scanEndedCB);
+            NimBLEDevice::getScan()->start(scanTime);
         }
         vTaskDelay(pdMS_TO_TICKS(10));
     }
@@ -150,7 +143,7 @@ void app_main (void) {
     NimBLEScan* pScan = NimBLEDevice::getScan();
 
     /* create a callback that gets called when advertisers are found */
-    pScan->setAdvertisedDeviceCallbacks(new AdvertisedDeviceCallbacks());
+    pScan->setScanCallbacks(new scanCallbacks());
 
     /* Set scan interval (how often) and window (how long) in milliseconds */
     pScan->setInterval(97);
@@ -164,7 +157,7 @@ void app_main (void) {
     /*  Start scanning for advertisers for the scan time specified (in seconds) 0 = forever
      *  Optional callback for when scanning stops.
      */
-    pScan->start(scanTime, scanEndedCB);
+    pScan->start(scanTime);
 
     printf("Scanning for peripherals\n");
 }

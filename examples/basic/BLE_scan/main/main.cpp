@@ -29,7 +29,7 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
 void scanTask (void * parameter){
     for(;;) {
         // put your main code here, to run repeatedly:
-        BLEScanResults foundDevices = pBLEScan->start(scanTime, false);
+        BLEScanResults foundDevices = pBLEScan->getResults(scanTime, false);
         printf("Devices found: %d\n", foundDevices.getCount());
         printf("Scan done!\n");
         pBLEScan->clearResults();   // delete results fromBLEScan buffer to release memory
@@ -44,7 +44,7 @@ void app_main(void) {
 
   BLEDevice::init("");
   pBLEScan = BLEDevice::getScan(); //create new scan
-  pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks());
+  pBLEScan->setScanCallbacks(new MyAdvertisedDeviceCallbacks());
   pBLEScan->setActiveScan(true); //active scan uses more power, but get results faster
   pBLEScan->setInterval(100);
   pBLEScan->setWindow(99);  // less or equal setInterval value

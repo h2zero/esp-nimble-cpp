@@ -11,8 +11,6 @@
 
 extern "C" {void app_main(void);}
 
-void scanEndedCB(NimBLEScanResults results);
-
 static NimBLEAdvertisedDevice* advDevice;
 
 static bool doConnect = false;
@@ -31,13 +29,13 @@ class ClientCallbacks : public NimBLEClientCallbacks {
          *  Min interval: 120 * 1.25ms = 150, Max interval: 120 * 1.25ms = 150, 0 latency, 45 * 10ms = 450ms timeout 
          */
         pClient->updateConnParams(120,120,0,45);
-    };
+    }
 
     void onDisconnect(NimBLEClient* pClient, int reason) {
         printf("%s Disconnected, reason = %d - Starting scan\n",
                pClient->getPeerAddress().toString().c_str(), reason);
-        NimBLEDevice::getScan()->start(scanTime, scanEndedCB);
-    };
+        NimBLEDevice::getScan()->start(scanTime);
+    }
     
     /********************* Security handled here **********************
     ****** Note: these are the same return values as defaults ********/
@@ -45,29 +43,28 @@ class ClientCallbacks : public NimBLEClientCallbacks {
         printf("Client Passkey Request\n");
         /** return the passkey to send to the server */
         return 123456;
-    };
+    }
 
     bool onConfirmPIN(uint32_t pass_key){
         printf("The passkey YES/NO number: %d\n", pass_key);
     /** Return false if passkeys don't match. */
         return true;
-    };
+    }
 
-    /** Pairing process complete, we can check the results in ble_gap_conn_desc */
-    void onAuthenticationComplete(ble_gap_conn_desc* desc){
-        if(!desc->sec_state.encrypted) {
+    /** Pairing process complete, we can check the results in connInfo */
+    void onAuthenticationComplete(NimBLEConnInfo& connInfo){
+        if(!connInfo.isEncrypted()) {
             printf("Encrypt connection failed - disconnecting\n");
             /** Find the client with the connection handle provided in desc */
-            NimBLEDevice::getClientByID(desc->conn_handle)->disconnect();
+            NimBLEDevice::getClientByID(connInfo.getConnHandle())->disconnect();
             return;
         }
-    };
+    }
 };
 
 
 /** Define a class to handle the callbacks when advertisments are received */
-class AdvertisedDeviceCallbacks: public NimBLEAdvertisedDeviceCallbacks {
-    
+class scanCallbacks: public NimBLEScanCallbacks {
     void onResult(NimBLEAdvertisedDevice* advertisedDevice) {
         printf("Advertised Device found: %s\n", advertisedDevice->toString().c_str());
         if(advertisedDevice->isAdvertisingService(NimBLEUUID("DEAD")))
@@ -80,7 +77,12 @@ class AdvertisedDeviceCallbacks: public NimBLEAdvertisedDeviceCallbacks {
             /** Ready to connect now */ 
             doConnect = true;
         }
-    };
+    }
+
+    /** Callback to process the results of the completed scan or restart it */
+    void onScanEnd(NimBLEScanResults results) {
+        printf("Scan Ended\n");
+    }
 };
 
 
@@ -93,11 +95,6 @@ void notifyCB(NimBLERemoteCharacteristic* pRemoteCharacteristic, uint8_t* pData,
     str += ", Characteristic = " + pRemoteCharacteristic->getUUID().toString();
     str += ", Value = " + std::string((char*)pData, length);
     printf("%s\n", str.c_str());
-}
-
-/** Callback to process the results of the last scan or restart it */
-void scanEndedCB(NimBLEScanResults results){
-    printf("Scan Ended\n");
 }
 
 
@@ -312,7 +309,7 @@ void connectTask (void * parameter){
                 printf("Failed to connect, starting scan\n");
             }
     
-            NimBLEDevice::getScan()->start(scanTime,scanEndedCB);
+            NimBLEDevice::getScan()->start(scanTime);
         }
         vTaskDelay(10/portTICK_PERIOD_MS);
     }
@@ -351,7 +348,7 @@ void app_main (void){
     NimBLEScan* pScan = NimBLEDevice::getScan(); 
     
     /** create a callback that gets called when advertisers are found */
-    pScan->setAdvertisedDeviceCallbacks(new AdvertisedDeviceCallbacks());
+    pScan->setScanCallbacks (new scanCallbacks());
     
     /** Set scan interval (how often) and window (how long) in milliseconds */
     pScan->setInterval(400);
@@ -364,7 +361,7 @@ void app_main (void){
     /** Start scanning for advertisers for the scan time specified (in seconds) 0 = forever
      *  Optional callback for when scanning stops. 
      */
-    pScan->start(scanTime, scanEndedCB);
+    pScan->start(scanTime);
     
     printf("Scanning for peripherals\n");
     
