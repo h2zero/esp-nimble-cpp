@@ -925,10 +925,12 @@ void NimBLEDevice::deinit(bool clearAll) {
     if (ret == 0) {
         nimble_port_deinit();
 #ifdef ESP_PLATFORM
+#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
         ret = esp_nimble_hci_and_controller_deinit();
         if (ret != ESP_OK) {
             NIMBLE_LOGE(LOG_TAG, "esp_nimble_hci_and_controller_deinit() failed with error: %d", ret);
         }
+#endif
 #endif
         initialized = false;
         m_synced = false;
