@@ -95,7 +95,7 @@ public:
     void              removeDescriptor(NimBLEDescriptor *pDescriptor, bool deleteDsc = false);
     NimBLEService*    getService();
     uint16_t          getProperties();
-    NimBLEAttValue    getValue(time_t *timestamp = nullptr);
+    NimBLEAttValue*   getValue(time_t *timestamp = nullptr);
     size_t            getDataLength();
     void              setValue(const uint8_t* data, size_t size);
     void              setValue(const std::vector<uint8_t>& vec);
