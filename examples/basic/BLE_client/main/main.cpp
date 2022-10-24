@@ -14,7 +14,7 @@
 #include "NimBLEDevice.h"
 
 extern "C"{void app_main(void);}
- 
+
 // The remote service we wish to connect to.
 static BLEUUID serviceUUID("4fafc201-1fb5-459e-8fcc-c5c9c331914b");
 // The characteristic of the remote service we are interested in.
@@ -53,11 +53,11 @@ class MyClientCallback : public BLEClientCallbacks {
 ****** Note: these are the same return values as defaults ********/
   uint32_t onPassKeyRequest(){
     printf("Client PassKeyRequest\n");
-    return 123456; 
+    return 123456;
   }
   bool onConfirmPIN(uint32_t pass_key){
     printf("The passkey YES/NO number: %d\n", pass_key);
-    return true; 
+    return true;
   }
 
   void onAuthenticationComplete(BLEConnInfo& connInfo){
@@ -101,10 +101,11 @@ bool connectToServer() {
     if(pRemoteCharacteristic->canRead()) {
       std::string value = pRemoteCharacteristic->readValue();
       printf("The characteristic value was: %s\n", value.c_str());
-      }
-    /** registerForNotify() has been deprecated and replaced with subscribe() / unsubscribe().
-     *  Subscribe parameter defaults are: notifications=true, notifyCallback=nullptr, response=false.
-     *  Unsubscribe parameter defaults are: response=false. 
+    }
+
+    /** registerForNotify() has been removed and replaced with subscribe() / unsubscribe().
+     *  Subscribe parameter defaults are: notifications=true, notifyCallback=nullptr, response=true.
+     *  Unsubscribe parameter defaults are: response=true.
      */
     if(pRemoteCharacteristic->canNotify()) {
         //pRemoteCharacteristic->registerForNotify(notifyCallback);
@@ -151,7 +152,7 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
 void connectTask (void * parameter){
     for(;;) {
       // If the flag "doConnect" is true then we have scanned for and found the desired
-      // BLE Server with which we wish to connect.  Now we connect to it.  Once we are 
+      // BLE Server with which we wish to connect.  Now we connect to it.  Once we are
       // connected we set the connected flag to be true.
       if (doConnect == true) {
         if (connectToServer()) {
@@ -168,17 +169,17 @@ void connectTask (void * parameter){
         char buf[256];
         snprintf(buf, 256, "Time since boot: %lu", (unsigned long)(esp_timer_get_time() / 1000000ULL));
         printf("Setting new characteristic value to %s\n", buf);
-        
+
         // Set the characteristic's value to be the array of bytes that is actually a string.
         /*** Note: write value now returns true if successful, false otherwise - try again or disconnect ***/
         pRemoteCharacteristic->writeValue((uint8_t*)buf, strlen(buf), false);
       }else if(doScan){
         BLEDevice::getScan()->start(0);  // this is just eample to start scan after disconnect, most likely there is better way to do it
       }
-      
+
       vTaskDelay(1000/portTICK_PERIOD_MS); // Delay a second between loops.
     }
-    
+
     vTaskDelete(NULL);
 } // End of loop
 
@@ -195,7 +196,7 @@ void app_main(void) {
   pBLEScan->setInterval(1349);
   pBLEScan->setWindow(449);
   pBLEScan->setActiveScan(true);
-  
+
   xTaskCreate(connectTask, "connectTask", 5000, NULL, 1, NULL);
   pBLEScan->start(5 * 1000, false);
 } // End of setup.
