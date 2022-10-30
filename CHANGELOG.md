@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.4.1] - 2022-10-23
+## [1.4.1] - 2022-10-30
 
 ### Fixed
  - NimBLEDevice::getPower incorrect value when power level is -3db.
