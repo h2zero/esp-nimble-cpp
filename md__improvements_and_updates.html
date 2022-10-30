@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">esp-nimble-cpp
-   &#160;<span id="projectnumber">1.4.0</span>
+   &#160;<span id="projectnumber">1.4.1</span>
    </div>
   </td>
  </tr>
@@ -96,7 +96,7 @@ $(document).ready(function(){initNavTree('md__improvements_and_updates.html','')
 </li>
 </ul>
 <p><a class="anchor" id="server"></a> </p>
-<h1><a class="anchor" id="autotoc_md37"></a>
+<h1><a class="anchor" id="autotoc_md41"></a>
 Server</h1>
 <p><code>NimBLEService::NimBLEService::createCharacteristic</code> takes a 3rd parameter to specify the maximum data size that can be stored by the characteristic. This allows for limiting the RAM use of the characteristic in cases where small amounts of data are expected. <br  />
  <br  />
@@ -137,7 +137,7 @@ Server</h1>
  <br  />
 </p>
 <p><a class="anchor" id="advertising"></a> </p>
-<h1><a class="anchor" id="autotoc_md38"></a>
+<h1><a class="anchor" id="autotoc_md42"></a>
 Advertising</h1>
 <p><code><a class="el" href="class_nim_b_l_e_advertising.html#aeeee5a131b42a4f76010751f4c182e4f" title="Start advertising.">NimBLEAdvertising::start</a></code></p>
 <p>Now takes 2 optional parameters, the first is the duration to advertise for (in seconds), the second is a callback that is invoked when advertising ends and takes a pointer to a <code><a class="el" href="class_nim_b_l_e_advertising.html" title="Perform and manage BLE advertising.">NimBLEAdvertising</a></code> object (similar to the <code><a class="el" href="class_nim_b_l_e_scan.html#a21b1e27816717b77533755f31dfaa820" title="Start scanning.">NimBLEScan::start</a></code> API).</p>
@@ -146,7 +146,7 @@ Advertising</h1>
  <br  />
 </p>
 <p><a class="anchor" id="client"></a> </p>
-<h1><a class="anchor" id="autotoc_md39"></a>
+<h1><a class="anchor" id="autotoc_md43"></a>
 Client</h1>
 <p><code><a class="el" href="class_nim_b_l_e_remote_characteristic.html#a417bb44d000758535253488f4d77774a" title="Read the value of the remote characteristic.">NimBLERemoteCharacteristic::readValue</a>(time_t\*, bool)</code> <code><a class="el" href="class_nim_b_l_e_remote_descriptor.html#ac4e3a21818903b69ace41c36a58d3c46" title="Template to convert the remote descriptor data to &lt;type&gt;.">NimBLERemoteDescriptor::readValue(bool)</a></code></p>
 <p>Have been added as templates to allow reading the values as any specified type.</p>
@@ -163,7 +163,7 @@ Client</h1>
 </div><!-- fragment --><p> <br  />
 </p>
 <p><code><a class="el" href="class_nim_b_l_e_remote_characteristic.html#ab4f54eabe90a416546b7b3fc3477f49c" title="backward-compatibility method for subscribe/unsubscribe notifications/indications">NimBLERemoteCharacteristic::registerForNotify</a></code> Has been <b>deprecated</b> as now the internally stored characteristic value is updated when notification/indication is received.</p>
-<p><code><a class="el" href="class_nim_b_l_e_remote_characteristic.html#ad2691a8ea85488c8270f78701352fbb2" title="Subscribe for notifications or indications.">NimBLERemoteCharacteristic::subscribe</a></code> and <code><a class="el" href="class_nim_b_l_e_remote_characteristic.html#ae2791429ba4a8c310ffc24139a985da6" title="Unsubscribe for notifications or indications.">NimBLERemoteCharacteristic::unsubscribe</a></code> have been implemented to replace it. A callback is no longer required to get the most recent value unless timing is important. Instead, the application can call <code><a class="el" href="class_nim_b_l_e_remote_characteristic.html#a6d0779ffe7e89449121428e7fd6083d8" title="Get the value of the remote characteristic.">NimBLERemoteCharacteristic::getValue</a></code> to get the last updated value any time. <br  />
+<p><code><a class="el" href="class_nim_b_l_e_remote_characteristic.html#aa08b2f62376568e1fc833e4ff91e8aa7" title="Subscribe for notifications or indications.">NimBLERemoteCharacteristic::subscribe</a></code> and <code><a class="el" href="class_nim_b_l_e_remote_characteristic.html#a6e331afdbdbc32bf461c9866236a97aa" title="Unsubscribe for notifications or indications.">NimBLERemoteCharacteristic::unsubscribe</a></code> have been implemented to replace it. A callback is no longer required to get the most recent value unless timing is important. Instead, the application can call <code><a class="el" href="class_nim_b_l_e_remote_characteristic.html#a6d0779ffe7e89449121428e7fd6083d8" title="Get the value of the remote characteristic.">NimBLERemoteCharacteristic::getValue</a></code> to get the last updated value any time. <br  />
  <br  />
 </p>
 <p>The <code>notify_callback</code> function is now defined as a <code>std::function</code> to take advantage of using <code>std::bind</code> to specify a class member function for the callback.</p>
@@ -183,7 +183,7 @@ Client</h1>
 </p>
 <p><code><a class="el" href="class_nim_b_l_e_client.html#ae9b3e8a9b47c7eaad040b485bda958a1" title="Connect to an advertising device.">NimBLEClient::connect()</a></code> can now be called without an address or advertised device parameter. This will connect to the device with the address previously set when last connected or set with <code>NimBLEDevice::setPeerAddress()</code>.</p>
 <p><a class="anchor" id="general"></a> </p>
-<h1><a class="anchor" id="autotoc_md40"></a>
+<h1><a class="anchor" id="autotoc_md44"></a>
 General</h1>
 <p>To reduce resource use all instances of <code>std::map</code> have been replaced with <code>std::vector</code>.</p>
 <p>Use of <code>FreeRTOS::Semaphore</code> has been removed as it was consuming too much ram, the related files have been left in place to accomodate application use.</p>

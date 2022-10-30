@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">esp-nimble-cpp
-   &#160;<span id="projectnumber">1.4.0</span>
+   &#160;<span id="projectnumber">1.4.1</span>
    </div>
   </td>
  </tr>
@@ -110,19 +110,19 @@ $(document).ready(function(){initNavTree('md__migration_guide.html',''); initRes
 </li>
 </ul>
 <p><a class="anchor" id="general-information"></a> </p>
-<h1><a class="anchor" id="autotoc_md50"></a>
+<h1><a class="anchor" id="autotoc_md54"></a>
 General Information</h1>
-<h2><a class="anchor" id="autotoc_md51"></a>
+<h2><a class="anchor" id="autotoc_md55"></a>
 Header Files</h2>
 <p>All classes are accessible by including <code><a class="el" href="_nim_b_l_e_device_8h_source.html">NimBLEDevice.h</a></code> in your application, no further headers need to be included.</p>
 <p>(Mainly for Arduino) You may choose to include <code><a class="el" href="_nim_b_l_e_log_8h_source.html">NimBLELog.h</a></code> in your application if you want to use the <code>NIMBLE_LOGx</code> macros for debugging. These macros are used the same way as the <code>ESP_LOGx</code> macros. <br  />
 </p>
-<h2><a class="anchor" id="autotoc_md52"></a>
+<h2><a class="anchor" id="autotoc_md56"></a>
 Class Names</h2>
 <p>Class names remain the same as the original with the addition of a "Nim" prefix. For example <code>BLEDevice</code> is now <code><a class="el" href="class_nim_b_l_e_device.html" title="A model of a BLE Device from which all the BLE roles are created.">NimBLEDevice</a></code> and <code>BLEServer</code> is now <code><a class="el" href="class_nim_b_l_e_server.html" title="The model of a BLE server.">NimBLEServer</a></code> etc.</p>
 <p>For convenience definitions have been added to allow applications to use either name for all classes this means <b>no class names need to be changed in existing code</b> and makes migrating easier. <br  />
 </p>
-<h2><a class="anchor" id="autotoc_md53"></a>
+<h2><a class="anchor" id="autotoc_md57"></a>
 BLE Addresses</h2>
 <p><code>BLEAddress</code> (<code><a class="el" href="class_nim_b_l_e_address.html" title="A BLE device address.">NimBLEAddress</a></code>) When constructing an address the constructor now takes an *(optional)* <code>uint8_t type</code> parameter to specify the address type. Default is (0) Public static address.</p>
 <p>For example <code>BLEAddress addr(11:22:33:44:55:66, 1)</code> will create the address object with an address type of: 1 (Random).</p>
@@ -130,33 +130,33 @@ BLE Addresses</h2>
 <p><code>BLEAddress::getNative</code> (<code><a class="el" href="class_nim_b_l_e_address.html#adef69a03a08303957d7e40eef07b4d80" title="Get the native representation of the address.">NimBLEAddress::getNative</a></code>) returns a uint8_t pointer to the native address byte array. In this library the address bytes are stored in reverse order from the original library. This is due to the way the NimBLE stack expects addresses to be presented to it. All other functions such as <code>toString</code> are not affected as the endian change is made within them. <br  />
 </p>
 <p><a class="anchor" id="server-api"></a> </p>
-<h1><a class="anchor" id="autotoc_md54"></a>
+<h1><a class="anchor" id="autotoc_md58"></a>
 Server API</h1>
 <p>Creating a <code>BLEServer</code> instance is the same as original, no changes required. For example <code>BLEDevice::createServer()</code> will work just as it did before.</p>
 <p><code>BLEServerCallbacks</code> (<code><a class="el" href="class_nim_b_l_e_server_callbacks.html" title="Callbacks associated with the operation of a BLE server.">NimBLEServerCallbacks</a></code>) has new methods for handling security operations. <b>Note:</b> All callback methods have default implementations which allows the application to implement only the methods applicable. <br  />
 </p>
 <p><a class="anchor" id="services"></a> </p>
-<h2><a class="anchor" id="autotoc_md55"></a>
+<h2><a class="anchor" id="autotoc_md59"></a>
 Services</h2>
 <p>Creating a <code>BLEService</code> (<code><a class="el" href="class_nim_b_l_e_service.html" title="The model of a BLE service.">NimBLEService</a></code>) instance is the same as original, no changes required. For example <code>BLEServer::createService(SERVICE_UUID)</code> will work just as it did before.</p>
 <p><a class="anchor" id="characteristics"></a> </p>
-<h2><a class="anchor" id="autotoc_md56"></a>
+<h2><a class="anchor" id="autotoc_md60"></a>
 Characteristics</h2>
 <p><code>BLEService::createCharacteristic</code> (<code><a class="el" href="class_nim_b_l_e_service.html#a415e1b836946831c6f9edd74adba8763" title="Create a new BLE Characteristic associated with this service.">NimBLEService::createCharacteristic</a></code>) is used the same way as originally except the properties parameter has changed.</p>
 <p>When creating a characteristic the properties are now set with <code>NIMBLE_PROPERTY::XXXX</code> instead of <code>BLECharacteristic::XXXX</code>.</p>
-<h3><a class="anchor" id="autotoc_md57"></a>
+<h3><a class="anchor" id="autotoc_md61"></a>
 Originally</h3>
 <blockquote class="doxtable">
 <p>BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE </p>
 </blockquote>
-<h3><a class="anchor" id="autotoc_md58"></a>
+<h3><a class="anchor" id="autotoc_md62"></a>
 Is Now</h3>
 <blockquote class="doxtable">
 <p>NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE </p>
 </blockquote>
 <p><br  />
 </p>
-<h3><a class="anchor" id="autotoc_md59"></a>
+<h3><a class="anchor" id="autotoc_md63"></a>
 The full list of properties</h3>
 <blockquote class="doxtable">
 <p>NIMBLE_PROPERTY::READ NIMBLE_PROPERTY::READ_ENC NIMBLE_PROPERTY::READ_AUTHEN NIMBLE_PROPERTY::READ_AUTHOR NIMBLE_PROPERTY::WRITE NIMBLE_PROPERTY::WRITE_NR NIMBLE_PROPERTY::WRITE_ENC NIMBLE_PROPERTY::WRITE_AUTHEN NIMBLE_PROPERTY::WRITE_AUTHOR NIMBLE_PROPERTY::BROADCAST NIMBLE_PROPERTY::NOTIFY NIMBLE_PROPERTY::INDICATE </p>
@@ -188,7 +188,7 @@ The full list of properties</h3>
 </div><!-- fragment --><p> <br  />
 </p>
 <p><a class="anchor" id="descriptors"></a> </p>
-<h2><a class="anchor" id="autotoc_md60"></a>
+<h2><a class="anchor" id="autotoc_md64"></a>
 Descriptors</h2>
 <p>Descriptors are now created using the <code><a class="el" href="class_nim_b_l_e_characteristic.html#a1fc55adb9d62d8b5fe1be2b172686353" title="Create a new BLE Descriptor associated with this characteristic.">NimBLECharacteristic::createDescriptor</a></code> method.</p>
 <p>BLE2902 or NimBLE2902 class has been removed. NimBLE automatically creates the 0x2902 descriptor if a characteristic has a notification or indication property assigned to it.</p>
@@ -205,7 +205,7 @@ Descriptors</h2>
 <div class="line">                                   NIMBLE_PROPERTY::READ |</div>
 <div class="line">                                   NIMBLE_PROPERTY::WRITE,</div>
 <div class="line">                                   uint16_t max_len = 100);</div>
-</div><!-- fragment --> <h4><a class="anchor" id="autotoc_md61"></a>
+</div><!-- fragment --> <h4><a class="anchor" id="autotoc_md65"></a>
 Example</h4>
 <div class="fragment"><div class="line">pDescriptor = pCharacteristic-&gt;createDescriptor(&quot;ABCD&quot;,</div>
 <div class="line">                                                NIMBLE_PROPERTY::READ |</div>
@@ -216,13 +216,13 @@ Example</h4>
 </p>
 <p>For the 0x2904, there is a special class that is created when you call `createDescriptor("2904").</p>
 <p>The pointer returned is of the base class <code><a class="el" href="class_nim_b_l_e_descriptor.html" title="A model of a BLE descriptor.">NimBLEDescriptor</a></code> but the call will create the derived class of <code><a class="el" href="class_nim_b_l_e2904.html" title="Descriptor for Characteristic Presentation Format.">NimBLE2904</a></code> so you must cast the returned pointer to <code><a class="el" href="class_nim_b_l_e2904.html" title="Descriptor for Characteristic Presentation Format.">NimBLE2904</a></code> to access the specific class methods.</p>
-<h4><a class="anchor" id="autotoc_md62"></a>
+<h4><a class="anchor" id="autotoc_md66"></a>
 Example</h4>
 <div class="fragment"><div class="line">p2904 = (NimBLE2904*)pCharacteristic-&gt;createDescriptor(&quot;2904&quot;);</div>
 </div><!-- fragment --><p> <br  />
 </p>
 <p><a class="anchor" id="server-security"></a> </p>
-<h2><a class="anchor" id="autotoc_md63"></a>
+<h2><a class="anchor" id="autotoc_md67"></a>
 Server Security</h2>
 <p>Security is set on the characteristic or descriptor properties by applying one of the following: </p><blockquote class="doxtable">
 <p>NIMBLE_PROPERTY::READ_ENC NIMBLE_PROPERTY::READ_AUTHEN NIMBLE_PROPERTY::READ_AUTHOR NIMBLE_PROPERTY::WRITE_ENC NIMBLE_PROPERTY::WRITE_AUTHEN NIMBLE_PROPERTY::WRITE_AUTHOR </p>
@@ -233,7 +233,7 @@ Server Security</h2>
 <p>This can be changed to use passkey authentication or numeric comparison. See <a href="#security-api">Security API</a> for details. <br  />
 </p>
 <p><a class="anchor" id="advertising-api"></a> </p>
-<h1><a class="anchor" id="autotoc_md64"></a>
+<h1><a class="anchor" id="autotoc_md68"></a>
 Advertising API</h1>
 <p>Advertising works the same as the original API except:</p>
 <p>Calling <code><a class="el" href="class_nim_b_l_e_advertising.html#af7083f58717b7e76d90d367f00a0ef08" title="Set the advertisement data that is to be published in a regular advertisement.">NimBLEAdvertising::setAdvertisementData</a></code> will entirely replace any data set with <code><a class="el" href="class_nim_b_l_e_advertising.html#a4f334752ea04223185292fe9ab524b69" title="Add a service uuid to exposed list of services.">NimBLEAdvertising::addServiceUUID</a></code>, or <code><a class="el" href="class_nim_b_l_e_advertising.html#aa0d30dfb57670cc8180e17dffddad416" title="Set the device appearance in the advertising data. The codes for distinct appearances can be found he...">NimBLEAdvertising::setAppearance</a></code> or similar methods. You should set all the data you wish to advertise within the <code><a class="el" href="class_nim_b_l_e_advertisement_data.html" title="Advertisement data set by the programmer to be published by the BLE server.">NimBLEAdvertisementData</a></code> instead. <br  />
@@ -244,7 +244,7 @@ Advertising API</h1>
 <p>Now takes 2 optional parameters, the first is the duration to advertise for (in seconds), the second is a callback that is invoked when advertising ends and takes a pointer to a <code><a class="el" href="class_nim_b_l_e_advertising.html" title="Perform and manage BLE advertising.">NimBLEAdvertising</a></code> object (similar to the <code><a class="el" href="class_nim_b_l_e_scan.html#a21b1e27816717b77533755f31dfaa820" title="Start scanning.">NimBLEScan::start</a></code> API). This provides an opportunity to update the advertisement data if desired. <br  />
 </p>
 <p><a class="anchor" id="client-api"></a> </p>
-<h1><a class="anchor" id="autotoc_md65"></a>
+<h1><a class="anchor" id="autotoc_md69"></a>
 Client API</h1>
 <p>Client instances are created just as before with <code>BLEDevice::createClient</code> (<code><a class="el" href="class_nim_b_l_e_device.html#af8142995252f486916dbb9de2a5b0c9e" title="Creates a new client object and maintains a list of all client objects each client can connect to 1 p...">NimBLEDevice::createClient</a></code>).</p>
 <p>Multiple client instances can be created, up to the maximum number of connections set in the config file (default: 3). To delete a client instance you must use <code><a class="el" href="class_nim_b_l_e_device.html#a83aa0a3d9d57358d35082a442edf8549" title="Delete the client object and remove it from the list. Checks if it is connected or trying to connect ...">NimBLEDevice::deleteClient</a></code>.</p>
@@ -264,7 +264,7 @@ Client API</h1>
 <p><b>Added:</b> <code><a class="el" href="class_nim_b_l_e_client.html#a1019178a12799ca2c3a84f523b3a7db9" title="Retrieves the full database of attributes that the peripheral has available.">NimBLEClient::discoverAttributes</a></code> for the user to discover all the peripheral attributes to replace the the removed automatic functionality. <br  />
 </p>
 <p><a class="anchor" id="remote-services"></a> </p>
-<h2><a class="anchor" id="autotoc_md66"></a>
+<h2><a class="anchor" id="autotoc_md70"></a>
 Remote Services</h2>
 <p><code>BLERemoteService</code> (<code><a class="el" href="class_nim_b_l_e_remote_service.html" title="A model of a remote BLE service.">NimBLERemoteService</a></code>) Methods remain mostly unchanged with the exceptions of:</p>
 <blockquote class="doxtable">
@@ -278,7 +278,7 @@ Remote Services</h2>
 <p>This method now takes an optional (bool) parameter to indicate if the characteristics should be retrieved from the server (true) or the currently known database returned (false : default). Also now returns a pointer to <code>std::vector</code> instead of <code>std::map</code>. <br  />
 </p>
 <p><a class="anchor" id="remote-characteristics"></a> </p>
-<h2><a class="anchor" id="autotoc_md67"></a>
+<h2><a class="anchor" id="autotoc_md71"></a>
 Remote Characteristics</h2>
 <p><code>BLERemoteCharacteristic</code> (<code><a class="el" href="class_nim_b_l_e_remote_characteristic.html" title="A model of a remote BLE characteristic.">NimBLERemoteCharacteristic</a></code>) There have been a few changes to the methods in this class:</p>
 <blockquote class="doxtable">
@@ -290,7 +290,7 @@ Remote Characteristics</h2>
 <p><code>BLERemoteCharacteristic::registerForNotify</code> (<code><a class="el" href="class_nim_b_l_e_remote_characteristic.html#ab4f54eabe90a416546b7b3fc3477f49c" title="backward-compatibility method for subscribe/unsubscribe notifications/indications">NimBLERemoteCharacteristic::registerForNotify</a></code>) </p>
 </blockquote>
 <p>Is now <b>deprecated</b>. </p><blockquote class="doxtable">
-<p><code><a class="el" href="class_nim_b_l_e_remote_characteristic.html#ad2691a8ea85488c8270f78701352fbb2" title="Subscribe for notifications or indications.">NimBLERemoteCharacteristic::subscribe</a></code> <code><a class="el" href="class_nim_b_l_e_remote_characteristic.html#ae2791429ba4a8c310ffc24139a985da6" title="Unsubscribe for notifications or indications.">NimBLERemoteCharacteristic::unsubscribe</a></code> </p>
+<p><code><a class="el" href="class_nim_b_l_e_remote_characteristic.html#aa08b2f62376568e1fc833e4ff91e8aa7" title="Subscribe for notifications or indications.">NimBLERemoteCharacteristic::subscribe</a></code> <code><a class="el" href="class_nim_b_l_e_remote_characteristic.html#a6e331afdbdbc32bf461c9866236a97aa" title="Unsubscribe for notifications or indications.">NimBLERemoteCharacteristic::unsubscribe</a></code> </p>
 </blockquote>
 <p>Are the new methods added to replace it. <br  />
 </p>
@@ -313,12 +313,12 @@ Remote Characteristics</h2>
 <p>This method now takes an optional (bool) parameter to indicate if the descriptors should be retrieved from the server (true) or the currently known database returned (false : default). Also now returns a pointer to <code>std::vector</code> instead of <code>std::map</code>. <br  />
 </p>
 <p><a class="anchor" id="client-security"></a> </p>
-<h2><a class="anchor" id="autotoc_md68"></a>
+<h2><a class="anchor" id="autotoc_md72"></a>
 Client Security</h2>
 <p>The client will automatically initiate security when the peripheral responds that it's required. The default configuration will use "just-works" pairing with no bonding, if you wish to enable bonding see below. <br  />
 </p>
 <p><a class="anchor" id="security-api"></a> </p>
-<h1><a class="anchor" id="autotoc_md69"></a>
+<h1><a class="anchor" id="autotoc_md73"></a>
 Security API</h1>
 <p>Security operations have been moved to <code>BLEDevice</code> (<code><a class="el" href="class_nim_b_l_e_device.html" title="A model of a BLE Device from which all the BLE roles are created.">NimBLEDevice</a></code>).</p>
 <p>Also security callback methods are now incorporated in the <code><a class="el" href="class_nim_b_l_e_server_callbacks.html" title="Callbacks associated with the operation of a BLE server.">NimBLEServerCallbacks</a></code> / <code><a class="el" href="class_nim_b_l_e_client_callbacks.html" title="Callbacks associated with a BLE client.">NimBLEClientCallbacks</a></code> classes. However backward compatibility with the original <code>BLESecurity</code> (<code><a class="el" href="class_nim_b_l_e_security.html" title="A class to handle BLE security operations. Deprecated - provided for backward compatibility only.">NimBLESecurity</a></code>) class is retained to minimize application code changes.</p>
@@ -359,7 +359,7 @@ Security API</h1>
 <p>Sets the keys we are willing to accept from the peer during pairing. <br  />
 </p>
 <p><a class="anchor" id="arduino-configuration"></a> </p>
-<h1><a class="anchor" id="autotoc_md70"></a>
+<h1><a class="anchor" id="autotoc_md74"></a>
 Arduino Configuration</h1>
 <p>Unlike the original library pre-packaged in the esp32-arduino, this library has all the configuration options that are normally set in menuconfig available in the <em><a class="el" href="nimconfig_8h.html">src/nimconfig.h</a></em> file.</p>
 <p>This allows Arduino users to fully customize the build, such as increasing max connections or loading the BLE stack into external PSRAM.</p>
