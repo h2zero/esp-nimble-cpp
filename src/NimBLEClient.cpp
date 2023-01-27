@@ -1175,6 +1175,8 @@ int NimBLEClient::handleGapEvent(struct ble_gap_event *event, void *arg) {
                 NIMBLE_LOGD(LOG_TAG, "No passkey action required");
             }
 
+            //warning: variable 'pkey' set but not used [-Wunused-but-set-variable]
+            assert(pkey.action);
             return 0;
         } // BLE_GAP_EVENT_PASSKEY_ACTION
 
