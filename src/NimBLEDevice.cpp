@@ -85,8 +85,10 @@ std::list <NimBLEAddress>   NimBLEDevice::m_ignoreList;
 std::vector<NimBLEAddress>  NimBLEDevice::m_whiteList;
 uint8_t                     NimBLEDevice::m_own_addr_type = BLE_OWN_ADDR_PUBLIC;
 #ifdef ESP_PLATFORM
+# ifdef CONFIG_BTDM_BLE_SCAN_DUPL
 uint16_t                    NimBLEDevice::m_scanDuplicateSize = CONFIG_BTDM_SCAN_DUPL_CACHE_SIZE;
 uint8_t                     NimBLEDevice::m_scanFilterMode = CONFIG_BTDM_SCAN_DUPL_TYPE;
+#endif
 #endif
 
 /**
@@ -493,6 +495,7 @@ uint16_t NimBLEDevice::getMTU() {
 
 
 #ifdef ESP_PLATFORM
+# ifdef CONFIG_BTDM_BLE_SCAN_DUPL
 /**
  * @brief Set the duplicate filter cache size for filtering scanned devices.
  * @param [in] cacheSize The number of advertisements filtered before the cache is reset.\n
@@ -511,6 +514,7 @@ void NimBLEDevice::setScanDuplicateCacheSize(uint16_t cacheSize) {
 
     m_scanDuplicateSize = cacheSize;
 }
+
 
 
 /**
@@ -538,6 +542,7 @@ void NimBLEDevice::setScanFilterMode(uint8_t mode) {
 
     m_scanFilterMode = mode;
 }
+#endif
 #endif
 
 #if defined(CONFIG_BT_NIMBLE_ROLE_CENTRAL) || defined(CONFIG_BT_NIMBLE_ROLE_PERIPHERAL)
