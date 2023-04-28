@@ -38,6 +38,12 @@
 #include "NimBLEServer.h"
 #endif
 
+#if defined(CONFIG_BT_NIMBLE_L2CAP_COC_MAX_NUM)
+//FIXME: Insert preprocessor comparison with > 0 here
+#include "NimBLEL2CAPServer.h"
+#include "NimBLEL2CAPService.h"
+#endif
+
 #include "NimBLEUtils.h"
 #include "NimBLEAddress.h"
 
@@ -79,6 +85,9 @@
 #define BLEEddystoneTLM                 NimBLEEddystoneTLM
 #define BLEEddystoneURL                 NimBLEEddystoneURL
 #define BLEConnInfo                     NimBLEConnInfo
+#define BLEL2CapServer                  NimBLEL2CAPServer
+#define BLEL2CapService                 NimBLEL2CAPService
+#define BLEL2CapServiceCallbacks        NimBLEL2CAPServiceCallbacks
 
 #ifdef CONFIG_BT_NIMBLE_MAX_CONNECTIONS
 #define NIMBLE_MAX_CONNECTIONS          CONFIG_BT_NIMBLE_MAX_CONNECTIONS
