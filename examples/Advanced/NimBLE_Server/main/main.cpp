@@ -57,7 +57,7 @@ class ServerCallbacks: public NimBLEServerCallbacks {
         /** This should prompt the user to enter the passkey displayed
          * on the peer device.
          */
-        NimBLEDevice::getServer()->injectPassKey(address, 123456)
+        NimBLEDevice::getServer()->injectPassKey(address, 123456);
     };
 
     void onConfirmPIN(const BLEAddress& address, uint32_t pass_key){
