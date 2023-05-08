@@ -920,7 +920,7 @@ void NimBLEServerCallbacks::onPassKeyEntry(const NimBLEAddress& address){
 
 void NimBLEServerCallbacks::onConfirmPIN(const NimBLEAddress& address, uint32_t pin){
     NIMBLE_LOGD("NimBLEServerCallbacks", "onConfirmPIN: default: true");
-    NimBLEDevice::getServer()->injectConfirmPin(address, true);
+    NimBLEDevice::getServer()->injectConfirmPIN(address, true);
 } // onConfirmPIN
 
 void NimBLEServerCallbacks::onAuthenticationComplete(NimBLEConnInfo& connInfo){
