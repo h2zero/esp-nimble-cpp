@@ -81,6 +81,8 @@ public:
 #if !CONFIG_BT_NIMBLE_EXT_ADV || defined(_DOXYGEN_)
     void                   advertiseOnDisconnect(bool);
 #endif
+    void                   injectPassKey(const NimBLEAddress& address, uint32_t pin);
+    void                   injectConfirmPIN(const NimBLEAddress& address, bool accept);
 
 private:
     NimBLEServer();
@@ -152,10 +154,25 @@ public:
     virtual void onMTUChange(uint16_t MTU, NimBLEConnInfo& connInfo);
 
     /**
-     * @brief Called when a client requests a passkey for pairing.
+     * @brief Called when a client requests a passkey for pairing (display).
      * @return The passkey to be sent to the client.
      */
-    virtual uint32_t onPassKeyRequest();
+    virtual uint32_t onPassKeyDisplay();
+
+    /**
+     * @brief Called when a client requests a passkey for pairing (input).
+     * @param [in] address The address to the peer device making the pairing attempt.
+     * Should be passed back to NimBLEServer::injectPassKey
+     */
+    virtual void onPassKeyEntry(const NimBLEAddress& address);
+
+    /**
+     * @brief Called when using numeric comparision for pairing.
+     * @param [in] address The address to the peer device making the pairing attempt.
+     * Should be passed back to NimBLEServer::injectConfirmPIN
+     * @param [in] pin The pin to compare with the client.
+     */
+    virtual void onConfirmPIN(const NimBLEAddress& address, uint32_t pin);
 
     /**
      * @brief Called when the pairing procedure is complete.
@@ -163,13 +180,6 @@ public:
      * about the peer connection parameters.
      */
     virtual void onAuthenticationComplete(NimBLEConnInfo& connInfo);
-
-    /**
-     * @brief Called when using numeric comparision for pairing.
-     * @param [in] pin The pin to compare with the client.
-     * @return True to accept the pin.
-     */
-    virtual bool onConfirmPIN(uint32_t pin);
 }; // NimBLEServerCallbacks
 
 #endif /* CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_PERIPHERAL */
