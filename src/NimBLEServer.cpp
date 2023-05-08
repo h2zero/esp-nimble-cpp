@@ -913,18 +913,18 @@ uint32_t NimBLEServerCallbacks::onPassKeyDisplay(){
     return 123456;
 } //onPassKeyDisplay
 
-uint32_t NimBLEServerCallbacks::onPassKeyEntry(const NimBLEAddress& address){
+void NimBLEServerCallbacks::onPassKeyEntry(const NimBLEAddress& address){
     NIMBLE_LOGD("NimBLEServerCallbacks", "onPassKeyEntry: default: 123456");
     NimBLEDevice::getServer()->injectPassKey(address, 123456);
 } //onPassKeyEntry
 
-void NimBLEServerCallbacks::onAuthenticationComplete(NimBLEConnInfo& connInfo){
-    NIMBLE_LOGD("NimBLEServerCallbacks", "onAuthenticationComplete: default");
-} // onAuthenticationComplete
-
-bool NimBLEServerCallbacks::onConfirmPIN(const NimBLEAddress& address, uint32_t pin){
+void NimBLEServerCallbacks::onConfirmPIN(const NimBLEAddress& address, uint32_t pin){
     NIMBLE_LOGD("NimBLEServerCallbacks", "onConfirmPIN: default: true");
     NimBLEDevice::getServer()->injectConfirmPin(address, true);
 } // onConfirmPIN
+
+void NimBLEServerCallbacks::onAuthenticationComplete(NimBLEConnInfo& connInfo){
+    NIMBLE_LOGD("NimBLEServerCallbacks", "onAuthenticationComplete: default");
+} // onAuthenticationComplete
 
 #endif /* CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_PERIPHERAL */
