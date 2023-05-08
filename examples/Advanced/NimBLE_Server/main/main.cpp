@@ -44,18 +44,26 @@ class ServerCallbacks: public NimBLEServerCallbacks {
     
 /********************* Security handled here **********************
 ****** Note: these are the same return values as defaults ********/
-    uint32_t onPassKeyRequest(){
-        printf("Server Passkey Request\n");
+    uint32_t onPassKeyDisplay(){
+        printf("Server Passkey Display\n");
         /** This should return a random 6 digit number for security 
          *  or make your own static passkey as done here.
          */
         return 123456; 
     };
 
-    bool onConfirmPIN(uint32_t pass_key){
+    void onPassKeyEntry(const BLEAddress& address){
+        printf("Server Passkey Entry\n");
+        /** This should prompt the user to enter the passkey displayed
+         * on the peer device.
+         */
+        NimBLEDevice()::getServer()->injectPassKey(address, 123456)
+    };
+
+    void onConfirmPIN(const BLEAddress& address, uint32_t pass_key){
         printf("The passkey YES/NO number: %d\n", pass_key);
-        /** Return false if passkeys don't match. */
-        return true; 
+        /** Inject false if passkeys don't match. */
+        NimBLEDevice()::getServer()->injectConfirmPIN(address, true);
     };
 
     void onAuthenticationComplete(NimBLEConnInfo& connInfo){
