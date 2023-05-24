@@ -56,7 +56,7 @@ class MyClientCallback : public BLEClientCallbacks {
     return 123456;
   }
   bool onConfirmPIN(uint32_t pass_key){
-    printf("The passkey YES/NO number: %d\n", pass_key);
+    printf("The passkey YES/NO number: %" PRIu32"\n", pass_key);
     return true;
   }
 

@@ -46,7 +46,7 @@ uint32_t value = 0;
 #define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
 
 /**  None of these are required as they will be handled by the library with defaults. **
- **                       Remove as you see fit for your needs                        */  
+ **                       Remove as you see fit for your needs                        */
 class MyServerCallbacks: public BLEServerCallbacks {
     void onConnect(BLEServer* pServer, BLEConnInfo& connInfo) {
       deviceConnected = true;
@@ -59,12 +59,12 @@ class MyServerCallbacks: public BLEServerCallbacks {
 ****** Note: these are the same return values as defaults ********/
   uint32_t onPassKeyRequest(){
     printf("Server PassKeyRequest\n");
-    return 123456; 
+    return 123456;
   }
 
   bool onConfirmPIN(uint32_t pass_key){
-    printf("The passkey YES/NO number: %d\n", pass_key);
-    return true; 
+    printf("The passkey YES/NO number: %" PRIu32"\n", pass_key);
+    return true;
   }
 
   void onAuthenticationComplete(BLEConnInfo& connInfo){
@@ -94,13 +94,13 @@ void connectedTask (void * parameter){
             // do stuff here on connecting
             oldDeviceConnected = deviceConnected;
         }
-        
+
         vTaskDelay(10/portTICK_PERIOD_MS); // Delay between loops to reset watchdog timer
     }
-    
+
     vTaskDelete(NULL);
 }
-    
+
 void app_main(void) {
   // Create the BLE Device
   BLEDevice::init("ESP32");
@@ -115,13 +115,13 @@ void app_main(void) {
   // Create a BLE Characteristic
   pCharacteristic = pService->createCharacteristic(
                       CHARACTERISTIC_UUID,
-                /******* Enum Type NIMBLE_PROPERTY now *******     
+                /******* Enum Type NIMBLE_PROPERTY now *******
                       BLECharacteristic::PROPERTY_READ   |
                       BLECharacteristic::PROPERTY_WRITE  |
                       BLECharacteristic::PROPERTY_NOTIFY |
                       BLECharacteristic::PROPERTY_INDICATE
                     );
-                **********************************************/    
+                **********************************************/
                       NIMBLE_PROPERTY::READ   |
                       NIMBLE_PROPERTY::WRITE  |
                       NIMBLE_PROPERTY::NOTIFY |
@@ -130,11 +130,11 @@ void app_main(void) {
 
   // https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.descriptor.gatt.client_characteristic_configuration.xml
   // Create a BLE Descriptor
-  /***************************************************   
-   NOTE: DO NOT create a 2902 descriptor. 
-   it will be created automatically if notifications 
+  /***************************************************
+   NOTE: DO NOT create a 2902 descriptor.
+   it will be created automatically if notifications
    or indications are enabled on a characteristic.
-   
+
    pCharacteristic->addDescriptor(new BLE2902());
   ****************************************************/
   // Start the service
@@ -147,9 +147,9 @@ void app_main(void) {
   /** This method had been removed **
   pAdvertising->setMinPreferred(0x0);  // set value to 0x00 to not advertise this parameter
   **/
-  
+
   xTaskCreate(connectedTask, "connectedTask", 5000, NULL, 1, NULL);
-  
+
   BLEDevice::startAdvertising();
   printf("Waiting a client connection to notify...\n");
 }

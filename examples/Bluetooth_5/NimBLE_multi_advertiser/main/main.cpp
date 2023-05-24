@@ -45,7 +45,7 @@ class ServerCallbacks: public NimBLEServerCallbacks {
         printf("Client disconnected\n");
         // if still advertising we won't sleep yet.
         if (!pServer->getAdvertising()->isAdvertising()) {
-            printf("Sleeping for %u seconds\n", sleepTime);
+            printf("Sleeping for %" PRIu32" seconds\n", sleepTime);
             esp_deep_sleep_start();
         }
     };
@@ -61,7 +61,7 @@ class advCallbacks: public NimBLEExtAdvertisingCallbacks {
                 printf(" client connecting\n");
                 return;
             case BLE_HS_ETIMEOUT:
-                printf("Time expired - sleeping for %u seconds\n", sleepTime);
+                printf("Time expired - sleeping for %" PRIu32" seconds\n", sleepTime);
                 break;
             default:
                 break;

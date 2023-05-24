@@ -46,7 +46,7 @@ class ClientCallbacks : public NimBLEClientCallbacks {
     }
 
     bool onConfirmPIN(uint32_t pass_key){
-        printf("The passkey YES/NO number: %d\n", pass_key);
+        printf("The passkey YES/NO number: %" PRIu32"\n", pass_key);
     /** Return false if passkeys don't match. */
         return true;
     }

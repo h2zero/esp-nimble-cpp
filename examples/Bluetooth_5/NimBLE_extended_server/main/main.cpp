@@ -42,7 +42,7 @@ class ServerCallbacks: public NimBLEServerCallbacks {
     };
 
     void onDisconnect(NimBLEServer* pServer, NimBLEConnInfo& connInfo, int reason) {
-        printf("Client disconnected - sleeping for %u seconds\n", sleepSeconds);
+        printf("Client disconnected - sleeping for %" PRIu32" seconds\n", sleepSeconds);
         esp_deep_sleep_start();
     };
 };
@@ -57,7 +57,7 @@ class advertisingCallbacks: public NimBLEExtAdvertisingCallbacks {
                 printf("Client connecting\n");
                 return;
             case BLE_HS_ETIMEOUT:
-                printf("Time expired - sleeping for %u seconds\n", sleepSeconds);
+                printf("Time expired - sleeping for %" PRIu32" seconds\n", sleepSeconds);
                 break;
             default:
                 break;
