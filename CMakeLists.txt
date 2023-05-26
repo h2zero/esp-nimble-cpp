@@ -18,6 +18,10 @@ if("arduino" IN_LIST BUILD_COMPONENTS OR __hack_component_targets MATCHES "__idf
     list(APPEND ESP_NIMBLE_PRIV_REQUIRES
         arduino
     )
+elseif("framework-arduinoespressif32" IN_LIST BUILD_COMPONENTS OR __hack_component_targets MATCHES "___idf_framework-arduinoespressif32")
+    list(APPEND ESP_NIMBLE_PRIV_REQUIRES
+        framework-arduinoespressif32
+    )
 endif()
 
 idf_component_register(
