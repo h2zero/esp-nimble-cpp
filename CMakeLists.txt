@@ -29,6 +29,7 @@ idf_component_register(
     "esp32"
     "esp32s3"
     "esp32c3"
+    "esp32c6"
   INCLUDE_DIRS
     "src"
   SRCS
