@@ -23,7 +23,9 @@
 #  include "esp_bt.h"
 #  include "nvs_flash.h"
 #  if defined(CONFIG_NIMBLE_CPP_IDF)
-#    include "esp_nimble_hci.h"
+#    if (ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0) || CONFIG_BT_NIMBLE_LEGACY_VHCI_ENABLE)
+#       include "esp_nimble_hci.h"
+#    endif
 #    include "nimble/nimble_port.h"
 #    include "nimble/nimble_port_freertos.h"
 #    include "host/ble_hs.h"
