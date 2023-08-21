@@ -57,6 +57,7 @@ idf_component_register(
   REQUIRES
     bt
     nvs_flash
+    driver
   PRIV_REQUIRES
     ${ESP_NIMBLE_PRIV_REQUIRES}
 )
