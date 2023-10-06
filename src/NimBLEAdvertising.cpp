@@ -138,6 +138,7 @@ void NimBLEAdvertising::addTxPower() {
  */
 void NimBLEAdvertising::setName(const std::string &name) {
     m_name.assign(name.begin(), name.end());
+    m_name[name.length()] = 0;
     m_advData.name = &m_name[0];
     m_advData.name_len = m_name.size();
     m_advDataSet = false;
