@@ -25,6 +25,18 @@
 #define CONFIG_BT_NIMBLE_ROLE_BROADCASTER
 #endif
 
+#ifndef CONFIG_BTDM_SCAN_DUPL_TYPE_DEVICE
+#define CONFIG_BTDM_SCAN_DUPL_TYPE_DEVICE 0
+#endif
+
+#ifndef CONFIG_BTDM_SCAN_DUPL_TYPE_DATA
+#define CONFIG_BTDM_SCAN_DUPL_TYPE_DATA 1
+#endif
+
+#ifndef CONFIG_BTDM_SCAN_DUPL_TYPE_DATA_DEVICE
+#define CONFIG_BTDM_SCAN_DUPL_TYPE_DATA_DEVICE 2
+#endif
+
 /* Enables the use of Arduino String class for attribute values */
 #if defined __has_include
 #  if __has_include (<Arduino.h>)
