@@ -10,6 +10,8 @@
 #include "sdkconfig.h"
 #include "nimconfig_rename.h"
 
+#include <ctime>
+
 #if defined(CONFIG_BT_ENABLED)
 
 // Allows cpp wrapper to select the correct include paths when using esp-idf
