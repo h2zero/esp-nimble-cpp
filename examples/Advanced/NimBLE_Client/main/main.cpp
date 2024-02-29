@@ -146,8 +146,8 @@ bool connectToServer() {
          *  Min interval: 12 * 1.25ms = 15, Max interval: 12 * 1.25ms = 15, 0 latency, 12 * 10ms = 120ms timeout
          */
         pClient->setConnectionParams(6,6,0,15);
-        /** Set how long we are willing to wait for the connection to complete (seconds), default is 30. */
-        pClient->setConnectTimeout(5);
+        /** Set how long we are willing to wait for the connection to complete (milliseconds), default is 30000. */
+        pClient->setConnectTimeout(5 * 1000);
 
 
         if (!pClient->connect(advDevice)) {
@@ -358,7 +358,7 @@ void app_main (void){
      *  but will use more energy from both devices
      */
     pScan->setActiveScan(true);
-    /** Start scanning for advertisers for the scan time specified (in seconds) 0 = forever
+    /** Start scanning for advertisers for the scan time specified (in milliseconds) 0 = forever
      *  Optional callback for when scanning stops.
      */
     pScan->start(scanTime);
