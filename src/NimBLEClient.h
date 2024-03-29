@@ -61,6 +61,7 @@ public:
                                                                    bool deleteCallbacks = true);
     std::string                                 toString();
     uint16_t                                    getConnId();
+    void                                        setConnId(uint16_t conn_id);
     uint16_t                                    getMTU();
     bool                                        secureConnection();
     void                                        setConnectTimeout(uint32_t timeout);

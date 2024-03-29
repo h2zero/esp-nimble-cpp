@@ -552,6 +552,11 @@ uint16_t NimBLEClient::getConnId() {
 } // getConnId
 
 
+void NimBLEClient::setConnId(uint16_t conn_id) {
+    m_conn_id = conn_id;
+    m_connEstablished = true;
+} // setConnId
+
 /**
  * @brief Retrieve the address of the peer.
  */
