@@ -553,6 +553,21 @@ uint16_t NimBLEClient::getConnId() {
 
 
 /**
+ * @brief Set the connection id for this client.
+ * @param [in] conn_id The connection id.
+ * @note Sets the connection established flag to true.
+ * @note This is designed to be used when a connection is made outside of the
+ *       NimBLEClient class, such as when a connection is made by the
+ *       NimBLEServer class and the client is passed the connection id. This use
+ *       enables the GATT Server to read the name of the device that has
+ *       connected to it.
+ */
+void NimBLEClient::setConnId(uint16_t conn_id) {
+    m_conn_id = conn_id;
+    m_connEstablished = true;
+} // setConnId
+
+/**
  * @brief Retrieve the address of the peer.
  */
 NimBLEAddress NimBLEClient::getPeerAddress() {
