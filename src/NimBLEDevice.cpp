@@ -567,10 +567,11 @@ int NimBLEDevice::getNumBonds() {
 
 /**
  * @brief Deletes all bonding information.
+ * @returns 0 on success, non-zero on failure.
  */
 /*STATIC*/
-void NimBLEDevice::deleteAllBonds() {
-    ble_store_clear();
+int NimBLEDevice::deleteAllBonds() {
+    return ble_store_clear();
 }
 
 
