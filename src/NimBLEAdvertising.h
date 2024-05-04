@@ -133,7 +133,7 @@ private:
     bool                    m_customScanResponseData;
     bool                    m_scanResp;
     bool                    m_advDataSet;
-    advCompleteCB_t         m_advCompCB;
+    advCompleteCB_t         m_advCompCB{nullptr};
     uint8_t                 m_slaveItvl[4];
     uint32_t                m_duration;
     std::vector<uint8_t>    m_svcData16;
