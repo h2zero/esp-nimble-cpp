@@ -161,8 +161,8 @@ public:
 
     /**
      * @brief Called when using numeric comparision for pairing.
-     * @param [in] address The address to the peer device making the pairing attempt.
-     * Should be passed back to NimBLEServer::injectConfirmPIN
+     * @param [in] connInfo A reference to a NimBLEConnInfo instance with information
+     * Should be passed back to NimBLEDevice::injectConfirmPIN
      * @param [in] pin The pin to compare with the client.
      */
     virtual void onConfirmPIN(const NimBLEConnInfo& connInfo, uint32_t pin);

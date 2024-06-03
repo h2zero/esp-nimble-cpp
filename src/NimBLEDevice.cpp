@@ -1158,7 +1158,7 @@ int NimBLEDevice::startSecurity(uint16_t conn_id) {
 
 /**
  * @brief Inject the provided passkey into the Security Manager
- * @param [in] address Address to the peer connection
+ * @param [in] peerInfo Connection information for the peer
  * @param [in] pin The 6-digit pin to inject
  * @return true if the passkey was injected successfully.
  */
