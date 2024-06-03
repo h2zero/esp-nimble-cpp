@@ -160,26 +160,19 @@ public:
     virtual uint32_t onPassKeyDisplay();
 
     /**
-     * @brief Called when a client requests a passkey for pairing (input).
-     * @param [in] address The address to the peer device making the pairing attempt.
-     * Should be passed back to NimBLEServer::injectPassKey
-     */
-    virtual void onPassKeyEntry(const NimBLEAddress& address);
-
-    /**
      * @brief Called when using numeric comparision for pairing.
      * @param [in] address The address to the peer device making the pairing attempt.
      * Should be passed back to NimBLEServer::injectConfirmPIN
      * @param [in] pin The pin to compare with the client.
      */
-    virtual void onConfirmPIN(const NimBLEAddress& address, uint32_t pin);
+    virtual void onConfirmPIN(const NimBLEConnInfo& connInfo, uint32_t pin);
 
     /**
      * @brief Called when the pairing procedure is complete.
      * @param [in] connInfo A reference to a NimBLEConnInfo instance with information
      * about the peer connection parameters.
      */
-    virtual void onAuthenticationComplete(NimBLEConnInfo& connInfo);
+    virtual void onAuthenticationComplete(const NimBLEConnInfo& connInfo);
 }; // NimBLEServerCallbacks
 
 #endif /* CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_PERIPHERAL */

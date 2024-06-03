@@ -52,21 +52,13 @@ class ServerCallbacks: public NimBLEServerCallbacks {
         return 123456;
     };
 
-    void onPassKeyEntry(const BLEAddress& address){
-        printf("Server Passkey Entry\n");
-        /** This should prompt the user to enter the passkey displayed
-         * on the peer device.
-         */
-        NimBLEDevice::getServer()->injectPassKey(address, 123456);
-    };
-
-    void onConfirmPIN(const BLEAddress& address, uint32_t pass_key){
-        printf("The passkey YES/NO number: %d\n", pass_key);
+    void onConfirmPIN(const NimBLEConnInfo& connInfo, uint32_t pass_key){
+        printf("The passkey YES/NO number: %" PRIu32 "\n", pass_key);
         /** Inject false if passkeys don't match. */
-        NimBLEDevice::getServer()->injectConfirmPIN(address, true);
+        NimBLEDevice::injectConfirmPIN(connInfo, true);
     };
 
-    void onAuthenticationComplete(NimBLEConnInfo& connInfo){
+    void onAuthenticationComplete(const NimBLEConnInfo& connInfo){
         /** Check that encryption was successful, if not we disconnect the client */
         if(!connInfo.isEncrypted()) {
             NimBLEDevice::getServer()->disconnect(connInfo.getConnHandle());

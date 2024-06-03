@@ -542,7 +542,7 @@ int NimBLEServer::handleGapEvent(struct ble_gap_event *event, void *arg) {
                     return BLE_ATT_ERR_INVALID_HANDLE;
                 }
 
-                pServer->m_pServerCallbacks->onConfirmPIN(peerInfo.getAddress(), event->passkey.params.numcmp);
+                pServer->m_pServerCallbacks->onConfirmPIN(peerInfo, event->passkey.params.numcmp);
             //TODO: Handle out of band pairing
             } else if (event->passkey.params.action == BLE_SM_IOACT_OOB) {
                 static uint8_t tem_oob[16] = {0};
@@ -553,15 +553,6 @@ int NimBLEServer::handleGapEvent(struct ble_gap_event *event, void *arg) {
                 rc = ble_sm_inject_io(event->passkey.conn_handle, &pkey);
                 NIMBLE_LOGD(LOG_TAG, "BLE_SM_IOACT_OOB; ble_sm_inject_io result: %d", rc);
             //////////////////////////////////
-            } else if (event->passkey.params.action == BLE_SM_IOACT_INPUT) {
-                NIMBLE_LOGD(LOG_TAG, "Enter the passkey");
-
-                rc = ble_gap_conn_find(event->passkey.conn_handle, &peerInfo.m_desc);
-                if(rc != 0) {
-                    return BLE_ATT_ERR_INVALID_HANDLE;
-                }
-
-                pServer->m_pServerCallbacks->onPassKeyEntry(peerInfo.getAddress());
             } else if (event->passkey.params.action == BLE_SM_IOACT_NONE) {
                 NIMBLE_LOGD(LOG_TAG, "No passkey action required");
             }
@@ -859,17 +850,12 @@ uint32_t NimBLEServerCallbacks::onPassKeyDisplay(){
     return 123456;
 } //onPassKeyDisplay
 
-void NimBLEServerCallbacks::onPassKeyEntry(const NimBLEAddress& address){
-    NIMBLE_LOGD("NimBLEServerCallbacks", "onPassKeyEntry: default: 123456");
-    NimBLEDevice::getServer()->injectPassKey(address, 123456);
-} //onPassKeyEntry
-
-void NimBLEServerCallbacks::onConfirmPIN(const NimBLEAddress& address, uint32_t pin){
+void NimBLEServerCallbacks::onConfirmPIN(const NimBLEConnInfo& connInfo, uint32_t pin){
     NIMBLE_LOGD("NimBLEServerCallbacks", "onConfirmPIN: default: true");
-    NimBLEDevice::getServer()->injectConfirmPIN(address, true);
+    NimBLEDevice::injectConfirmPIN(connInfo, true);
 } // onConfirmPIN
 
-void NimBLEServerCallbacks::onAuthenticationComplete(NimBLEConnInfo& connInfo){
+void NimBLEServerCallbacks::onAuthenticationComplete(const NimBLEConnInfo& connInfo){
     NIMBLE_LOGD("NimBLEServerCallbacks", "onAuthenticationComplete: default");
 } // onAuthenticationComplete
 
