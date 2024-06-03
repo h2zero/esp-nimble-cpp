@@ -263,60 +263,6 @@ void NimBLEServer::advertiseOnDisconnect(bool aod) {
 } // advertiseOnDisconnect
 #endif
 
-/**
- * @brief Inject the provided passkey into the Security Manager
- * @param [in] address Address to the peer connection
- * @param [in] pin The 6-digit pin to inject
- */
-void NimBLEServer::injectPassKey(const NimBLEAddress& address, uint32_t pin) {
-    NimBLEConnInfo peerInfo;
-    ble_addr_t peerAddr;
-    int rc = 0;
-    struct ble_sm_io pkey = {0,0};
-
-    pkey.action = BLE_SM_IOACT_INPUT;
-    pkey.passkey = pin;
-
-    peerAddr.type = address.getType();
-    memcpy(peerAddr.val, address.getNative(), 6);
-
-    rc = ble_gap_conn_find_by_addr(&peerAddr, &peerInfo.m_desc);
-    if (rc != 0) {
-        NIMBLE_LOGW(LOG_TAG, "BLE_SM_IOACT_INPUT; ble_gap_conn_find_by_addr result: %d", rc);
-        return;
-    }
-
-    rc = ble_sm_inject_io(peerInfo.getConnHandle(), &pkey);
-
-    NIMBLE_LOGD(LOG_TAG, "BLE_SM_IOACT_INPUT; ble_sm_inject_io result: %d", rc);
-}
-
-/**
- * @brief Inject the provided numeric comparison response into the Security Manager
- * @param [in] address Address to the peer connection
- * @param [in] accept Whether the user confirmed or declined the comparison
- */
-void NimBLEServer::injectConfirmPIN(const NimBLEAddress& address, bool accept) {
-    NimBLEConnInfo peerInfo;
-    ble_addr_t peerAddr;
-    int rc = 0;
-    struct ble_sm_io pkey = {0,0};
-
-    pkey.action = BLE_SM_IOACT_NUMCMP;
-    pkey.numcmp_accept = accept;
-
-    peerAddr.type = address.getType();
-    memcpy(peerAddr.val, address.getNative(), 6);
-
-    rc = ble_gap_conn_find_by_addr(&peerAddr, &peerInfo.m_desc);
-    if (rc != 0) {
-        NIMBLE_LOGW(LOG_TAG, "BLE_SM_IOACT_NUMCMP; ble_gap_conn_find_by_addr result: %d", rc);
-        return;
-    }
-
-    rc = ble_sm_inject_io(peerInfo.getConnHandle(), &pkey);
-    NIMBLE_LOGD(LOG_TAG, "BLE_SM_IOACT_NUMCMP; ble_sm_inject_io result: %d", rc);
-}
 
 /**
  * @brief Return the number of connected clients.
