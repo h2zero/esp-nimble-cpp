@@ -59,35 +59,29 @@ class MyServerCallbacks: public BLEServerCallbacks {
     }
   /***************** New - Security handled here ********************
   ****** Note: these are the same return values as defaults ********/
-<<<<<<< HEAD
-    uint32_t onPassKeyRequest(){
-      printf("Server PassKeyRequest\n");
-      return 123456;
-    }
-
-    bool onConfirmPIN(uint32_t pass_key){
-      printf("The passkey YES/NO number: %" PRIu32"\n", pass_key);
-      return true;
-=======
     uint32_t onPassKeyDisplay(){
-      printf("Server PassKeyDisplay\n");
-      return 123456; 
-    }
+        printf("Server Passkey Display\n");
+        /** This should return a random 6 digit number for security
+         *  or make your own static passkey as done here.
+         */
+        return 123456;
+    };
 
-    void onPassKeyEntry(const BLEAddress& address){
-      printf("Server PassKeyEntry\n");
-      BLEDevice::getServer()->injectPassKey(address, 123456);
-    }
+    void onConfirmPIN(const NimBLEConnInfo& connInfo, uint32_t pass_key){
+        printf("The passkey YES/NO number: %" PRIu32 "\n", pass_key);
+        /** Inject false if passkeys don't match. */
+        NimBLEDevice::injectConfirmPIN(connInfo, true);
+    };
 
-    void onConfirmPIN(const BLEAddress& address, uint32_t pass_key){
-      printf("The passkey YES/NO number: %d\n", pass_key);
-      BLEDevice::getServer()->injectConfirmPIN(address, true);
->>>>>>> c721ae0 (Update examples to match new methods of PassKey and Numeric Comparison)
-    }
-
-    void onAuthenticationComplete(BLEConnInfo& connInfo){
-      printf("Starting BLE work!\n");
-    }
+    void onAuthenticationComplete(const NimBLEConnInfo& connInfo){
+        /** Check that encryption was successful, if not we disconnect the client */
+        if(!connInfo.isEncrypted()) {
+            NimBLEDevice::getServer()->disconnect(connInfo.getConnHandle());
+            printf("Encrypt connection failed - disconnecting client\n");
+            return;
+        }
+        printf("Starting BLE work!");
+    };
   /*******************************************************************/
 };
 
