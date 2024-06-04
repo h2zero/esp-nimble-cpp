@@ -564,7 +564,7 @@ uint16_t NimBLEClient::getConnId() {
  *       enables the GATT Server to read the name of the device that has
  *       connected to it.
  */
-bool NimBLEClient::setConnection(const NimBLEConnInfo &connInfo) {
+bool NimBLEClient::setConnection(NimBLEConnInfo &connInfo) {
     if (isConnected() || m_connEstablished) {
         NIMBLE_LOGE(LOG_TAG, "Already connected");
         return false;

@@ -61,7 +61,7 @@ public:
                                                                    bool deleteCallbacks = true);
     std::string                                 toString();
     uint16_t                                    getConnId();
-    bool                                        setConnection(const NimBLEConnInfo &conn_info);
+    bool                                        setConnection(NimBLEConnInfo &conn_info);
     bool                                        setConnId(uint16_t conn_id);
     bool                                        setConnId(uint16_t conn_id, const NimBLEAddress &peerAddress);
     uint16_t                                    getMTU();
