@@ -551,6 +551,17 @@ uint16_t NimBLEClient::getConnId() {
     return m_conn_id;
 } // getConnId
 
+/**
+ * @brief Clear the connection information for this client.
+ * @note This is designed to be used to reset the connection information after
+ *       calling setConnection(), and should not be used to disconnect from a
+ *       peer. To disconnect from a peer, use disconnect().
+ */
+void NimBLEClient::clearConnection() {
+    m_conn_id = BLE_HS_CONN_HANDLE_NONE;
+    m_connEstablished = false;
+    m_peerAddress = NimBLEAddress();
+} // clearConnection
 
 /**
  * @brief Set the connection information for this client.
