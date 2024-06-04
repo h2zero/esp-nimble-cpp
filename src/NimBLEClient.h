@@ -63,7 +63,6 @@ public:
     uint16_t                                    getConnId();
     bool                                        setConnection(NimBLEConnInfo &conn_info);
     bool                                        setConnection(uint16_t conn_id);
-    bool                                        setConnection(uint16_t conn_id, const NimBLEAddress &peerAddress);
     uint16_t                                    getMTU();
     bool                                        secureConnection();
     void                                        setConnectTimeout(uint32_t timeout);
