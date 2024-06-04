@@ -1208,7 +1208,7 @@ int NimBLEClient::handleGapEvent(struct ble_gap_event *event, void *arg) {
                 return 0;
 
             NimBLEConnInfo peerInfo;
-            rc = ble_gap_conn_find(event->enc_change.conn_handle, &peerInfo.m_desc);
+            rc = ble_gap_conn_find(event->passkey.conn_handle, &peerInfo.m_desc);
             if (rc != 0) {
                 NIMBLE_LOGE(LOG_TAG, "Connection info not found");
                 rc = 0;
