@@ -3,12 +3,51 @@
 All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
+## Fixed
+- `NimBLEDevice::getPower` return value corrected to return `-3` when the power level is set to `ESP_PWR_LVL_N3`.
+- Fixed building with esp-idf version 5.x.
+- Fixed pairing failing when the process was started by the peer first.
+- `NimBLEService::getHandle` will now fetch the handle from the stack if not valid to avoid returning an invalid value.
+- Fixed building with esp-idf and Arduino component.
+- `NimBLEHIDDevice::pnp` will now set the data correctly.
+
 ### Changed
 - NimBLESecurity class removed.
+- All functions that take a time input parameter now expect the value to be in milliseconds instead of seconds.
+- `NimBLEClientCallbacks::onDisconnect` now takes an additional `int reason` parameter to let the application know why the disconnect occurred.
+- `NimBLERemoteCharacteristic::registerForNotify` Has been removed.
+- `NimBLERemoteCharacteristic::readUInt16` Has been removed.
+- `NimBLERemoteCharacteristic::readUInt32` Has been removed.
+- `NimBLERemoteCharacteristic::readUInt8` Has been removed.
+- `NimBLERemoteCharacteristic::readFloat` Has been removed.
+- `NimBLECharacteristicCallbacks::onStatus` No longer takes a `status` parameter, refer to the return code for success/failure.
+- All connection oriented callbacks now receive a reference to `NimBLEConnInfo`, the `ble_gap_conn_desc` has also been replace with `NimBLEConnInfo` in the functions that received it.
+- `NimBLEAdvertisedDeviceCallbacks` Has been replaced by `NimBLEScanCallbacks` which contains the following methods: `onResult`, `onScanEnd`, and `onDiscovered`
+- - `NimBLEScanCallbacks::onResult`, functions the same as the old `NimBLEAdvertisedDeviceCallbacks::onResult`
+- - `NimBLEScanCallbacks::onScanEnd`, replaces the scanEnded callback passed to `NimBLEScan::start`
+- - `NimBLEScanCallbacks::onDiscovered`, This is called immediately when a device is first scanned, before any scan response data is available.
+- The callback parameter for `NimBLEScan::start` has been removed and the blocking overload of `NimBLEScan::start` has been replaced by an overload of `NimBLEScan::getResults` with the same parameters.
+- Added optional `conn_handle` parameter to `NimBLECharacteristic::notify` to allow for sending notifications to specific clients.
+- Added optional `NimBLEAddress` parameter to `NimBLEAdvertising::start` to allow for directed advertising to a peer.
+- `NimBLEAdvertisedDevice::getManufacturerData` now takes an optional index parameter for use in the case of multiple manufacturer data fields.
+- `NimBLEAdvertising::start` advertising complete callback is now defined as std::function to allow for using std::bind for callback functions.
+- `NimBLEDevice::deleteAllBonds` now returns true on success, otherwise false.
+- `NimBLEClientCallbacks::onPassKeyRequest` has been changed to `NimBLEClientCallbacks::onPassKeyEntry` which takes a `const NimBLEConnInfo` parameter and does not return a value. Instead or returning a value this callback should prompt a user to enter a pin number which is sent later via `NimBLEDevice::injectPassKey`.
+- `NimBLEClientCallbacks::onConfirmPin` no longer returns a value and now takes a `const NimBLEConnInfo` parameter. This should be used to prompt a user to confirm the pin on the display (YES/NO) after which the response should be sent with `NimBLEDevice::injectConfirmPIN`.
+- `NimBLEServer::onPassKeyRequest` has been replaced with `NimBLEServer::onPassKeyDisplay` which should display the pairing pin that the client is expected to send.
+- `NimBLEServer::onAuthenticationComplete` now takes a `const NimBLEConnInfo` parameter.
 
 ### Added
 - `NimBLEDevice::setDeviceName` to change the device name after initialization.
 - `NimBLEHIDDevice::batteryLevel` returns the HID device battery level characteristic.
+- `NimBLEAdvertisedDevice::getAdvFlags` returns the advertisement flags of the advertiser.
+- `NimBLEAdvertisedDevice::getPayloadByType` Generic use function that returns the data from the advertisement with the specified type.
+- `NimBLEAdvertisedDevice::haveType` Generic use function that returns true if the advertisement data contains a field with the specified type.
+- Support for esp32c6, esp32c2 and esp32h2.
+- `NimBLEClient::setConnection` to be able to set a clients connection parameters, useful when a server wants to read data from the connected client.
+- `NimBLEClient::clearConnection` compliments `setConnection` to allow the client instance to be reused.
+- `NimBLEDevice::injectPassKey` Used to send the pairing passkey instead of a return value from the client callback.
+- `NimBLEDevice::injectConfirmPIN` Used to send the numeric comparison pairing PIN confirmation instead of a return value from the client callback.
 
 ## [1.4.0] - 2022-07-31
 
@@ -120,7 +159,7 @@ All notable changes to this project will be documented in this file.
 
 - `NimBLEService::getCharacteristicByHandle`: Get a pointer to the characteristic object with the specified handle.
 
-- `NimBLEService::getCharacteristics`: Get the vector containing pointers to each characteristic associated with this service.  
+- `NimBLEService::getCharacteristics`: Get the vector containing pointers to each characteristic associated with this service.
 Overloads to get a vector containing pointers to all the characteristics in a service with the UUID. (supports multiple same UUID's in a service)
   - `NimBLEService::getCharacteristics(const char *uuid)`
   - `NimBLEService::getCharacteristics(const NimBLEUUID &uuid)`
@@ -164,10 +203,10 @@ Overloads to get a vector containing pointers to all the characteristics in a se
 
 - `NimBLEAdvertising` Custom scan response data can now be used without custom advertisment.
 
-- `NimBLEScan` Now uses the controller duplicate filter.  
+- `NimBLEScan` Now uses the controller duplicate filter.
 
-- `NimBLEAdvertisedDevice` Has been refactored to store the complete advertisement payload and no longer parses the data from each advertisement.  
-Instead the data will be parsed on-demand when the user application asks for specific data.  
+- `NimBLEAdvertisedDevice` Has been refactored to store the complete advertisement payload and no longer parses the data from each advertisement.
+Instead the data will be parsed on-demand when the user application asks for specific data.
 
 ### Fixed
 - `NimBLEHIDDevice` Characteristics now use encryption, this resolves an issue with communicating with devices requiring encryption for HID devices.
@@ -176,84 +215,84 @@ Instead the data will be parsed on-demand when the user application asks for spe
 ## [1.1.0] - 2021-01-20
 
 ### Added
-- `NimBLEDevice::setOwnAddrType` added to enable the use of random and random-resolvable addresses, by asukiaaa  
+- `NimBLEDevice::setOwnAddrType` added to enable the use of random and random-resolvable addresses, by asukiaaa
 
-- New examples for securing and authenticating client/server connections, by mblasee.  
+- New examples for securing and authenticating client/server connections, by mblasee.
 
-- `NimBLEAdvertising::SetMinPreferred` and `NimBLEAdvertising::SetMinPreferred` re-added.  
+- `NimBLEAdvertising::SetMinPreferred` and `NimBLEAdvertising::SetMinPreferred` re-added.
 
-- Conditional checks added for command line config options in `nimconfig.h` to support custom configuration in platformio.  
+- Conditional checks added for command line config options in `nimconfig.h` to support custom configuration in platformio.
 
-- `NimBLEClient::setValue` Now takes an extra bool parameter `response` to enable the use of write with response (default = false).  
+- `NimBLEClient::setValue` Now takes an extra bool parameter `response` to enable the use of write with response (default = false).
 
-- `NimBLEClient::getCharacteristic(uint16_t handle)` Enabling the use of the characteristic handle to be used to find 
-the NimBLERemoteCharacteristic object.  
+- `NimBLEClient::getCharacteristic(uint16_t handle)` Enabling the use of the characteristic handle to be used to find
+the NimBLERemoteCharacteristic object.
 
-- `NimBLEHIDDevice` class added by wakwak-koba.  
+- `NimBLEHIDDevice` class added by wakwak-koba.
 
-- `NimBLEServerCallbacks::onDisconnect` overloaded callback added to provide a ble_gap_conn_desc parameter for the application  
-to obtain information about the disconnected client.  
+- `NimBLEServerCallbacks::onDisconnect` overloaded callback added to provide a ble_gap_conn_desc parameter for the application
+to obtain information about the disconnected client.
 
-- Conditional checks in `nimconfig.h` for command line defined macros to support platformio config settings.  
+- Conditional checks in `nimconfig.h` for command line defined macros to support platformio config settings.
 
 ### Changed
-- `NimBLEAdvertising::start` now returns a bool value to indicate success/failure.  
+- `NimBLEAdvertising::start` now returns a bool value to indicate success/failure.
 
-- Some asserts were removed in `NimBLEAdvertising::start` and replaced with better return code handling and logging.    
+- Some asserts were removed in `NimBLEAdvertising::start` and replaced with better return code handling and logging.
 
-- If a host reset event occurs, scanning and advertising will now only be restarted if their previous duration was indefinite.  
+- If a host reset event occurs, scanning and advertising will now only be restarted if their previous duration was indefinite.
 
 - `NimBLERemoteCharacteristic::subscribe` and `NimBLERemoteCharacteristic::registerForNotify` will now set the callback
-regardless of the existance of the CCCD and return true unless the descriptor write operation failed.  
+regardless of the existance of the CCCD and return true unless the descriptor write operation failed.
 
-- Advertising tx power level is now sent in the advertisement packet instead of scan response.  
+- Advertising tx power level is now sent in the advertisement packet instead of scan response.
 
-- `NimBLEScan` When the scan ends the scan stopped flag is now set before calling the scan complete callback (if used)  
-this allows the starting of a new scan from the callback function.  
+- `NimBLEScan` When the scan ends the scan stopped flag is now set before calling the scan complete callback (if used)
+this allows the starting of a new scan from the callback function.
 
 ### Fixed
-- Sometimes `NimBLEClient::connect` would hang on the task block if no event arrived to unblock.  
-A time limit has been added to timeout appropriately.  
+- Sometimes `NimBLEClient::connect` would hang on the task block if no event arrived to unblock.
+A time limit has been added to timeout appropriately.
 
-- When getting descriptors for a characterisic the end handle of the service was used as a proxy for the characteristic end  
-handle. This would be rejected by some devices and has been changed to use the next characteristic handle as the end when possible.  
+- When getting descriptors for a characterisic the end handle of the service was used as a proxy for the characteristic end
+handle. This would be rejected by some devices and has been changed to use the next characteristic handle as the end when possible.
 
-- An exception could occur when deleting a client instance if a notification arrived while the attribute vectors were being  
-deleted. A flag has been added to prevent this.  
-  
-- An exception could occur after a host reset event when the host re-synced if the tasks that were stopped during the event did  
-not finish processing. A yield has been added after re-syncing to allow tasks to finish before proceeding.  
-  
-- Occasionally the controller would fail to send a disconnected event causing the client to indicate it is connected  
-and would be unable to reconnect. A timer has been added to reset the host/controller if it expires.  
-  
-- Occasionally the call to start scanning would get stuck in a loop on BLE_HS_EBUSY, this loop has been removed.  
+- An exception could occur when deleting a client instance if a notification arrived while the attribute vectors were being
+deleted. A flag has been added to prevent this.
 
-- 16bit and 32bit UUID's in some cases were not discovered or compared correctly if the device  
-advertised them as 16/32bit but resolved them to 128bits. Both are now checked.  
-  
-- `FreeRTOS` compile errors resolved in latest Ardruino core and IDF v3.3.  
+- An exception could occur after a host reset event when the host re-synced if the tasks that were stopped during the event did
+not finish processing. A yield has been added after re-syncing to allow tasks to finish before proceeding.
 
-- Multiple instances of `time()` called inside critical sections caused sporadic crashes, these have been moved out of critical regions.  
+- Occasionally the controller would fail to send a disconnected event causing the client to indicate it is connected
+and would be unable to reconnect. A timer has been added to reset the host/controller if it expires.
 
-- Advertisement type now correctly set when using non-connectable (advertiser only) mode.  
+- Occasionally the call to start scanning would get stuck in a loop on BLE_HS_EBUSY, this loop has been removed.
 
-- Advertising payload length correction, now accounts for appearance.  
+- 16bit and 32bit UUID's in some cases were not discovered or compared correctly if the device
+advertised them as 16/32bit but resolved them to 128bits. Both are now checked.
 
-- (Arduino) Ensure controller mode is set to BLE Only.  
+- `FreeRTOS` compile errors resolved in latest Ardruino core and IDF v3.3.
+
+- Multiple instances of `time()` called inside critical sections caused sporadic crashes, these have been moved out of critical regions.
+
+- Advertisement type now correctly set when using non-connectable (advertiser only) mode.
+
+- Advertising payload length correction, now accounts for appearance.
+
+- (Arduino) Ensure controller mode is set to BLE Only.
 
 
 ## [1.0.2] - 2020-09-13
 
 ### Changed
 
-- `NimBLEAdvertising::start` Now takes 2 optional parameters, the first is the duration to advertise for (in seconds), the second is a  
+- `NimBLEAdvertising::start` Now takes 2 optional parameters, the first is the duration to advertise for (in seconds), the second is a
 callback that is invoked when advertsing ends and takes a pointer to a `NimBLEAdvertising` object (similar to the `NimBLEScan::start` API).
 
 - (Arduino) Maximum BLE connections can now be altered by only changing the value of `CONFIG_BT_NIMBLE_MAX_CONNECTIONS` in `nimconfig.h`.
 Any changes to the controller max connection settings in `sdkconfig.h` will now have no effect when using this library.
 
-- (Arduino) Revert the previous change to fix the advertising start delay. Instead a replacement fix that routes all BLE controller commands from  
+- (Arduino) Revert the previous change to fix the advertising start delay. Instead a replacement fix that routes all BLE controller commands from
 a task running on core 0 (same as the controller) has been implemented. This improves response times and reliability for all BLE functions.
 
 
