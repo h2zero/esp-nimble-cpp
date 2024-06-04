@@ -579,7 +579,7 @@ bool NimBLEClient::setConnId(uint16_t conn_id) {
     }
 
     // ensure the address is valid
-    auto address = connInfo.getIdAddress();
+    auto address = connInfo.getAddress();
     if(address == NimBLEAddress("")) {
         NIMBLE_LOGE(LOG_TAG, "Invalid peer address;(NULL)");
         return false;
