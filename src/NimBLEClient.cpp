@@ -578,7 +578,7 @@ bool NimBLEClient::setConnection(NimBLEConnInfo &connInfo) {
 } // setConnection
 
 /**
- * @brief Set the connection id for this client.
+ * @brief Set the connection information for this client.
  * @param [in] conn_id The connection id.
  * @note Sets the connection established flag to true.
  * @note This is designed to be used when a connection is made outside of the
@@ -589,7 +589,7 @@ bool NimBLEClient::setConnection(NimBLEConnInfo &connInfo) {
  * @note If the client is already connected to a peer, this will return false.
  * @note This will look up the peer address using the connection id.
  */
-bool NimBLEClient::setConnId(uint16_t conn_id) {
+bool NimBLEClient::setConnnection(uint16_t conn_id) {
     if (isConnected() || m_connEstablished) {
         NIMBLE_LOGE(LOG_TAG, "Already connected");
         return false;
@@ -619,7 +619,7 @@ bool NimBLEClient::setConnId(uint16_t conn_id) {
 } // setConnId
 
 /**
- * @brief Set the connection id for this client.
+ * @brief Set the connection information for this client.
  * @param [in] conn_id The connection id.
  * @param [in] peerAddress The address of the peer that this client is
  * @note Sets the connection established flag to true.
@@ -630,7 +630,7 @@ bool NimBLEClient::setConnId(uint16_t conn_id) {
  *       connected to it.
  * @note If the client is already connected to a peer, this will return false.
  */
-bool NimBLEClient::setConnId(uint16_t conn_id, const NimBLEAddress &peerAddress) {
+bool NimBLEClient::setConnection(uint16_t conn_id, const NimBLEAddress &peerAddress) {
     if (isConnected() || m_connEstablished) {
         NIMBLE_LOGE(LOG_TAG, "Already connected");
         return false;
