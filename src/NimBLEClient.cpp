@@ -561,10 +561,68 @@ uint16_t NimBLEClient::getConnId() {
  *       NimBLEServer class and the client is passed the connection id. This use
  *       enables the GATT Server to read the name of the device that has
  *       connected to it.
+ * @note If the client is already connected to a peer, this will return false.
+ * @note This will look up the peer address using the connection id.
  */
-void NimBLEClient::setConnId(uint16_t conn_id) {
+bool NimBLEClient::setConnId(uint16_t conn_id) {
+    if (isConnected() || m_connEstablished) {
+        NIMBLE_LOGE(LOG_TAG, "Already connected");
+        return false;
+    }
+
+    // we weren't provided the peer address, look it up using ble_gap_conn_find
+    NimBLEConnInfo connInfo;
+    int rc = ble_gap_conn_find(m_conn_id, &connInfo.m_desc);
+    if (rc != 0) {
+        NIMBLE_LOGE(LOG_TAG, "Connection info not found");
+        return false;
+    }
+
+    // ensure the address is valid
+    auto address = connInfo.getIdAddress();
+    if(address == NimBLEAddress("")) {
+        NIMBLE_LOGE(LOG_TAG, "Invalid peer address;(NULL)");
+        return false;
+    }
+
+    // we're good, so update the state
     m_conn_id = conn_id;
     m_connEstablished = true;
+    m_peerAddress = address;
+
+    return true;
+} // setConnId
+
+/**
+ * @brief Set the connection id for this client.
+ * @param [in] conn_id The connection id.
+ * @param [in] peerAddress The address of the peer that this client is
+ * @note Sets the connection established flag to true.
+ * @note This is designed to be used when a connection is made outside of the
+ *       NimBLEClient class, such as when a connection is made by the
+ *       NimBLEServer class and the client is passed the connection id. This use
+ *       enables the GATT Server to read the name of the device that has
+ *       connected to it.
+ * @note If the client is already connected to a peer, this will return false.
+ */
+bool NimBLEClient::setConnId(uint16_t conn_id, const NimBLEAddress &peerAddress) {
+    if (isConnected() || m_connEstablished) {
+        NIMBLE_LOGE(LOG_TAG, "Already connected");
+        return false;
+    }
+
+    // ensure the address is valid
+    if(peerAddress == NimBLEAddress("")) {
+        NIMBLE_LOGE(LOG_TAG, "Invalid peer address;(NULL)");
+        return false;
+    }
+
+    // we're good, so update the state
+    m_conn_id = conn_id;
+    m_connEstablished = true;
+    m_peerAddress = peerAddress;
+
+    return true;
 } // setConnId
 
 /**
