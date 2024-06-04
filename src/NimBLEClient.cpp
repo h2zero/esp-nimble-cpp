@@ -589,7 +589,7 @@ bool NimBLEClient::setConnection(NimBLEConnInfo &connInfo) {
  * @note If the client is already connected to a peer, this will return false.
  * @note This will look up the peer address using the connection id.
  */
-bool NimBLEClient::setConnnection(uint16_t conn_id) {
+bool NimBLEClient::setConnection(uint16_t conn_id) {
     if (isConnected() || m_connEstablished) {
         NIMBLE_LOGE(LOG_TAG, "Already connected");
         return false;
