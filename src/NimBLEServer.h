@@ -81,8 +81,6 @@ public:
 #if !CONFIG_BT_NIMBLE_EXT_ADV || defined(_DOXYGEN_)
     void                   advertiseOnDisconnect(bool);
 #endif
-    void                   injectPassKey(const NimBLEAddress& address, uint32_t pin);
-    void                   injectConfirmPIN(const NimBLEAddress& address, bool accept);
 
 private:
     NimBLEServer();
