@@ -567,10 +567,16 @@ int NimBLEDevice::getNumBonds() {
 
 /**
  * @brief Deletes all bonding information.
+ * @returns true on success, false on failure.
  */
 /*STATIC*/
-void NimBLEDevice::deleteAllBonds() {
-    ble_store_clear();
+bool NimBLEDevice::deleteAllBonds() {
+    int rc = ble_store_clear();
+    if (rc != 0) {
+        NIMBLE_LOGE(LOG_TAG, "Failed to delete all bonds; rc=%d", rc);
+        return false;
+    }
+    return true;
 }
 
 
@@ -1148,6 +1154,43 @@ int NimBLEDevice::startSecurity(uint16_t conn_id) {
 
     return rc;
 } // startSecurity
+
+
+/**
+ * @brief Inject the provided passkey into the Security Manager
+ * @param [in] peerInfo Connection information for the peer
+ * @param [in] pin The 6-digit pin to inject
+ * @return true if the passkey was injected successfully.
+ */
+bool NimBLEDevice::injectPassKey(const NimBLEConnInfo& peerInfo, uint32_t pin) {
+    int rc = 0;
+    struct ble_sm_io pkey = {0,0};
+
+    pkey.action = BLE_SM_IOACT_INPUT;
+    pkey.passkey = pin;
+
+    rc = ble_sm_inject_io(peerInfo.getConnHandle(), &pkey);
+    NIMBLE_LOGD(LOG_TAG, "BLE_SM_IOACT_INPUT; ble_sm_inject_io result: %d", rc);
+    return rc == 0;
+}
+
+
+/**
+ * @brief Inject the provided numeric comparison response into the Security Manager
+ * @param [in] peerInfo Connection information for the peer
+ * @param [in] accept Whether the user confirmed or declined the comparison
+ */
+bool NimBLEDevice::injectConfirmPIN(const NimBLEConnInfo& peerInfo, bool accept) {
+    int rc = 0;
+    struct ble_sm_io pkey = {0,0};
+
+    pkey.action = BLE_SM_IOACT_NUMCMP;
+    pkey.numcmp_accept = accept;
+
+    rc = ble_sm_inject_io(peerInfo.getConnHandle(), &pkey);
+    NIMBLE_LOGD(LOG_TAG, "BLE_SM_IOACT_NUMCMP; ble_sm_inject_io result: %d", rc);
+    return rc == 0;
+}
 
 
 /**
