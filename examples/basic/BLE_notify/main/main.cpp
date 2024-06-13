@@ -138,7 +138,6 @@ void app_main(void) {
                       NIMBLE_PROPERTY::INDICATE
                     );
 
-  // https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.descriptor.gatt.client_characteristic_configuration.xml
   // Create a BLE Descriptor
   /***************************************************
    NOTE: DO NOT create a 2902 descriptor.
