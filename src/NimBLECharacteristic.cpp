@@ -236,14 +236,13 @@ NimBLEUUID NimBLECharacteristic::getUUID() {
  * @brief Retrieve the current value of the characteristic.
  * @return The NimBLEAttValue containing the current characteristic value.
  */
-NimBLEAttValue NimBLECharacteristic::getValue(time_t *timestamp) {
+NimBLEAttValue* NimBLECharacteristic::getValue(time_t *timestamp) {
     if(timestamp != nullptr) {
         m_value.getValue(timestamp);
     }
 
-    return m_value;
+    return &m_value;
 } // getValue
-
 
 /**
  * @brief Retrieve the the current data length of the characteristic.
