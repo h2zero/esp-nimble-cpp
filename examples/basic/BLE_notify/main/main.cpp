@@ -152,7 +152,7 @@ void app_main(void) {
   // Start advertising
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
   pAdvertising->addServiceUUID(SERVICE_UUID);
-  pAdvertising->setScanResponse(false);
+  pAdvertising->enableScanResponse(false);
   /** This method had been removed **
   pAdvertising->setMinPreferred(0x0);  // set value to 0x00 to not advertise this parameter
   **/
