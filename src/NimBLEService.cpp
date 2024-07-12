@@ -47,6 +47,8 @@ NimBLEService::NimBLEService(const NimBLEUUID &uuid) {
     m_handle       = NULL_HANDLE;
     m_pSvcDef      = nullptr;
     m_removed      = 0;
+    m_secondary    = false;
+    m_pSecSvcDef   = nullptr;
 
 } // NimBLEService
 
@@ -63,6 +65,13 @@ NimBLEService::~NimBLEService() {
         }
 
         delete(m_pSvcDef);
+    }
+
+    if(m_pSecSvcDef != nullptr) {
+        for(auto &it : m_secSvcVec) {
+            delete it;
+        }
+        delete m_pSecSvcDef;
     }
 
     for(auto &it : m_chrVec) {
@@ -130,7 +139,7 @@ bool NimBLEService::start() {
         ble_gatt_chr_def* pChr_a = nullptr;
         ble_gatt_dsc_def* pDsc_a = nullptr;
 
-        svc[0].type = BLE_GATT_SVC_TYPE_PRIMARY;
+        svc[0].type = m_secondary ? BLE_GATT_SVC_TYPE_SECONDARY : BLE_GATT_SVC_TYPE_PRIMARY;
         svc[0].uuid = &m_uuid.getNative()->u;
         svc[0].includes = NULL;
 
@@ -222,6 +231,19 @@ bool NimBLEService::start() {
         // end of services must indicate to api with type = 0
         svc[1].type = 0;
         m_pSvcDef = svc;
+
+        if(m_secSvcVec.size() > 0){
+            size_t numSecSvcs = m_secSvcVec.size();
+            ble_gatt_svc_def** m_pSecSvcDef = new ble_gatt_svc_def*[numSecSvcs + 1];
+            int i = 0;
+            for(auto& it : m_secSvcVec) {
+                it->start();
+                m_pSecSvcDef[i] = it->m_pSvcDef;
+                ++i;
+            }
+            m_pSecSvcDef[numSecSvcs] = nullptr;
+            m_pSvcDef->includes = (const ble_gatt_svc_def**)m_pSecSvcDef;
+        }
     }
 
     int rc = ble_gatts_count_cfg((const ble_gatt_svc_def*)m_pSvcDef);
@@ -234,7 +256,6 @@ bool NimBLEService::start() {
     if (rc != 0) {
         NIMBLE_LOGE(LOG_TAG, "ble_gatts_add_svcs, rc= %d, %s", rc, NimBLEUtils::returnCodeToString(rc));
         return false;
-
     }
 
     NIMBLE_LOGD(LOG_TAG, "<< start()");
@@ -252,6 +273,44 @@ uint16_t NimBLEService::getHandle() {
     }
     return m_handle;
 } // getHandle
+
+
+/**
+ * @brief Creates a BLE service as a secondary service to the service this was called from.
+ * @param [in] uuid The UUID of the secondary service.
+ * @return A reference to the new secondary service object.
+ */
+NimBLEService* NimBLEService::createService(const NimBLEUUID &uuid) {
+    NIMBLE_LOGD(LOG_TAG, ">> createService - %s", uuid.toString().c_str());
+
+    NimBLEServer* pServer = getServer();
+    NimBLEService* pService = new NimBLEService(uuid, 0, pServer);
+    m_secSvcVec.push_back(pService);
+    pService->m_secondary = true;
+    pServer->serviceChanged();
+
+    NIMBLE_LOGD(LOG_TAG, "<< createService");
+    return pService;
+}
+
+
+/**
+ * @brief Adds a secondary service to this service which was either already created but removed from availability,\n
+ * or created and later added.
+ * @param [in] service The secondary service object to add.
+ */
+void NimBLEService::addService(NimBLEService* service) {
+    // If adding a service that was not removed add it and return.
+    // Else reset GATT and send service changed notification.
+    if(service->m_removed == 0) {
+        m_secSvcVec.push_back(service);
+        return;
+    }
+
+    service->m_secondary = true;
+    service->m_removed = 0;
+    getServer()->serviceChanged();
+}
 
 
 /**
