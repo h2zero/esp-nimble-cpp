@@ -31,13 +31,13 @@ void app_main(void) {
   BLEService *pService = pServer->createService(SERVICE_UUID);
   BLECharacteristic *pCharacteristic = pService->createCharacteristic(
                                         CHARACTERISTIC_UUID,
-                                  /***** Enum Type NIMBLE_PROPERTY now *****      
+                                  /***** Enum Type NIMBLE_PROPERTY now *****
                                         BLECharacteristic::PROPERTY_READ   |
-                                        BLECharacteristic::PROPERTY_WRITE  
+                                        BLECharacteristic::PROPERTY_WRITE
                                         );
                                   *****************************************/
                                         NIMBLE_PROPERTY::READ |
-                                        NIMBLE_PROPERTY::WRITE 
+                                        NIMBLE_PROPERTY::WRITE
                                        );
 
   pCharacteristic->setValue("Hello World says Neil");
@@ -45,13 +45,13 @@ void app_main(void) {
   // BLEAdvertising *pAdvertising = pServer->getAdvertising();  // this still is working for backward compatibility
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
   pAdvertising->addServiceUUID(SERVICE_UUID);
-  pAdvertising->setScanResponse(true);
-  
+  pAdvertising->enableScanResponse(true);
+
   /** These methods have been removed **
   pAdvertising->setMinPreferred(0x06);  // functions that help with iPhone connections issue
   pAdvertising->setMinPreferred(0x12);
   */
-  
+
   BLEDevice::startAdvertising();
   printf("Characteristic defined! Now you can read it in your phone!\n");
 }

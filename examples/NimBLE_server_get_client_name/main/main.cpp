@@ -60,7 +60,7 @@ extern "C" void app_main(void) {
 
     BLEAdvertising* pAdvertising = NimBLEDevice::getAdvertising();
     pAdvertising->addServiceUUID(SERVICE_UUID);
-    pAdvertising->setScanResponse(true);
+    pAdvertising->enableScanResponse(true);
 
     pAdvertising->start();
     printf("Advertising started, connect with your phone.\n");

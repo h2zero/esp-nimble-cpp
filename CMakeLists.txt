@@ -44,6 +44,7 @@ idf_component_register(
     "src/NimBLE2904.cpp"
     "src/NimBLEAddress.cpp"
     "src/NimBLEAdvertisedDevice.cpp"
+    "src/NimBLEAdvertisementData.cpp"
     "src/NimBLEAdvertising.cpp"
     "src/NimBLEAttValue.cpp"
     "src/NimBLEBeacon.cpp"
