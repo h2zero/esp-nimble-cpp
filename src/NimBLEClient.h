@@ -103,7 +103,6 @@ private:
     int32_t                 m_connectTimeout;
     NimBLEClientCallbacks*  m_pClientCallbacks;
     ble_task_data_t*        m_pTaskData;
-    ble_npl_callout         m_dcTimer;
 #if CONFIG_BT_NIMBLE_EXT_ADV
     uint8_t                 m_phyMask;
 #endif
