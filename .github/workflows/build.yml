@@ -4,6 +4,8 @@ on:
   workflow_dispatch:      # Start a workflow
   pull_request:
   push:
+    branches:
+      - master
 
 jobs:
   build-esp-idf-component:
