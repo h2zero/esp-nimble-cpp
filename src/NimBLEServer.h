@@ -18,10 +18,8 @@
 #include "nimconfig.h"
 #if defined(CONFIG_BT_ENABLED) && defined(CONFIG_BT_NIMBLE_ROLE_PERIPHERAL)
 
-#define NIMBLE_ATT_REMOVE_HIDE 1
-#define NIMBLE_ATT_REMOVE_DELETE 2
-
-#define onMtuChanged onMTUChange
+class NimBLEServer;
+class NimBLEServerCallbacks;
 
 #include "NimBLEUtils.h"
 #include "NimBLEAddress.h"
@@ -31,13 +29,13 @@
 #include "NimBLEAdvertising.h"
 #endif
 #include "NimBLEService.h"
+#include "NimBLECharacteristic.h"
 #include "NimBLEConnInfo.h"
 
+#define NIMBLE_ATT_REMOVE_HIDE 1
+#define NIMBLE_ATT_REMOVE_DELETE 2
 
-class NimBLEService;
-class NimBLECharacteristic;
-class NimBLEServerCallbacks;
-
+#define onMtuChanged onMTUChange
 
 /**
  * @brief The model of a %BLE server.
@@ -122,6 +120,9 @@ private:
     void                   resetGATT();
     bool                   setIndicateWait(uint16_t conn_handle);
     void                   clearIndicateWait(uint16_t conn_handle);
+
+    static int             handleGattEvent(uint16_t conn_handle, uint16_t attr_handle,
+                                           struct ble_gatt_access_ctxt *ctxt, void *arg);
 
 }; // NimBLEServer
 

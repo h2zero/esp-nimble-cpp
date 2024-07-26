@@ -92,7 +92,7 @@ class scanCallbacks: public NimBLEScanCallbacks {
 void notifyCB(NimBLERemoteCharacteristic* pRemoteCharacteristic, uint8_t* pData, size_t length, bool isNotify){
     std::string str = (isNotify == true) ? "Notification" : "Indication";
     str += " from ";
-    str += pRemoteCharacteristic->getRemoteService()->getClient()->getPeerAddress().toString();
+    str += pRemoteCharacteristic->getClient()->getPeerAddress().toString();
     str += ": Service = " + pRemoteCharacteristic->getRemoteService()->getUUID().toString();
     str += ", Characteristic = " + pRemoteCharacteristic->getUUID().toString();
     str += ", Value = " + std::string((char*)pData, length);
