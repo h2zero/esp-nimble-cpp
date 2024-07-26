@@ -39,7 +39,7 @@ class ClientCallbacks : public NimBLEClientCallbacks {
 
     /********************* Security handled here **********************
     ****** Note: these are the same return values as defaults ********/
-    void onPassKeyEntry(const NimBLEConnInfo& connInfo){
+    void onPassKeyEntry(NimBLEConnInfo& connInfo){
         printf("Server Passkey Entry\n");
         /** This should prompt the user to enter the passkey displayed
          * on the peer device.
@@ -47,14 +47,14 @@ class ClientCallbacks : public NimBLEClientCallbacks {
         NimBLEDevice::injectPassKey(connInfo, 123456);
     };
 
-    void onConfirmPIN(const NimBLEConnInfo& connInfo, uint32_t pass_key){
+    void onConfirmPIN(NimBLEConnInfo& connInfo, uint32_t pass_key){
         printf("The passkey YES/NO number: %" PRIu32 "\n", pass_key);
         /** Inject false if passkeys don't match. */
         NimBLEDevice::injectConfirmPIN(connInfo, true);
     };
 
     /** Pairing process complete, we can check the results in connInfo */
-    void onAuthenticationComplete(const NimBLEConnInfo& connInfo){
+    void onAuthenticationComplete(NimBLEConnInfo& connInfo){
         if(!connInfo.isEncrypted()) {
             printf("Encrypt connection failed - disconnecting\n");
             /** Find the client with the connection handle provided in desc */
@@ -92,7 +92,7 @@ class scanCallbacks: public NimBLEScanCallbacks {
 void notifyCB(NimBLERemoteCharacteristic* pRemoteCharacteristic, uint8_t* pData, size_t length, bool isNotify){
     std::string str = (isNotify == true) ? "Notification" : "Indication";
     str += " from ";
-    str += pRemoteCharacteristic->getRemoteService()->getClient()->getPeerAddress().toString();
+    str += pRemoteCharacteristic->getClient()->getPeerAddress().toString();
     str += ": Service = " + pRemoteCharacteristic->getRemoteService()->getUUID().toString();
     str += ", Characteristic = " + pRemoteCharacteristic->getUUID().toString();
     str += ", Value = " + std::string((char*)pData, length);
