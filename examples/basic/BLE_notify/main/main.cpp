@@ -65,13 +65,13 @@ class MyServerCallbacks: public BLEServerCallbacks {
         return 123456;
     };
 
-    void onConfirmPIN(const NimBLEConnInfo& connInfo, uint32_t pass_key){
+    void onConfirmPIN(NimBLEConnInfo& connInfo, uint32_t pass_key){
         printf("The passkey YES/NO number: %" PRIu32 "\n", pass_key);
         /** Inject false if passkeys don't match. */
         NimBLEDevice::injectConfirmPIN(connInfo, true);
     };
 
-    void onAuthenticationComplete(const NimBLEConnInfo& connInfo){
+    void onAuthenticationComplete(NimBLEConnInfo& connInfo){
         /** Check that encryption was successful, if not we disconnect the client */
         if(!connInfo.isEncrypted()) {
             NimBLEDevice::getServer()->disconnect(connInfo.getConnHandle());
