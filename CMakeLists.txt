@@ -52,6 +52,7 @@ idf_component_register(
     "src/NimBLERemoteCharacteristic.cpp"
     "src/NimBLERemoteDescriptor.cpp"
     "src/NimBLERemoteService.cpp"
+    "src/NimBLERemoteValueAttribute.cpp"
     "src/NimBLEScan.cpp"
     "src/NimBLEServer.cpp"
     "src/NimBLEService.cpp"
