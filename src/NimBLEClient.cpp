@@ -1327,20 +1327,20 @@ bool NimBLEClientCallbacks::onConnParamsUpdateRequest(NimBLEClient* pClient, con
     return true;
 }
 
-void NimBLEClientCallbacks::onPassKeyEntry(const NimBLEConnInfo& connInfo){
+void NimBLEClientCallbacks::onPassKeyEntry(NimBLEConnInfo& connInfo){
     NIMBLE_LOGD("NimBLEClientCallbacks", "onPassKeyEntry: default: 123456");
     NimBLEDevice::injectPassKey(connInfo, 123456);
 } //onPassKeyEntry
 
-void NimBLEClientCallbacks::onAuthenticationComplete(const NimBLEConnInfo& connInfo){
+void NimBLEClientCallbacks::onAuthenticationComplete(NimBLEConnInfo& connInfo){
     NIMBLE_LOGD("NimBLEClientCallbacks", "onAuthenticationComplete: default");
 }
 
-void NimBLEClientCallbacks::onIdentity(const NimBLEConnInfo& connInfo){
+void NimBLEClientCallbacks::onIdentity(NimBLEConnInfo& connInfo){
     NIMBLE_LOGD("NimBLEClientCallbacks", "onIdentity: default");
 } // onIdentity
 
-void NimBLEClientCallbacks::onConfirmPIN(const NimBLEConnInfo& connInfo, uint32_t pin){
+void NimBLEClientCallbacks::onConfirmPIN(NimBLEConnInfo& connInfo, uint32_t pin){
     NIMBLE_LOGD("NimBLEClientCallbacks", "onConfirmPIN: default: true");
     NimBLEDevice::injectConfirmPIN(connInfo, true);
 }

@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - master
+      - remove-conninfo-const
 
 jobs:
   build-esp-idf-component:

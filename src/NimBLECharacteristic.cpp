@@ -203,7 +203,7 @@ size_t NimBLECharacteristic::getSubscribedCount() const {
  * @brief Set the subscribe status for this characteristic.\n
  * This will maintain a vector of subscribed clients and their indicate/notify status.
  */
-void NimBLECharacteristic::setSubscribe(const ble_gap_event* event, const NimBLEConnInfo& connInfo) {
+void NimBLECharacteristic::setSubscribe(const ble_gap_event* event, NimBLEConnInfo& connInfo) {
     uint16_t subVal = 0;
     if (event->subscribe.cur_notify > 0 && (m_properties & NIMBLE_PROPERTY::NOTIFY)) {
         subVal |= NIMBLE_SUB_NOTIFY;
@@ -379,11 +379,11 @@ void NimBLECharacteristic::sendValue(const uint8_t* value, size_t length, bool i
     NIMBLE_LOGD(LOG_TAG, "<< sendValue");
 } // sendValue
 
-void NimBLECharacteristic::readEvent(const NimBLEConnInfo& connInfo) {
+void NimBLECharacteristic::readEvent(NimBLEConnInfo& connInfo) {
     m_pCallbacks->onRead(this, connInfo);
 }
 
-void NimBLECharacteristic::writeEvent(const uint8_t* val, uint16_t len, const NimBLEConnInfo& connInfo) {
+void NimBLECharacteristic::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) {
     setValue(val, len);
     m_pCallbacks->onWrite(this, connInfo);
 }
@@ -432,7 +432,7 @@ std::string NimBLECharacteristic::toString() const {
  * @param [in] pCharacteristic The characteristic that is the source of the event.
  * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
  */
-void NimBLECharacteristicCallbacks::onRead(NimBLECharacteristic* pCharacteristic, const NimBLEConnInfo& connInfo) {
+void NimBLECharacteristicCallbacks::onRead(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo) {
     NIMBLE_LOGD("NimBLECharacteristicCallbacks", "onRead: default");
 } // onRead
 
@@ -441,7 +441,7 @@ void NimBLECharacteristicCallbacks::onRead(NimBLECharacteristic* pCharacteristic
  * @param [in] pCharacteristic The characteristic that is the source of the event.
  * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
  */
-void NimBLECharacteristicCallbacks::onWrite(NimBLECharacteristic* pCharacteristic, const NimBLEConnInfo& connInfo) {
+void NimBLECharacteristicCallbacks::onWrite(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo) {
     NIMBLE_LOGD("NimBLECharacteristicCallbacks", "onWrite: default");
 } // onWrite
 
@@ -467,7 +467,7 @@ void NimBLECharacteristicCallbacks::onStatus(NimBLECharacteristic* pCharacterist
  * * 3 = Notifications and Indications
  */
 void NimBLECharacteristicCallbacks::onSubscribe(NimBLECharacteristic* pCharacteristic,
-                                                const NimBLEConnInfo& connInfo,
+                                                NimBLEConnInfo& connInfo,
                                                 uint16_t              subValue) {
     NIMBLE_LOGD("NimBLECharacteristicCallbacks", "onSubscribe: default");
 }

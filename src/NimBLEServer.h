@@ -78,7 +78,7 @@ public:
     NimBLEConnInfo         getPeerInfo(size_t index);
     NimBLEConnInfo         getPeerInfo(const NimBLEAddress& address);
     NimBLEConnInfo         getPeerIDInfo(uint16_t id);
-    std::string            getPeerName(const NimBLEConnInfo& connInfo);
+    std::string            getPeerName(NimBLEConnInfo& connInfo);
     void                   getPeerNameOnConnect(bool enable);
 #if !CONFIG_BT_NIMBLE_EXT_ADV || defined(_DOXYGEN_)
     void                   advertiseOnDisconnect(bool);
@@ -183,14 +183,14 @@ public:
      * Should be passed back to NimBLEDevice::injectConfirmPIN
      * @param [in] pin The pin to compare with the client.
      */
-    virtual void onConfirmPIN(const NimBLEConnInfo& connInfo, uint32_t pin);
+    virtual void onConfirmPIN(NimBLEConnInfo& connInfo, uint32_t pin);
 
     /**
      * @brief Called when the pairing procedure is complete.
      * @param [in] connInfo A reference to a NimBLEConnInfo instance with information
      * about the peer connection parameters.
      */
-    virtual void onAuthenticationComplete(const NimBLEConnInfo& connInfo);
+    virtual void onAuthenticationComplete(NimBLEConnInfo& connInfo);
 
     /**
      * @brief Called when the pairing procedure is complete.
@@ -198,13 +198,13 @@ public:
      * @param [in] name The name of the connected peer device.
      * about the peer connection parameters.
      */
-    virtual void onAuthenticationComplete(const NimBLEConnInfo& connInfo, const std::string& name);
+    virtual void onAuthenticationComplete(NimBLEConnInfo& connInfo, const std::string& name);
 
     /**
      * @brief Called when the peer identity address is resolved.
      * @param [in] connInfo A reference to a NimBLEConnInfo instance with information
      */
-    virtual void onIdentity(const NimBLEConnInfo& connInfo);
+    virtual void onIdentity(NimBLEConnInfo& connInfo);
 }; // NimBLEServerCallbacks
 
 #endif /* CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_PERIPHERAL */

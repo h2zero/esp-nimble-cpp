@@ -148,27 +148,27 @@ public:
      * @brief Called when server requests a passkey for pairing.
      * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
      */
-    virtual void onPassKeyEntry(const NimBLEConnInfo& connInfo);
+    virtual void onPassKeyEntry(NimBLEConnInfo& connInfo);
 
     /**
      * @brief Called when the pairing procedure is complete.
      * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.\n
      * This can be used to check the status of the connection encryption/pairing.
      */
-    virtual void onAuthenticationComplete(const NimBLEConnInfo& connInfo);
+    virtual void onAuthenticationComplete(NimBLEConnInfo& connInfo);
 
     /**
      * @brief Called when using numeric comparision for pairing.
      * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
      * @param [in] pin The pin to compare with the server.
      */
-    virtual void onConfirmPIN(const NimBLEConnInfo& connInfo, uint32_t pin);
+    virtual void onConfirmPIN(NimBLEConnInfo& connInfo, uint32_t pin);
 
     /**
      * @brief Called when the peer identity address is resolved.
      * @param [in] connInfo A reference to a NimBLEConnInfo instance with information
      */
-    virtual void onIdentity(const NimBLEConnInfo& connInfo);
+    virtual void onIdentity(NimBLEConnInfo& connInfo);
 };
 
 #endif /* CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_CENTRAL */

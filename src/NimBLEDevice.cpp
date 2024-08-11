@@ -1142,7 +1142,7 @@ int NimBLEDevice::startSecurity(uint16_t conn_id) {
  * @param [in] pin The 6-digit pin to inject
  * @return true if the passkey was injected successfully.
  */
-bool NimBLEDevice::injectPassKey(const NimBLEConnInfo& peerInfo, uint32_t pin) {
+bool NimBLEDevice::injectPassKey(NimBLEConnInfo& peerInfo, uint32_t pin) {
     int rc = 0;
     struct ble_sm_io pkey = {0,0};
 
@@ -1160,7 +1160,7 @@ bool NimBLEDevice::injectPassKey(const NimBLEConnInfo& peerInfo, uint32_t pin) {
  * @param [in] peerInfo Connection information for the peer
  * @param [in] accept Whether the user confirmed or declined the comparison
  */
-bool NimBLEDevice::injectConfirmPIN(const NimBLEConnInfo& peerInfo, bool accept) {
+bool NimBLEDevice::injectConfirmPIN(NimBLEConnInfo& peerInfo, bool accept) {
     int rc = 0;
     struct ble_sm_io pkey = {0,0};
 

@@ -460,7 +460,7 @@ std::string NimBLEServer::getPeerNameInternal(uint16_t conn_handle, TaskHandle_t
  * @returns A string containing the name.
  * @note This is a blocking call and should NOT be called from any callbacks!
  */
-std::string NimBLEServer::getPeerName(const NimBLEConnInfo& connInfo) {
+std::string NimBLEServer::getPeerName(NimBLEConnInfo& connInfo) {
     std::string name = getPeerNameInternal(connInfo.getConnHandle(), xTaskGetCurrentTaskHandle());
     return name;
 }
@@ -1073,20 +1073,20 @@ uint32_t NimBLEServerCallbacks::onPassKeyDisplay(){
     return 123456;
 } //onPassKeyDisplay
 
-void NimBLEServerCallbacks::onConfirmPIN(const NimBLEConnInfo& connInfo, uint32_t pin){
+void NimBLEServerCallbacks::onConfirmPIN(NimBLEConnInfo& connInfo, uint32_t pin){
     NIMBLE_LOGD("NimBLEServerCallbacks", "onConfirmPIN: default: true");
     NimBLEDevice::injectConfirmPIN(connInfo, true);
 } // onConfirmPIN
 
-void NimBLEServerCallbacks::onIdentity(const NimBLEConnInfo& connInfo){
+void NimBLEServerCallbacks::onIdentity(NimBLEConnInfo& connInfo){
     NIMBLE_LOGD("NimBLEServerCallbacks", "onIdentity: default");
 } // onIdentity
 
-void NimBLEServerCallbacks::onAuthenticationComplete(const NimBLEConnInfo& connInfo){
+void NimBLEServerCallbacks::onAuthenticationComplete(NimBLEConnInfo& connInfo){
     NIMBLE_LOGD("NimBLEServerCallbacks", "onAuthenticationComplete: default");
 } // onAuthenticationComplete
 
-void NimBLEServerCallbacks::onAuthenticationComplete(const NimBLEConnInfo& connInfo, const std::string& name){
+void NimBLEServerCallbacks::onAuthenticationComplete(NimBLEConnInfo& connInfo, const std::string& name){
     NIMBLE_LOGD("NimBLEServerCallbacks", "onAuthenticationComplete: default");
 } // onAuthenticationComplete
 

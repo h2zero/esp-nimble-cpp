@@ -118,11 +118,11 @@ std::string NimBLEDescriptor::toString() const {
     return res;
 } // toString
 
-void NimBLEDescriptor::readEvent(const NimBLEConnInfo& connInfo) {
+void NimBLEDescriptor::readEvent(NimBLEConnInfo& connInfo) {
     m_pCallbacks->onRead(this, connInfo);
 } // readEvent
 
-void NimBLEDescriptor::writeEvent(const uint8_t* val, uint16_t len, const NimBLEConnInfo& connInfo) {
+void NimBLEDescriptor::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) {
     setValue(val, len);
     m_pCallbacks->onWrite(this, connInfo);
 } // writeEvent
@@ -132,7 +132,7 @@ void NimBLEDescriptor::writeEvent(const uint8_t* val, uint16_t len, const NimBLE
  * @param [in] pDescriptor The descriptor that is the source of the event.
  * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
  */
-void NimBLEDescriptorCallbacks::onRead(NimBLEDescriptor* pDescriptor, const NimBLEConnInfo& connInfo) {
+void NimBLEDescriptorCallbacks::onRead(NimBLEDescriptor* pDescriptor, NimBLEConnInfo& connInfo) {
     NIMBLE_LOGD("NimBLEDescriptorCallbacks", "onRead: default");
 } // onRead
 
@@ -141,7 +141,7 @@ void NimBLEDescriptorCallbacks::onRead(NimBLEDescriptor* pDescriptor, const NimB
  * @param [in] pDescriptor The descriptor that is the source of the event.
  * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
  */
-void NimBLEDescriptorCallbacks::onWrite(NimBLEDescriptor* pDescriptor, const NimBLEConnInfo& connInfo) {
+void NimBLEDescriptorCallbacks::onWrite(NimBLEDescriptor* pDescriptor, NimBLEConnInfo& connInfo) {
     NIMBLE_LOGD("NimBLEDescriptorCallbacks", "onWrite: default");
 } // onWrite
 
