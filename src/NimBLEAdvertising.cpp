@@ -44,7 +44,7 @@ NimBLEAdvertising::NimBLEAdvertising() {
  * @brief Stops the current advertising and resets the advertising data to the default values.
  */
 void NimBLEAdvertising::reset() {
-    if(NimBLEDevice::getInitialized() && isAdvertising()) {
+    if(NimBLEDevice::isInitialized() && isAdvertising()) {
         stop();
     }
     memset(&m_advData, 0, sizeof m_advData);
