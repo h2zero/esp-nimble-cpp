@@ -50,7 +50,7 @@ class ClientCallbacks : public NimBLEClientCallbacks {
     void onConfirmPIN(NimBLEConnInfo& connInfo, uint32_t pass_key){
         printf("The passkey YES/NO number: %" PRIu32 "\n", pass_key);
         /** Inject false if passkeys don't match. */
-        NimBLEDevice::injectConfirmPIN(connInfo, true);
+        NimBLEDevice::injectConfirmPasskey(connInfo, true);
     };
 
     /** Pairing process complete, we can check the results in connInfo */
@@ -58,7 +58,7 @@ class ClientCallbacks : public NimBLEClientCallbacks {
         if(!connInfo.isEncrypted()) {
             printf("Encrypt connection failed - disconnecting\n");
             /** Find the client with the connection handle provided in desc */
-            NimBLEDevice::getClientByID(connInfo.getConnHandle())->disconnect();
+            NimBLEDevice::getClientByHandle(connInfo.getConnHandle())->disconnect();
             return;
         }
     }

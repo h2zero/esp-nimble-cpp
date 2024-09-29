@@ -55,7 +55,7 @@ class ServerCallbacks: public NimBLEServerCallbacks {
     void onConfirmPIN(NimBLEConnInfo& connInfo, uint32_t pass_key){
         printf("The passkey YES/NO number: %" PRIu32 "\n", pass_key);
         /** Inject false if passkeys don't match. */
-        NimBLEDevice::injectConfirmPIN(connInfo, true);
+        NimBLEDevice::injectConfirmPasskey(connInfo, true);
     };
 
     void onAuthenticationComplete(NimBLEConnInfo& connInfo){
