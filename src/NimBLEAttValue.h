@@ -38,12 +38,12 @@
 #  error CONFIG_NIMBLE_CPP_ATT_VALUE_INIT_LENGTH cannot be less than 1; Range = 1 : 512
 # endif
 
-/* Used to determine if the type passed to a template has a c_str() and length() method. */
+/* Used to determine if the type passed to a template has a data() and size() method. */
 template <typename T, typename = void, typename = void>
-struct Has_c_str_len : std::false_type {};
+struct Has_data_size : std::false_type {};
 
 template <typename T>
-struct Has_c_str_len<T, decltype(void(std::declval<T&>().c_str())), decltype(void(std::declval<T&>().length()))>
+struct Has_data_size<T, decltype(void(std::declval<T&>().data())), decltype(void(std::declval<T&>().size()))>
     : std::true_type {};
 
 /**
@@ -217,13 +217,13 @@ class NimBLEAttValue {
      * @brief Template to set value to the value of <type\>val.
      * @param [in] s The <type\>value to set.
      * @param [in] len The length of the value in bytes, defaults to sizeof(T).
-     * @details Only used for types without a `c_str()` method.
+     * @details Only used for types without a `data()` method.
      */
     template <typename T>
 # ifdef _DOXYGEN_
     bool
 # else
-    typename std::enable_if<!Has_c_str_len<T>::value, bool>::type
+    typename std::enable_if<!Has_data_size<T>::value, bool>::type
 # endif
     setValue(const T& s, uint16_t len = 0) {
         if (len == 0) {
@@ -236,19 +236,19 @@ class NimBLEAttValue {
      * @brief Template to set value to the value of <type\>val.
      * @param [in] s The <type\>value to set.
      * @param [in] len The length of the value in bytes, defaults to string.length().
-     * @details Only used if the <type\> has a `c_str()` method.
+     * @details Only used if the <type\> has a `data()` method.
      */
     template <typename T>
 # ifdef _DOXYGEN_
     bool
 # else
-    typename std::enable_if<Has_c_str_len<T>::value, bool>::type
+    typename std::enable_if<Has_data_size<T>::value, bool>::type
 # endif
     setValue(const T& s, uint16_t len = 0) {
         if (len == 0) {
-            len = s.length();
+            len = s.size();
         }
-        return setValue(reinterpret_cast<const uint8_t*>(s.c_str()), len);
+        return setValue(reinterpret_cast<const uint8_t*>(s.data()), len);
     }
 
     /**

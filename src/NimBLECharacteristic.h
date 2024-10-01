@@ -77,36 +77,36 @@ class NimBLECharacteristic : public NimBLELocalValueAttribute {
     /*********************** Template Functions ************************/
 
     /**
-     * @brief Template to send a notification from a class type that has a c_str() and length() method.
+     * @brief Template to send a notification from a class type that has a data() and length() method.
      * @tparam T The a reference to a class containing the data to send.
      * @param[in] value The <type\>value to set.
      * @param[in] is_notification if true sends a notification, false sends an indication.
-     * @details Only used if the <type\> has a `c_str()` method.
+     * @details Only used if the <type\> has a `data()` method.
      */
     template <typename T>
 # ifdef _DOXYGEN_
     void
 # else
-    typename std::enable_if<Has_c_str_len<T>::value, void>::type
+    typename std::enable_if<Has_data_size<T>::value, void>::type
 # endif
     notify(const T& value, bool is_notification = true) const {
-        notify(reinterpret_cast<const uint8_t*>(value.c_str()), value.length(), is_notification);
+        notify(reinterpret_cast<const uint8_t*>(value.data()), value.size(), is_notification);
     }
 
     /**
-     * @brief Template to send an indication from a class type that has a c_str() and length() method.
+     * @brief Template to send an indication from a class type that has a data() and length() method.
      * @tparam T The a reference to a class containing the data to send.
      * @param[in] value The <type\>value to set.
-     * @details Only used if the <type\> has a `c_str()` method.
+     * @details Only used if the <type\> has a `data()` method.
      */
     template <typename T>
 # ifdef _DOXYGEN_
     void
 # else
-    typename std::enable_if<Has_c_str_len<T>::value, void>::type
+    typename std::enable_if<Has_data_size<T>::value, void>::type
 # endif
     indicate(const T& value) const {
-        indicate(reinterpret_cast<const uint8_t*>(value.c_str()), value.length());
+        indicate(reinterpret_cast<const uint8_t*>(value.data()), value.size());
     }
 
   private:

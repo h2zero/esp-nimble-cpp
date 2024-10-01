@@ -88,13 +88,13 @@ class NimBLERemoteValueAttribute : public NimBLEAttribute {
      * @brief Template to set the remote characteristic value to <type\>val.
      * @param [in] s The value to write.
      * @param [in] response True == request write response.
-     * @details Only used for non-arrays and types without a `c_str()` method.
+     * @details Only used for non-arrays and types without a `data()` method.
      */
     template <typename T>
 # ifdef _DOXYGEN_
     bool
 # else
-    typename std::enable_if<!std::is_array<T>::value && !Has_c_str_len<T>::value, bool>::type
+    typename std::enable_if<!std::is_array<T>::value && !Has_data_size<T>::value, bool>::type
 # endif
     writeValue(const T& v, bool response = false) const {
         return writeValue(reinterpret_cast<const uint8_t*>(&v), sizeof(T), response);
@@ -104,16 +104,16 @@ class NimBLERemoteValueAttribute : public NimBLEAttribute {
      * @brief Template to set the remote characteristic value to <type\>val.
      * @param [in] s The value to write.
      * @param [in] response True == request write response.
-     * @details Only used if the <type\> has a `c_str()` method.
+     * @details Only used if the <type\> has a `data()` method.
      */
     template <typename T>
 # ifdef _DOXYGEN_
     bool
 # else
-    typename std::enable_if<Has_c_str_len<T>::value, bool>::type
+    typename std::enable_if<Has_data_size<T>::value, bool>::type
 # endif
     writeValue(const T& s, bool response = false) const {
-        return writeValue(reinterpret_cast<const uint8_t*>(s.c_str()), s.length(), response);
+        return writeValue(reinterpret_cast<const uint8_t*>(s.data()), s.size(), response);
     }
 
     /**
