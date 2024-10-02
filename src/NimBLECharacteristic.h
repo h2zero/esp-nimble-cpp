@@ -77,7 +77,10 @@ class NimBLECharacteristic : public NimBLELocalValueAttribute {
     /*********************** Template Functions ************************/
 
     /**
-     * @brief Template to send a notification from a class type that has a data() and length() method.
+     * @brief Template to send a notification for classes which may have
+     *        data()/size() or c_str()/length() methods. Falls back to sending
+     *        the data by casting the first element of the array to a uint8_t
+     *        pointer and getting the length of the array using sizeof.
      * @tparam T The a reference to a class containing the data to send.
      * @param[in] value The <type\>value to set.
      * @param[in] is_notification if true sends a notification, false sends an indication.
@@ -94,7 +97,10 @@ class NimBLECharacteristic : public NimBLELocalValueAttribute {
     }
 
     /**
-     * @brief Template to send an indication from a class type that has a data() and length() method.
+     * @brief Template to send an indication for classes which may have
+     *       data()/size() or c_str()/length() methods. Falls back to sending
+     *       the data by casting the first element of the array to a uint8_t
+     *       pointer and getting the length of the array using sizeof.
      * @tparam T The a reference to a class containing the data to send.
      * @param[in] value The <type\>value to set.
      */
