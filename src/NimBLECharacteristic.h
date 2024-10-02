@@ -89,7 +89,7 @@ class NimBLECharacteristic : public NimBLELocalValueAttribute {
         } else if constexpr (Has_c_str_length<T>::value) {
             notify(reinterpret_cast<const uint8_t*>(value.c_str()), value.length(), is_notification);
         } else {
-            notify(reinterpret_cast<const uint8_t*>(value.data()), value.size(), is_notification);
+            notify(reinterpret_cast<const uint8_t*>(&value[0]), sizeof(value), is_notification);
         }
     }
 
