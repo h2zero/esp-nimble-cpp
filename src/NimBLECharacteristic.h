@@ -81,32 +81,32 @@ class NimBLECharacteristic : public NimBLELocalValueAttribute {
      * @tparam T The a reference to a class containing the data to send.
      * @param[in] value The <type\>value to set.
      * @param[in] is_notification if true sends a notification, false sends an indication.
-     * @details Only used if the <type\> has a `data()` method.
      */
     template <typename T>
-# ifdef _DOXYGEN_
-    void
-# else
-    typename std::enable_if<Has_data_size<T>::value, void>::type
-# endif
-    notify(const T& value, bool is_notification = true) const {
-        notify(reinterpret_cast<const uint8_t*>(value.data()), value.size(), is_notification);
+    void notify(const T& value, bool is_notification = true) const {
+        if constexpr (Has_data_size<T>::value) {
+            notify(reinterpret_cast<const uint8_t*>(value.data()), value.size(), is_notification);
+        } else if constexpr (Has_c_str_length<T>::value) {
+            notify(reinterpret_cast<const uint8_t*>(value.c_str()), value.length(), is_notification);
+        } else {
+            notify(reinterpret_cast<const uint8_t*>(value.data()), value.size(), is_notification);
+        }
     }
 
     /**
      * @brief Template to send an indication from a class type that has a data() and length() method.
      * @tparam T The a reference to a class containing the data to send.
      * @param[in] value The <type\>value to set.
-     * @details Only used if the <type\> has a `data()` method.
      */
     template <typename T>
-# ifdef _DOXYGEN_
-    void
-# else
-    typename std::enable_if<Has_data_size<T>::value, void>::type
-# endif
-    indicate(const T& value) const {
-        indicate(reinterpret_cast<const uint8_t*>(value.data()), value.size());
+    void indicate(const T& value) const {
+        if constexpr (Has_data_size<T>::value) {
+            indicate(reinterpret_cast<const uint8_t*>(value.data()), value.size());
+        } else if constexpr (Has_c_str_length<T>::value) {
+            indicate(reinterpret_cast<const uint8_t*>(value.c_str()), value.length());
+        } else {
+            indicate(reinterpret_cast<const uint8_t*>(&value[0]), sizeof(value));
+        }
     }
 
   private:
