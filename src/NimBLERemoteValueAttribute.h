@@ -81,7 +81,7 @@ class NimBLERemoteValueAttribute : public NimBLEAttribute {
      * @note This function is only available if the type T is not a pointer.
      */
     template <typename T>
-    std::enable_if<!std::is_pointer_v<T>, bool>::type
+    std::enable_if<!std::is_pointer<T>::value, bool>::type
     writeValue(const T& v, bool response = false) const {
         if constexpr (Has_data_size<T>::value) {
             return writeValue(reinterpret_cast<const uint8_t*>(v.data()), v.size(), response);
