@@ -227,7 +227,8 @@ class NimBLEAttValue {
      * @note This function is only availabe if the type T is not a pointer.
      */
     template <typename T>
-    bool setValue(const T& s) requires (!std::is_pointer_v<T>) {
+    std::enable_if_t<!std::is_pointer_v<T>, bool>
+    setValue(const T& s) {
         if constexpr (Has_data_size<T>::value) {
             return setValue(reinterpret_cast<const uint8_t*>(s.data()), s.size());
         } else if constexpr (Has_c_str_length<T>::value) {

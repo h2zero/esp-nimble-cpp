@@ -85,7 +85,8 @@ class NimBLECharacteristic : public NimBLELocalValueAttribute {
      * @note This function is only available if the type T is not a pointer.
      */
     template <typename T>
-    void notify(const T& value, uint16_t conn_handle = BLE_HS_CONN_HANDLE_NONE) const requires (!std::is_pointer_v<T>) {
+    std::enable_if_t<!std::is_pointer_v<T>, void>
+    notify(const T& value, uint16_t conn_handle = BLE_HS_CONN_HANDLE_NONE) const {
         if constexpr (Has_data_size<T>::value) {
             notify(reinterpret_cast<const uint8_t*>(value.data()), value.size(), conn_handle);
         } else if constexpr (Has_c_str_length<T>::value) {
@@ -106,7 +107,8 @@ class NimBLECharacteristic : public NimBLELocalValueAttribute {
      * @note This function is only available if the type T is not a pointer.
      */
     template <typename T>
-    void indicate(const T& value, uint16_t conn_handle = BLE_HS_CONN_HANDLE_NONE) const requires (!std::is_pointer_v<T>) {
+    std::enable_if_t<!std::is_pointer_v<T>, void>
+    indicate(const T& value, uint16_t conn_handle = BLE_HS_CONN_HANDLE_NONE) const {
         if constexpr (Has_data_size<T>::value) {
             indicate(reinterpret_cast<const uint8_t*>(value.data()), value.size(), conn_handle);
         } else if constexpr (Has_c_str_length<T>::value) {
