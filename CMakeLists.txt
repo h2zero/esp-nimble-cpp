@@ -14,11 +14,18 @@ elseif("nimble" IN_LIST BUILD_COMPONENTS OR "__nimble" IN_LIST __hack_component_
     )
 endif()
 
-if("arduino" IN_LIST BUILD_COMPONENTS OR __hack_component_targets MATCHES "__idf_arduino")
+# Arduino install using IDF component manager
+if("espressif__arduino-esp32" IN_LIST BUILD_COMPONENTS OR "___idf_espressif__arduino-esp32" IN_LIST __hack_component_targets)
+    list(APPEND ESP_NIMBLE_PRIV_REQUIRES
+        arduino-esp32
+    )
+# Manual installation of Arduino framework
+elseif("arduino" IN_LIST BUILD_COMPONENTS OR "__idf_arduino" IN_LIST __hack_component_targets)
     list(APPEND ESP_NIMBLE_PRIV_REQUIRES
         arduino
     )
-elseif("framework-arduinoespressif32" IN_LIST BUILD_COMPONENTS OR __hack_component_targets MATCHES "___idf_framework-arduinoespressif32")
+# PlatformIO
+elseif("framework-arduinoespressif32" IN_LIST BUILD_COMPONENTS OR "___idf_framework-arduinoespressif32" IN_LIST __hack_component_targets)
     list(APPEND ESP_NIMBLE_PRIV_REQUIRES
         framework-arduinoespressif32
     )
