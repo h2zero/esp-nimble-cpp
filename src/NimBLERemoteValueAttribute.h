@@ -78,10 +78,11 @@ class NimBLERemoteValueAttribute : public NimBLEAttribute {
      * @brief Template to set the remote characteristic value to <type\>val.
      * @param [in] s The value to write.
      * @param [in] response True == request write response.
+     * @note This function is only available if the type T is not a pointer.
      */
     template <typename T>
     bool
-    writeValue(const T& v, bool response = false) const {
+    writeValue(const T& v, bool response = false) const requires (!std::is_pointer_v<T>) {
         if constexpr (Has_data_size<T>::value) {
             return writeValue(reinterpret_cast<const uint8_t*>(v.data()), v.size(), response);
         } else if constexpr (Has_c_str_length<T>::value) {

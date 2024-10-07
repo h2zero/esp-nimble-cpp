@@ -56,10 +56,8 @@ class NimBLECharacteristic : public NimBLELocalValueAttribute {
     void        setCallbacks(NimBLECharacteristicCallbacks* pCallbacks);
     void        indicate(uint16_t conn_handle = BLE_HS_CONN_HANDLE_NONE) const;
     void        indicate(const uint8_t* value, size_t length, uint16_t conn_handle = BLE_HS_CONN_HANDLE_NONE) const;
-    void        indicate(const std::vector<uint8_t>& value, uint16_t conn_handle = BLE_HS_CONN_HANDLE_NONE) const;
     void        notify(uint16_t conn_handle = BLE_HS_CONN_HANDLE_NONE) const;
     void        notify(const uint8_t* value, size_t length, uint16_t conn_handle = BLE_HS_CONN_HANDLE_NONE) const;
-    void        notify(const std::vector<uint8_t>& value, uint16_t conn_handle = BLE_HS_CONN_HANDLE_NONE) const;
 
     NimBLEDescriptor* createDescriptor(const char* uuid,
                                        uint32_t    properties = NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE,
@@ -83,16 +81,17 @@ class NimBLECharacteristic : public NimBLELocalValueAttribute {
      *        pointer and getting the length of the array using sizeof.
      * @tparam T The a reference to a class containing the data to send.
      * @param[in] value The <type\>value to set.
-     * @param[in] is_notification if true sends a notification, false sends an indication.
+     * @param[in] conn_handle The connection handle to send the notification to.
+     * @note This function is only available if the type T is not a pointer.
      */
     template <typename T>
-    void notify(const T& value, bool is_notification = true) const {
+    void notify(const T& value, uint16_t conn_handle = BLE_HS_CONN_HANDLE_NONE) const requires (!std::is_pointer_v<T>) {
         if constexpr (Has_data_size<T>::value) {
-            notify(reinterpret_cast<const uint8_t*>(value.data()), value.size(), is_notification);
+            notify(reinterpret_cast<const uint8_t*>(value.data()), value.size(), conn_handle);
         } else if constexpr (Has_c_str_length<T>::value) {
-            notify(reinterpret_cast<const uint8_t*>(value.c_str()), value.length(), is_notification);
+            notify(reinterpret_cast<const uint8_t*>(value.c_str()), value.length(), conn_handle);
         } else {
-            notify(reinterpret_cast<const uint8_t*>(&value[0]), sizeof(value), is_notification);
+            notify(reinterpret_cast<const uint8_t*>(&value[0]), sizeof(value), conn_handle);
         }
     }
 
@@ -103,15 +102,17 @@ class NimBLECharacteristic : public NimBLELocalValueAttribute {
      *       pointer and getting the length of the array using sizeof.
      * @tparam T The a reference to a class containing the data to send.
      * @param[in] value The <type\>value to set.
+     * @param[in] conn_handle The connection handle to send the indication to.
+     * @note This function is only available if the type T is not a pointer.
      */
     template <typename T>
-    void indicate(const T& value) const {
+    void indicate(const T& value, uint16_t conn_handle = BLE_HS_CONN_HANDLE_NONE) const requires (!std::is_pointer_v<T>) {
         if constexpr (Has_data_size<T>::value) {
-            indicate(reinterpret_cast<const uint8_t*>(value.data()), value.size());
+            indicate(reinterpret_cast<const uint8_t*>(value.data()), value.size(), conn_handle);
         } else if constexpr (Has_c_str_length<T>::value) {
-            indicate(reinterpret_cast<const uint8_t*>(value.c_str()), value.length());
+            indicate(reinterpret_cast<const uint8_t*>(value.c_str()), value.length(), conn_handle);
         } else {
-            indicate(reinterpret_cast<const uint8_t*>(&value[0]), sizeof(value));
+            indicate(reinterpret_cast<const uint8_t*>(&value[0]), sizeof(value), conn_handle);
         }
     }
 
