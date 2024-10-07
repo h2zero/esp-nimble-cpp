@@ -44,7 +44,7 @@ NimBLEAdvertising::NimBLEAdvertising() {
  * @brief Stops the current advertising and resets the advertising data to the default values.
  */
 void NimBLEAdvertising::reset() {
-    if(NimBLEDevice::getInitialized() && isAdvertising()) {
+    if(NimBLEDevice::isInitialized() && isAdvertising()) {
         stop();
     }
     memset(&m_advData, 0, sizeof m_advData);
@@ -421,13 +421,11 @@ bool NimBLEAdvertising::start(uint32_t duration, advCompleteCB_t advCompleteCB, 
 
 #if defined(CONFIG_BT_NIMBLE_ROLE_PERIPHERAL)
     NimBLEServer* pServer = NimBLEDevice::getServer();
-    if(pServer != nullptr) {
-        if(!pServer->m_gattsStarted){
-            pServer->start();
-        } else if(pServer->getConnectedCount() >= NIMBLE_MAX_CONNECTIONS) {
-            NIMBLE_LOGE(LOG_TAG, "Max connections reached - not advertising");
-            return false;
-        }
+    if(!pServer->m_gattsStarted){
+        pServer->start();
+    } else if(pServer->getConnectedCount() >= NIMBLE_MAX_CONNECTIONS) {
+        NIMBLE_LOGE(LOG_TAG, "Max connections reached - not advertising");
+        return false;
     }
 #endif
 
