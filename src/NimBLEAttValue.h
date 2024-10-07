@@ -224,25 +224,16 @@ class NimBLEAttValue {
     /**
      * @brief Template to set value to the value of <type\>val.
      * @param [in] s The <type\>value to set.
-     * @param [in] len The length of the value in bytes, defaults to string.length().
+     * @note This function is only availabe if the type T is not a pointer.
      */
     template <typename T>
-    bool setValue(const T& s, uint16_t len = 0) {
+    bool setValue(const T& s) requires (!std::is_pointer_v<T>) {
         if constexpr (Has_data_size<T>::value) {
-            if (len == 0) {
-                len = s.size();
-            }
-            return setValue(reinterpret_cast<const uint8_t*>(s.data()), len);
+            return setValue(reinterpret_cast<const uint8_t*>(s.data()), s.size());
         } else if constexpr (Has_c_str_length<T>::value) {
-            if (len == 0) {
-                len = s.length();
-            }
-            return setValue(reinterpret_cast<const uint8_t*>(s.c_str()), len);
+            return setValue(reinterpret_cast<const uint8_t*>(s.c_str()), s.length());
         } else {
-            if (len == 0) {
-                len = sizeof(s);
-            }
-            return setValue(reinterpret_cast<const uint8_t*>(&s[0]), len);
+            return setValue(reinterpret_cast<const uint8_t*>(&s[0]), sizeof(s));
         }
     }
 
