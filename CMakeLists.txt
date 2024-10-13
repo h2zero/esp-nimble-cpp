@@ -2,30 +2,28 @@
 # CMakeLists in this exact order for cmake to work correctly
 cmake_minimum_required(VERSION 3.5)
 
-idf_build_get_property(__hack_component_targets __COMPONENT_TARGETS)
-
-if("esp-nimble-component" IN_LIST BUILD_COMPONENTS OR "__esp-nimble-component" IN_LIST __hack_component_targets)
+if(__COMPONENT_TARGETS MATCHES "___idf_esp-nimble-component")
     list(APPEND ESP_NIMBLE_PRIV_REQUIRES
         esp-nimble-component
     )
-elseif("nimble" IN_LIST BUILD_COMPONENTS OR "__nimble" IN_LIST __hack_component_targets)
+elseif(__COMPONENT_TARGETS MATCHES "__idf_nimble")
     list(APPEND ESP_NIMBLE_PRIV_REQUIRES
         nimble
     )
 endif()
 
 # Arduino install using IDF component manager
-if("espressif__arduino-esp32" IN_LIST BUILD_COMPONENTS OR "___idf_espressif__arduino-esp32" IN_LIST __hack_component_targets)
+if(__COMPONENT_TARGETS MATCHES "___idf_espressif__arduino-esp32")
     list(APPEND ESP_NIMBLE_PRIV_REQUIRES
         arduino-esp32
     )
 # Manual installation of Arduino framework
-elseif("arduino" IN_LIST BUILD_COMPONENTS OR "__idf_arduino" IN_LIST __hack_component_targets)
+elseif(__COMPONENT_TARGETS MATCHES "__idf_arduino")
     list(APPEND ESP_NIMBLE_PRIV_REQUIRES
         arduino
     )
 # PlatformIO
-elseif("framework-arduinoespressif32" IN_LIST BUILD_COMPONENTS OR "___idf_framework-arduinoespressif32" IN_LIST __hack_component_targets)
+elseif(__COMPONENT_TARGETS MATCHES "___idf_framework-arduinoespressif32")
     list(APPEND ESP_NIMBLE_PRIV_REQUIRES
         framework-arduinoespressif32
     )
