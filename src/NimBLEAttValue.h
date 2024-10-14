@@ -234,7 +234,7 @@ class NimBLEAttValue {
         } else if constexpr (Has_c_str_length<T>::value) {
             return setValue(reinterpret_cast<const uint8_t*>(s.c_str()), s.length());
         } else {
-            return setValue(reinterpret_cast<const uint8_t*>(&s[0]), sizeof(s));
+            return setValue(reinterpret_cast<const uint8_t*>(&s), sizeof(s));
         }
     }
 

@@ -88,7 +88,7 @@ class NimBLERemoteValueAttribute : public NimBLEAttribute {
         } else if constexpr (Has_c_str_length<T>::value) {
             return writeValue(reinterpret_cast<const uint8_t*>(v.c_str()), v.length(), response);
         } else {
-            return writeValue(reinterpret_cast<const uint8_t*>(&v[0]), sizeof(v), response);
+            return writeValue(reinterpret_cast<const uint8_t*>(&v), sizeof(v), response);
         }
     }
 
