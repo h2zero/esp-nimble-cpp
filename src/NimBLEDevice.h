@@ -42,7 +42,9 @@ class NimBLEClient;
 #include "NimBLEAddress.h"
 
 #ifdef ESP_PLATFORM
+#ifndef CONFIG_IDF_TARGET_ESP32P4
 #  include "esp_bt.h"
+#endif
 #endif
 
 #include <string>
@@ -116,8 +118,10 @@ public:
 #endif
 
 #ifdef ESP_PLATFORM
+#ifndef CONFIG_IDF_TARGET_ESP32P4
     static void             setPower(esp_power_level_t powerLevel, esp_ble_power_type_t powerType=ESP_BLE_PWR_TYPE_DEFAULT);
     static int              getPower(esp_ble_power_type_t powerType=ESP_BLE_PWR_TYPE_DEFAULT);
+#endif
     static void             setOwnAddrType(uint8_t own_addr_type, bool useNRPA=false);
     static void             setScanDuplicateCacheSize(uint16_t cacheSize);
     static void             setScanFilterMode(uint8_t type);
