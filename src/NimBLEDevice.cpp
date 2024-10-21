@@ -20,7 +20,9 @@
 
 #ifdef ESP_PLATFORM
 #  include "esp_err.h"
+#ifndef CONFIG_IDF_TARGET_ESP32P4
 #  include "esp_bt.h"
+#endif
 #  include "nvs_flash.h"
 #  if defined(CONFIG_NIMBLE_CPP_IDF)
 #    if (ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0) || CONFIG_BT_NIMBLE_LEGACY_VHCI_ENABLE)
@@ -360,6 +362,7 @@ NimBLEClient* NimBLEDevice::getDisconnectedClient() {
 #endif // #if defined(CONFIG_BT_NIMBLE_ROLE_CENTRAL)
 
 #ifdef ESP_PLATFORM
+#ifndef CONFIG_IDF_TARGET_ESP32P4
 /**
  * @brief Set the transmission power.
  * @param [in] powerLevel The power level to set, can be one of:
@@ -438,7 +441,7 @@ int NimBLEDevice::getPower(esp_ble_power_type_t powerType) {
             return BLE_HS_ADV_TX_PWR_LVL_AUTO;
     }
 } // getPower
-
+#endif
 #else
 
 void NimBLEDevice::setPower(int dbm) {
