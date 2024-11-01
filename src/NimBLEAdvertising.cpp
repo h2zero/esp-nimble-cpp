@@ -56,7 +56,9 @@ void NimBLEAdvertising::reset() {
     m_advData.name                   = (uint8_t *)name;
     m_advData.name_len               = strlen(name);
     m_advData.name_is_complete       = 1;
+#ifndef CONFIG_IDF_TARGET_ESP32P4
     m_advData.tx_pwr_lvl             = NimBLEDevice::getPower();
+#endif
     m_advData.flags                  = (BLE_HS_ADV_F_DISC_GEN | BLE_HS_ADV_F_BREDR_UNSUP);
 
 #if !defined(CONFIG_BT_NIMBLE_ROLE_PERIPHERAL)
@@ -1018,7 +1020,9 @@ void NimBLEAdvertisementData::addTxPower() {
     char cdata[3];
     cdata[0] = BLE_HS_ADV_TX_PWR_LVL_LEN + 1;
     cdata[1] = BLE_HS_ADV_TYPE_TX_PWR_LVL;
+#ifndef CONFIG_IDF_TARGET_ESP32P4
     cdata[2] = NimBLEDevice::getPower();
+#endif
     addData(cdata, 3);
 } // addTxPower
 
