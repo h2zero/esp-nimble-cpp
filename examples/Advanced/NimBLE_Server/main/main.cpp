@@ -52,7 +52,7 @@ class ServerCallbacks: public NimBLEServerCallbacks {
         return 123456;
     };
 
-    void onConfirmPIN(NimBLEConnInfo& connInfo, uint32_t pass_key){
+    void onConfirmasskeyN(NimBLEConnInfo& connInfo, uint32_t pass_key){
         printf("The passkey YES/NO number: %" PRIu32 "\n", pass_key);
         /** Inject false if passkeys don't match. */
         NimBLEDevice::injectConfirmPasskey(connInfo, true);
