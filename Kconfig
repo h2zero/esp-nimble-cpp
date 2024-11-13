@@ -76,6 +76,13 @@ config NIMBLE_CPP_DEBUG_ASSERT_ENABLED
         Enabling this option will add debug asserts to the NimBLE CPP library.
         This will use approximately 1kB of flash memory.
 
+config NIMBLE_CPP_FREERTOS_TASK_BLOCK_BIT
+    int "FreeRTOS task block bit"
+    default 31
+    help
+        Configure the bit to set in the task notification value when a task is blocked waiting for an event.
+        This should be set to a bit that is not used by other notifications in the system.
+        
 #
 # BT config
 #
