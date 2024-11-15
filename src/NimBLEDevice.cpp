@@ -448,6 +448,20 @@ bool NimBLEDevice::setPower(int8_t dbm) {
     NIMBLE_LOGD(LOG_TAG, ">> setPower: %d", dbm);
 # ifdef ESP_PLATFORM
 #  ifndef CONFIG_IDF_TARGET_ESP32P4
+#   if defined(CONFIG_IDF_TARGET_ESP32S3)       \
+        || defined(CONFIG_IDF_TARGET_ESP32C3)   \
+        || defined(CONFIG_IDF_TARGET_ESP32C6)   \
+        || defined(CONFIG_IDF_TARGET_ESP32H2)
+    if (dbm >= 20)
+        dbm = ESP_PWR_LVL_P20;
+    else if (dbm >= 18)
+        dbm = ESP_PWR_LVL_P18;
+    else if (dbm >= 15)
+        dbm = ESP_PWR_LVL_P15;
+    else if (dbm >= 12)
+        dbm = ESP_PWR_LVL_P12;
+    else
+#   endif // CONFIG_IDF_TARGET_ESP32S3||C3||C6||H2
     if (dbm >= 9) {
         dbm = ESP_PWR_LVL_P9;
     } else if (dbm >= 6) {
@@ -464,6 +478,24 @@ bool NimBLEDevice::setPower(int8_t dbm) {
         dbm = ESP_PWR_LVL_N9;
     } else if (dbm >= -12) {
         dbm = ESP_PWR_LVL_N12;
+    }
+#   ifdef CONFIG_IDF_TARGET_ESP32C6
+    else if (dbm >= -15) {
+        dbm = ESP_PWR_LVL_N15;
+    }
+#   endif // CONFIG_IDF_TARGET_ESP32C6
+#   if defined(CONFIG_IDF_TARGET_ESP32S3)       \
+        || defined(CONFIG_IDF_TARGET_ESP32C3)   \
+        || defined(CONFIG_IDF_TARGET_ESP32H2)
+    else if (dbm >= -15) {
+        dbm = ESP_PWR_LVL_N15;
+    } else if (dbm >= -18) {
+        dbm = ESP_PWR_LVL_N18;
+    } else if (dbm >= -21) {
+        dbm = ESP_PWR_LVL_N21;
+    } else if (dbm >= -24) {
+        dbm = ESP_PWR_LVL_N24;
+#   endif // CONFIG_IDF_TARGET_ESP32S3||C3||H2
     } else {
         NIMBLE_LOGE(LOG_TAG, "Unsupported power level");
         return false;
@@ -501,6 +533,14 @@ int NimBLEDevice::getPower() {
 # ifdef ESP_PLATFORM
 #  ifndef CONFIG_IDF_TARGET_ESP32P4
     switch (esp_ble_tx_power_get(ESP_BLE_PWR_TYPE_DEFAULT)) {
+        case ESP_PWR_LVL_N24:
+            return -24;
+        case ESP_PWR_LVL_N21:
+            return -21;
+        case ESP_PWR_LVL_N18:
+            return -18;
+        case ESP_PWR_LVL_N15:
+            return -15;
         case ESP_PWR_LVL_N12:
             return -12;
         case ESP_PWR_LVL_N9:
@@ -517,6 +557,14 @@ int NimBLEDevice::getPower() {
             return 6;
         case ESP_PWR_LVL_P9:
             return 9;
+        case ESP_PWR_LVL_P12:
+            return 12;
+        case ESP_PWR_LVL_P15:
+            return 15;
+        case ESP_PWR_LVL_P18:
+            return 18;
+        case ESP_PWR_LVL_P20:
+            return 20;
         default:
             return 0xFF;
     }
