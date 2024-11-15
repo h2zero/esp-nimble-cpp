@@ -479,15 +479,21 @@ int NimBLEDevice::getPower() {
 #  ifndef CONFIG_IDF_TARGET_ESP32P4
     switch (esp_ble_tx_power_get(ESP_BLE_PWR_TYPE_DEFAULT)) {
 #   ifndef CONFIG_IDF_TARGET_ESP32
+#    if ESP_IDF_VERSION <= ESP_IDF_VERSION_VAL(4,4,2)
+        case ESP_PWR_LVL_N27:
+            return -27;
+#    endif
+#    if !defined(CONFIG_IDF_TARGET_ESP32C6) || (ESP_IDF_VERSION == ESP_IDF_VERSION_VAL(5,1,0))
         case ESP_PWR_LVL_N24:
             return -24;
         case ESP_PWR_LVL_N21:
             return -21;
         case ESP_PWR_LVL_N18:
             return -18;
+#    endif
+#   endif
         case ESP_PWR_LVL_N15:
             return -15;
-#   endif
         case ESP_PWR_LVL_N12:
             return -12;
         case ESP_PWR_LVL_N9:
@@ -509,7 +515,7 @@ int NimBLEDevice::getPower() {
             return 12;
         case ESP_PWR_LVL_P15:
             return 15;
-#    ifdef CONFIG_IDF_TARGET_ESP32H2
+#    if defined(CONFIG_IDF_TARGET_ESP32H2) && ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5,1,0) && ESP_IDF_VERSION <= ESP_IDF_VERSION_VAL(5,1,1)
         case ESP_PWR_LVL_P16:
             return 16;
         case ESP_PWR_LVL_P17:
@@ -519,16 +525,15 @@ int NimBLEDevice::getPower() {
 #    endif
         case ESP_PWR_LVL_P18:
             return 18;
-#    if defined(CONFIG_IDF_TARGET_ESP32S3)  \
-        || defined(CONFIG_IDF_TARGET_ESP32H2)
-        case ESP_PWR_LVL_P20:
-            return 20;
-#    endif
-#    if defined(CONFIG_IDF_TARGET_ESP32C2)      \
-        || defined(CONFIG_IDF_TARGET_ESP32C3)   \
-        || defined(CONFIG_IDF_TARGET_ESP32C6)
+#    if !defined(CONFIG_IDF_TARGET_ESP32H2)                                                                                                             \
+        || (defined(CONFIG_IDF_TARGET_ESP32C6) && ESP_IDF_VERSION == ESP_IDF_VERSION_VAL(5,1,0))                                                        \
+        && !(defined(CONFIG_IDF_TARGET_ESP32C3) && (ESP_IDF_VERSION == ESP_IDF_VERSION_VAL(5,1,5) || ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5,4,0)))    \
+        && !(defined(CONFIG_IDF_TARGET_ESP32C2) && (ESP_IDF_VERSION == ESP_IDF_VERSION_VAL(5,1,0) || ESP_IDF_VERSION == ESP_IDF_VERSION_VAL(5,1,1)))
         case ESP_PWR_LVL_P21:
             return 21;
+#    else
+        case ESP_PWR_LVL_P20:
+            return 20;
 #    endif
 #   endif
         default:
