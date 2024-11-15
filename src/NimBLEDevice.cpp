@@ -495,8 +495,9 @@ bool NimBLEDevice::setPower(int8_t dbm) {
         dbm = ESP_PWR_LVL_N21;
     } else if (dbm >= -24) {
         dbm = ESP_PWR_LVL_N24;
+    }
 #   endif // CONFIG_IDF_TARGET_ESP32S3||C3||H2
-    } else {
+    else {
         NIMBLE_LOGE(LOG_TAG, "Unsupported power level");
         return false;
     }
