@@ -421,6 +421,35 @@ std::vector<NimBLEClient*> NimBLEDevice::getConnectedClients() {
 /*                               TRANSMIT POWER                               */
 /* -------------------------------------------------------------------------- */
 
+# ifdef ESP_PLATFORM
+/**
+ * @brief Get the transmission power.
+ * @return The power level currently used in esp_power_level_t.
+ */
+esp_power_level_t NimBLEDevice::getPowerLevel() {
+    return esp_ble_tx_power_get(ESP_BLE_PWR_TYPE_DEFAULT);
+} // getPowerLevel
+
+/**
+ * @brief Set the transmission power.
+ * @param [in] powerLevel The power level to set in esp_power_level_t..
+ * @return True if the power level was set successfully.
+ */
+bool NimBLEDevice::setPower(esp_power_level_t powerLevel) {
+    NIMBLE_LOGD(LOG_TAG, ">> setPower: %d", powerLevel);
+#  ifndef CONFIG_IDF_TARGET_ESP32P4
+
+    esp_err_t errRc = esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_DEFAULT, powerLevel);
+    if (errRc != ESP_OK) {
+        NIMBLE_LOGE(LOG_TAG, "esp_ble_tx_power_set: rc=%d", errRc);
+    }
+
+    return errRc == ESP_OK;
+#  else
+    return false; // CONFIG_IDF_TARGET_ESP32P4
+#  endif
+} // setPower
+#else
 /**
  * @brief Set the transmission power.
  * @param [in] dbm The power level to set in dBm.
@@ -428,40 +457,6 @@ std::vector<NimBLEClient*> NimBLEDevice::getConnectedClients() {
  */
 bool NimBLEDevice::setPower(int8_t dbm) {
     NIMBLE_LOGD(LOG_TAG, ">> setPower: %d", dbm);
-# ifdef ESP_PLATFORM
-#  ifndef CONFIG_IDF_TARGET_ESP32P4
-    if (dbm >= 9) {
-        dbm = ESP_PWR_LVL_P9;
-    } else if (dbm >= 6) {
-        dbm = ESP_PWR_LVL_P6;
-    } else if (dbm >= 3) {
-        dbm = ESP_PWR_LVL_P3;
-    } else if (dbm >= 0) {
-        dbm = ESP_PWR_LVL_N0;
-    } else if (dbm >= -3) {
-        dbm = ESP_PWR_LVL_N3;
-    } else if (dbm >= -6) {
-        dbm = ESP_PWR_LVL_N6;
-    } else if (dbm >= -9) {
-        dbm = ESP_PWR_LVL_N9;
-    } else if (dbm >= -12) {
-        dbm = ESP_PWR_LVL_N12;
-    } else {
-        NIMBLE_LOGE(LOG_TAG, "Unsupported power level");
-        return false;
-    }
-
-    esp_err_t errRc = esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_DEFAULT, (esp_power_level_t)dbm);
-    if (errRc != ESP_OK) {
-        NIMBLE_LOGE(LOG_TAG, "esp_ble_tx_power_set: rc=%d", errRc);
-    }
-
-    return errRc == ESP_OK;
-#  else
-    return 0xFF; // CONFIG_IDF_TARGET_ESP32P4
-#  endif
-
-# else
     ble_hci_vs_set_tx_pwr_cp cmd{dbm};
     ble_hci_vs_set_tx_pwr_rp rsp{0};
     int rc = ble_hs_hci_send_vs_cmd(BLE_HCI_OCF_VS_SET_TX_PWR, &cmd, sizeof(cmd), &rsp, sizeof(rsp));
@@ -472,8 +467,8 @@ bool NimBLEDevice::setPower(int8_t dbm) {
 
     NIMBLE_LOGD(LOG_TAG, "TX power set to %d dBm\n", rsp.tx_power);
     return true;
-# endif
 } // setPower
+#endif
 
 /**
  * @brief Get the transmission power.
@@ -483,6 +478,16 @@ int NimBLEDevice::getPower() {
 # ifdef ESP_PLATFORM
 #  ifndef CONFIG_IDF_TARGET_ESP32P4
     switch (esp_ble_tx_power_get(ESP_BLE_PWR_TYPE_DEFAULT)) {
+#   ifndef CONFIG_IDF_TARGET_ESP32
+        case ESP_PWR_LVL_N24:
+            return -24;
+        case ESP_PWR_LVL_N21:
+            return -21;
+        case ESP_PWR_LVL_N18:
+            return -18;
+        case ESP_PWR_LVL_N15:
+            return -15;
+#   endif
         case ESP_PWR_LVL_N12:
             return -12;
         case ESP_PWR_LVL_N9:
@@ -499,6 +504,33 @@ int NimBLEDevice::getPower() {
             return 6;
         case ESP_PWR_LVL_P9:
             return 9;
+#   ifndef CONFIG_IDF_TARGET_ESP32
+        case ESP_PWR_LVL_P12:
+            return 12;
+        case ESP_PWR_LVL_P15:
+            return 15;
+#    ifdef CONFIG_IDF_TARGET_ESP32H2
+        case ESP_PWR_LVL_P16:
+            return 16;
+        case ESP_PWR_LVL_P17:
+            return 17;
+        case ESP_PWR_LVL_P19:
+            return 19;
+#    endif
+        case ESP_PWR_LVL_P18:
+            return 18;
+#    if defined(CONFIG_IDF_TARGET_ESP32S3)  \
+        || defined(CONFIG_IDF_TARGET_ESP32H2)
+        case ESP_PWR_LVL_P20:
+            return 20;
+#    endif
+#    if defined(CONFIG_IDF_TARGET_ESP32C2)      \
+        || defined(CONFIG_IDF_TARGET_ESP32C3)   \
+        || defined(CONFIG_IDF_TARGET_ESP32C6)
+        case ESP_PWR_LVL_P21:
+            return 21;
+#    endif
+#   endif
         default:
             return 0xFF;
     }
