@@ -491,9 +491,9 @@ int NimBLEDevice::getPower() {
         case ESP_PWR_LVL_N18:
             return -18;
 #    endif
-#   endif
         case ESP_PWR_LVL_N15:
             return -15;
+#   endif
         case ESP_PWR_LVL_N12:
             return -12;
         case ESP_PWR_LVL_N9:
@@ -525,15 +525,16 @@ int NimBLEDevice::getPower() {
 #    endif
         case ESP_PWR_LVL_P18:
             return 18;
-#    if !defined(CONFIG_IDF_TARGET_ESP32H2)                                                                                                             \
-        || (defined(CONFIG_IDF_TARGET_ESP32C6) && ESP_IDF_VERSION == ESP_IDF_VERSION_VAL(5,1,0))                                                        \
-        && !(defined(CONFIG_IDF_TARGET_ESP32C3) && (ESP_IDF_VERSION == ESP_IDF_VERSION_VAL(5,1,5) || ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5,4,0)))    \
-        && !(defined(CONFIG_IDF_TARGET_ESP32C2) && (ESP_IDF_VERSION == ESP_IDF_VERSION_VAL(5,1,0) || ESP_IDF_VERSION == ESP_IDF_VERSION_VAL(5,1,1)))
-        case ESP_PWR_LVL_P21:
-            return 21;
-#    else
+#    if defined(CONFIG_IDF_TARGET_ESP32H2)                                                      \
+        || (defined(CONFIG_IDF_TARGET_ESP32C6) && ESP_IDF_VERSION > ESP_IDF_VERSION_VAL(5,1,0)) \
+        || (defined(CONFIG_IDF_TARGET_ESP32C2) && ESP_IDF_VERSION > ESP_IDF_VERSION_VAL(5,2,0)) \
+        || ((defined(CONFIG_IDF_TARGET_ESP32C3) || defined(CONFIG_IDF_TARGET_ESP32S3))          \
+            && (ESP_IDF_VERSION == ESP_IDF_VERSION_VAL(5,1,5) || ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5,4,0)))
         case ESP_PWR_LVL_P20:
             return 20;
+#    else
+        case ESP_PWR_LVL_P21:
+            return 21;
 #    endif
 #   endif
         default:
