@@ -25,7 +25,7 @@ class ClientCallbacks : public NimBLEClientCallbacks {
 } clientCB;
 
 class scanCallbacks : public NimBLEScanCallbacks {
-    void onResult(NimBLEAdvertisedDevice* advertisedDevice) {
+    void onResult(const NimBLEAdvertisedDevice* advertisedDevice) {
         printf("Advertised Device found: %s\n", advertisedDevice->toString().c_str());
         if (advertisedDevice->haveName() && advertisedDevice->getName() == "NimBLE-Server") {
             printf("Found Our Device\n");

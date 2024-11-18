@@ -22,11 +22,7 @@ jobs:
         example:
           - Advanced/NimBLE_Client
           - Advanced/NimBLE_Server
-          - basic/BLE_client
-          - basic/BLE_notify
-          - basic/BLE_scan
-          - basic/BLE_server
-          - basic/BLE_uart
+          - Continuous_scan
           - Bluetooth_5/NimBLE_extended_client
           - Bluetooth_5/NimBLE_extended_server
           - Bluetooth_5/NimBLE_multi_advertiser
