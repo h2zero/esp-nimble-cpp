@@ -24,7 +24,7 @@ static bool doConnect = false;
 static bool connected = false;
 static bool doScan = false;
 static BLERemoteCharacteristic* pRemoteCharacteristic;
-static BLEAdvertisedDevice* myDevice;
+static const BLEAdvertisedDevice* myDevice;
 
 static void notifyCallback(
   BLERemoteCharacteristic* pBLERemoteCharacteristic,
@@ -137,7 +137,7 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
 
 /*** Only a reference to the advertised device is passed now
   void onResult(BLEAdvertisedDevice advertisedDevice) { **/
-  void onResult(BLEAdvertisedDevice* advertisedDevice) {
+  void onResult(const BLEAdvertisedDevice* advertisedDevice) {
     printf("BLE Advertised Device found: %s\n", advertisedDevice->toString().c_str());
 
     // We have found a device, let us now see if it contains the service we are looking for.
