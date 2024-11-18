@@ -83,8 +83,9 @@ class NimBLEScan {
 
     NimBLEScan();
     ~NimBLEScan();
-    static int handleGapEvent(ble_gap_event* event, void* arg);
-    void       onHostSync();
+    static int  handleGapEvent(ble_gap_event* event, void* arg);
+    static void srTimerCb(ble_npl_event* event);
+    void        onHostSync();
 
     NimBLEScanCallbacks* m_pScanCallbacks;
     ble_gap_disc_params  m_scanParams;
@@ -92,6 +93,7 @@ class NimBLEScan {
     uint32_t             m_duration;
     NimBLETaskData*      m_pTaskData;
     uint8_t              m_maxResults;
+    ble_npl_callout      m_srTimer;
 };
 
 /**

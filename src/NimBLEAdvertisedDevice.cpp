@@ -35,6 +35,7 @@ NimBLEAdvertisedDevice::NimBLEAdvertisedDevice(const ble_gap_event* event, uint8
       m_rssi{event->ext_disc.rssi},
       m_callbackSent{0},
       m_advLength{event->ext_disc.length_data},
+      m_srTimeout{0},
       m_isLegacyAdv{!!(event->ext_disc.props & BLE_HCI_ADV_LEGACY_MASK)},
       m_sid{event->ext_disc.sid},
       m_primPhy{event->ext_disc.prim_phy},
@@ -47,6 +48,7 @@ NimBLEAdvertisedDevice::NimBLEAdvertisedDevice(const ble_gap_event* event, uint8
       m_rssi{event->disc.rssi},
       m_callbackSent{0},
       m_advLength{event->disc.length_data},
+      m_srTimeout{0},
       m_payload(event->disc.data, event->disc.data + event->disc.length_data) {
 # endif
 } // NimBLEAdvertisedDevice

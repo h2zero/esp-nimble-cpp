@@ -157,6 +157,7 @@ class NimBLEAdvertisedDevice {
     int8_t        m_rssi{};
     uint8_t       m_callbackSent{};
     uint8_t       m_advLength{};
+    uint32_t      m_srTimeout{};
 
 # if CONFIG_BT_NIMBLE_EXT_ADV
     bool     m_isLegacyAdv{};

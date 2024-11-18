@@ -19,6 +19,12 @@
 # include "NimBLEDevice.h"
 # include "NimBLELog.h"
 
+# if defined(CONFIG_NIMBLE_CPP_IDF)
+#  include "nimble/nimble_port.h"
+# else
+#  include "nimble/porting/nimble/include/nimble/nimble_port.h"
+# endif
+
 # include <string>
 # include <climits>
 
@@ -33,13 +39,16 @@ NimBLEScan::NimBLEScan()
           .itvl{0}, .window{0}, .filter_policy{BLE_HCI_SCAN_FILT_NO_WL}, .limited{0}, .passive{1}, .filter_duplicates{1}},
       m_duration{BLE_HS_FOREVER},
       m_pTaskData{nullptr},
-      m_maxResults{0xFF} {}
+      m_maxResults{0xFF} {
+    ble_npl_callout_init(&m_srTimer, nimble_port_get_dflt_eventq(), NimBLEScan::srTimerCb, nullptr);
+}
 
 /**
  * @brief Scan destructor, release any allocated resources.
  */
 NimBLEScan::~NimBLEScan() {
     clearResults();
+    ble_npl_callout_deinit(&m_srTimer);
 }
 
 /**
@@ -133,7 +142,15 @@ int NimBLEScan::handleGapEvent(ble_gap_event* event, void* arg) {
                 } else if (isLegacyAdv && event_type == BLE_HCI_ADV_RPT_EVTYPE_SCAN_RSP) {
                     advertisedDevice->m_callbackSent = 2;
                     pScan->m_pScanCallbacks->onResult(advertisedDevice);
+                } else if (isLegacyAdv) {
+                    ble_npl_time_t ticks;
+                    ble_npl_time_ms_to_ticks(500, &ticks); // more than 500ms for scan response = not coming
+                    advertisedDevice->m_srTimeout = ble_npl_time_get() + ticks;
+                    if (!ble_npl_callout_is_active(&pScan->m_srTimer)) {
+                        ble_npl_callout_reset(&pScan->m_srTimer, ticks);
+                    }
                 }
+
                 // If not storing results and we have invoked the callback, delete the device.
                 if (pScan->m_maxResults == 0 && advertisedDevice->m_callbackSent >= 2) {
                     pScan->erase(advertisedAddress);
@@ -165,6 +182,41 @@ int NimBLEScan::handleGapEvent(ble_gap_event* event, void* arg) {
             return 0;
     }
 } // handleGapEvent
+
+/**
+ * @brief This will call the scan result callback when a scan response is not received
+ * and will delete the device from the vector when maxResults is 0.
+ */
+void NimBLEScan::srTimerCb(ble_npl_event* event) {
+    NimBLEScan*    pScan       = NimBLEDevice::getScan();
+    ble_npl_time_t now         = ble_npl_time_get();
+    ble_npl_time_t nextTimeout = BLE_NPL_TIME_FOREVER;
+
+    for (auto& ad : pScan->m_scanResults.m_deviceVec) {
+        if (!ad->m_srTimeout) {
+            continue;
+        }
+
+        if (ad->m_callbackSent == 1 && now > ad->m_srTimeout) {
+            ad->m_callbackSent = 2;
+            pScan->m_pScanCallbacks->onResult(ad);
+
+            if (pScan->m_maxResults == 0) {
+                pScan->erase(ad->getAddress());
+            }
+
+            continue;
+        }
+
+        if (ad->m_callbackSent == 1 && ad->m_srTimeout < nextTimeout) {
+            nextTimeout = ad->m_srTimeout;
+        }
+    }
+
+    if (nextTimeout != BLE_NPL_TIME_FOREVER) {
+        ble_npl_callout_reset(&pScan->m_srTimer, nextTimeout);
+    }
+} // srTimerCb
 
 /**
  * @brief Should we perform an active or passive scan?
@@ -277,8 +329,8 @@ bool NimBLEScan::start(uint32_t duration, bool is_continue, bool restart) {
     }
 
     if (isScanning()) {
-        if(restart) {
-            //NIMBLE_LOGI(LOG_TAG, "Scan already in progress, stopping it");
+        if (restart) {
+            // NIMBLE_LOGI(LOG_TAG, "Scan already in progress, stopping it");
             if (!stop()) {
                 return false;
             }
@@ -355,6 +407,10 @@ bool NimBLEScan::stop() {
     if (rc != 0 && rc != BLE_HS_EALREADY) {
         NIMBLE_LOGE(LOG_TAG, "Failed to cancel scan; rc=%d", rc);
         return false;
+    }
+
+    if (m_pScanCallbacks) {
+        ble_npl_callout_stop(&m_srTimer);
     }
 
     if (m_maxResults == 0) {
