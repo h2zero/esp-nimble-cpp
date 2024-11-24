@@ -343,9 +343,6 @@ void app_main (void){
     /** Optional: set the transmit power, default is -3db */
     NimBLEDevice::setPower(ESP_PWR_LVL_P9); /** 12db */
 
-    /** Optional: set any devices you don't want to get advertisments from */
-    // NimBLEDevice::addIgnored(NimBLEAddress ("aa:bb:cc:dd:ee:ff"));
-
     /** create new scan */
     NimBLEScan* pScan = NimBLEDevice::getScan();
 
