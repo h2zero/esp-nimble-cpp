@@ -53,7 +53,6 @@ idf_component_register(
     "src/NimBLEDescriptor.cpp"
     "src/NimBLEDevice.cpp"
     "src/NimBLEEddystoneTLM.cpp"
-    "src/NimBLEEddystoneURL.cpp"
     "src/NimBLEExtAdvertising.cpp"
     "src/NimBLEHIDDevice.cpp"
     "src/NimBLERemoteCharacteristic.cpp"
