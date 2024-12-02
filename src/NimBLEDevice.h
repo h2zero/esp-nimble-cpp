@@ -134,12 +134,11 @@ class NimBLEDevice {
     static void          onSync(void);
     static void          host_task(void* param);
     static int           getPower();
+    static bool          setPower(int8_t dbm);
 
 # if defined(ESP_PLATFORM)
     static esp_power_level_t getPowerLevel();
-    static bool              setPower(esp_power_level_t powerLevel);
-# else
-    static bool setPower(int8_t dbm);
+    static bool              setPowerLevel(esp_power_level_t powerLevel);
 # endif
 
 # if CONFIG_BT_NIMBLE_EXT_ADV
