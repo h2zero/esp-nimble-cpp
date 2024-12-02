@@ -60,9 +60,6 @@ class NimBLEClient {
     void           setClientCallbacks(NimBLEClientCallbacks* pClientCallbacks, bool deleteCallbacks = true);
     std::string    toString() const;
     uint16_t       getConnHandle() const;
-    void           clearConnection();
-    bool           setConnection(const NimBLEConnInfo& connInfo);
-    bool           setConnection(uint16_t connHandle);
     uint16_t       getMTU() const;
     bool           exchangeMTU();
     bool           secureConnection() const;
@@ -139,6 +136,7 @@ class NimBLEClient {
     ble_gap_conn_params m_connParams;
 
     friend class NimBLEDevice;
+    friend class NimBLEServer;
 }; // class NimBLEClient
 
 /**
@@ -154,7 +152,7 @@ class NimBLEClientCallbacks {
      */
     virtual void onConnect(NimBLEClient* pClient);
 
-        /**
+    /**
      * @brief Called when a connection attempt fails.
      * @param [in] pClient A pointer to the connecting client object.
      * @param [in] reason Contains the reason code for the connection failure.
