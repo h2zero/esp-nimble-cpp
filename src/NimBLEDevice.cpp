@@ -487,7 +487,7 @@ int NimBLEDevice::getPower() {
         return -3 * (ESP_PWR_LVL_N0 - pwr);
     }
 
-    if (pwr > ESP_PWR_LVL_N0 && pwr != ESP_PWR_LVL_INVALID) {
+    if (pwr > ESP_PWR_LVL_N0) {
         return (pwr - ESP_PWR_LVL_N0) * 3;
     }
 
