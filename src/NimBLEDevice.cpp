@@ -426,20 +426,24 @@ std::vector<NimBLEClient*> NimBLEDevice::getConnectedClients() {
  * @brief Get the transmission power.
  * @return The power level currently used in esp_power_level_t.
  */
-esp_power_level_t NimBLEDevice::getPowerLevel() {
-    return esp_ble_tx_power_get(ESP_BLE_PWR_TYPE_DEFAULT);
+esp_power_level_t NimBLEDevice::getPowerLevel(esp_ble_power_type_t powerType) {
+#  ifdef CONFIG_IDF_TARGET_ESP32P4
+    return 0xFF; // CONFIG_IDF_TARGET_ESP32P4 does not support esp_ble_tx_power_get
+#  else
+    return esp_ble_tx_power_get(powerType);
+#  endif
 } // getPowerLevel
 
 /**
  * @brief Set the transmission power.
- * @param [in] powerLevel The power level to set in esp_power_level_t..
+ * @param [in] powerLevel The power level to set in esp_power_level_t.
  * @return True if the power level was set successfully.
  */
-bool NimBLEDevice::setPowerLevel(esp_power_level_t powerLevel) {
+bool NimBLEDevice::setPowerLevel(esp_power_level_t powerLevel, esp_ble_power_type_t powerType) {
 #  ifdef CONFIG_IDF_TARGET_ESP32P4
-    return false;
+    return false; // CONFIG_IDF_TARGET_ESP32P4 does not support esp_ble_tx_power_set
 #  else
-    esp_err_t errRc = esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_DEFAULT, powerLevel);
+    esp_err_t errRc = esp_ble_tx_power_set(powerType, powerLevel);
     if (errRc != ESP_OK) {
         NIMBLE_LOGE(LOG_TAG, "esp_ble_tx_power_set: rc=%d", errRc);
     }
@@ -456,6 +460,9 @@ bool NimBLEDevice::setPowerLevel(esp_power_level_t powerLevel) {
  */
 bool NimBLEDevice::setPower(int8_t dbm) {
 # ifdef ESP_PLATFORM
+    if (dbm % 3 == 2) {
+        dbm++; // round up to the next multiple of 3 to be able to target 20dbm
+    }
     return setPowerLevel(static_cast<esp_power_level_t>(dbm / 3 + ESP_PWR_LVL_N0));
 # else
     NIMBLE_LOGD(LOG_TAG, ">> setPower: %d", dbm);
@@ -475,24 +482,24 @@ bool NimBLEDevice::setPower(int8_t dbm) {
 /**
  * @brief Get the transmission power.
  * @return The power level currently used in dbm.
+ * @note ESP32S3 only returns 0xFF as of IDF 5, so this function will return 20dbm.
  */
 int NimBLEDevice::getPower() {
 # ifdef ESP_PLATFORM
 #  ifdef CONFIG_IDF_TARGET_ESP32P4
-    return -127; // CONFIG_IDF_TARGET_ESP32P4 does not support esp_ble_tx_power_get
-#  endif
-
+    return 0xFF; // CONFIG_IDF_TARGET_ESP32P4 does not support esp_ble_tx_power_get
+#  else
     int pwr = esp_ble_tx_power_get(ESP_BLE_PWR_TYPE_DEFAULT);
     if (pwr < ESP_PWR_LVL_N0) {
         return -3 * (ESP_PWR_LVL_N0 - pwr);
     }
 
     if (pwr > ESP_PWR_LVL_N0) {
-        return (pwr - ESP_PWR_LVL_N0) * 3;
+        return std::min<int>((pwr - ESP_PWR_LVL_N0) * 3, 20);
     }
 
     return 0;
-
+#  endif
 # else
     return ble_phy_txpwr_get();
 # endif

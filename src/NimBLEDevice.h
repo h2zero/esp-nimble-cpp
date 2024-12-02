@@ -137,8 +137,8 @@ class NimBLEDevice {
     static bool          setPower(int8_t dbm);
 
 # if defined(ESP_PLATFORM)
-    static esp_power_level_t getPowerLevel();
-    static bool              setPowerLevel(esp_power_level_t powerLevel);
+    static esp_power_level_t getPowerLevel(esp_ble_power_type_t powerType = ESP_BLE_PWR_TYPE_DEFAULT);
+    static bool setPowerLevel(esp_power_level_t powerLevel, esp_ble_power_type_t powerType = ESP_BLE_PWR_TYPE_DEFAULT);
 # endif
 
 # if CONFIG_BT_NIMBLE_EXT_ADV
