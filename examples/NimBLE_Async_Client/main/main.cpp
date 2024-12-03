@@ -48,7 +48,7 @@ class scanCallbacks : public NimBLEScanCallbacks {
         }
     }
 
-    void onScanEnd(NimBLEScanResults results) {
+    void onScanEnd(const NimBLEScanResults&, int reason) {
         printf("Scan Ended\n");
         NimBLEDevice::getScan()->start(scanTimeMs);
     }
