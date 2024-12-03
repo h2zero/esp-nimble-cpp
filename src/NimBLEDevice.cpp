@@ -479,8 +479,7 @@ bool NimBLEDevice::setPower(int8_t dbm) {
 
 /**
  * @brief Get the transmission power.
- * @return The power level currently used in dbm.
- * @note ESP32S3 only returns 0xFF as of IDF 5, so this function will return 20dbm.
+ * @return The power level currently used in dbm or 0xFF on error.
  */
 int NimBLEDevice::getPower() {
 # ifdef ESP_PLATFORM
@@ -488,6 +487,19 @@ int NimBLEDevice::getPower() {
     return 0xFF; // CONFIG_IDF_TARGET_ESP32P4 does not support esp_ble_tx_power_get
 #  else
     int pwr = esp_ble_tx_power_get(ESP_BLE_PWR_TYPE_DEFAULT);
+
+#   if defined(CONFIG_IDF_TARGET_ESP32C3) || defined(CONFIG_IDF_TARGET_ESP32S3)
+    // workaround for bug when "enhanced tx power" was added
+    if (pwr == 0xFF) {
+        pwr = esp_ble_tx_power_get(ESP_BLE_PWR_TYPE_CONN_HDL3);
+    }
+#   endif
+
+    if (pwr < 0) {
+        NIMBLE_LOGE(LOG_TAG, "esp_ble_tx_power_get failed rc=%d", pwr);
+        return 0xFF;
+    }
+
     if (pwr < ESP_PWR_LVL_N0) {
         return -3 * (ESP_PWR_LVL_N0 - pwr);
     }
