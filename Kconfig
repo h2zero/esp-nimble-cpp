@@ -26,6 +26,113 @@ config NIMBLE_CPP_LOG_LEVEL
     default 3 if NIMBLE_CPP_LOG_LEVEL_INFO
     default 4 if NIMBLE_CPP_LOG_LEVEL_DEBUG
 
+config NIMBLE_LOG_OVERRIDE
+    bool "Enable log override, decoupled from general IDF logging."
+    default "n"
+    help
+        Enabling this option will allow NimBLE logging to be printed without
+        being tied to IDF log level.
+
+menu "NIMBLE Log Override Colors"
+    depends on NIMBLE_LOG_OVERRIDE
+
+    choice NIMBLE_LOG_OVERRIDE_COLOR_ERR
+        prompt "NimBLE CPP log override color Error"
+        default NIMBLE_LOG_OVERRIDE_COLOR_ERR_NONE
+        help
+            Select NimBLE CPP log override error color.
+
+        config NIMBLE_LOG_OVERRIDE_COLOR_ERR_NONE
+            bool "None"
+        config NIMBLE_LOG_OVERRIDE_COLOR_ERR_BLACK
+            bool "Black"
+        config NIMBLE_LOG_OVERRIDE_COLOR_ERR_RED
+            bool "Red"
+        config NIMBLE_LOG_OVERRIDE_COLOR_ERR_GREEN
+            bool "Green"
+        config NIMBLE_LOG_OVERRIDE_COLOR_ERR_YELLOW
+            bool "Yellow"
+        config NIMBLE_LOG_OVERRIDE_COLOR_ERR_BLUE
+            bool "Blue"
+        config NIMBLE_LOG_OVERRIDE_COLOR_ERR_PURPLE
+            bool "Purple"
+        config NIMBLE_LOG_OVERRIDE_COLOR_ERR_CYAN
+            bool "Cyan"
+    endchoice #NIMBLE_LOG_OVERRIDE_COLOR_ERR
+
+    choice NIMBLE_LOG_OVERRIDE_COLOR_WARN
+        prompt "NimBLE CPP log override color Warning"
+        default NIMBLE_LOG_OVERRIDE_COLOR_WARN_NONE
+        help
+            Select NimBLE CPP log override warning color.
+
+        config NIMBLE_LOG_OVERRIDE_COLOR_WARN_NONE
+            bool "None"
+        config NIMBLE_LOG_OVERRIDE_COLOR_WARN_BLACK
+            bool "Black"
+        config NIMBLE_LOG_OVERRIDE_COLOR_WARN_RED
+            bool "Red"
+        config NIMBLE_LOG_OVERRIDE_COLOR_WARN_GREEN
+            bool "Green"
+        config NIMBLE_LOG_OVERRIDE_COLOR_WARN_YELLOW
+            bool "Yellow"
+        config NIMBLE_LOG_OVERRIDE_COLOR_WARN_BLUE
+            bool "Blue"
+        config NIMBLE_LOG_OVERRIDE_COLOR_WARN_PURPLE
+            bool "Purple"
+        config NIMBLE_LOG_OVERRIDE_COLOR_WARN_CYAN
+            bool "Cyan"
+    endchoice #NIMBLE_LOG_OVERRIDE_COLOR_WARN
+
+    choice NIMBLE_LOG_OVERRIDE_COLOR_INFO
+        prompt "NimBLE CPP log override color Info"
+        default NIMBLE_LOG_OVERRIDE_COLOR_INFO_NONE
+        help
+            Select NimBLE CPP log override info color.
+
+        config NIMBLE_LOG_OVERRIDE_COLOR_INFO_NONE
+            bool "None"
+        config NIMBLE_LOG_OVERRIDE_COLOR_INFO_BLACK
+            bool "Black"
+        config NIMBLE_LOG_OVERRIDE_COLOR_INFO_RED
+            bool "Red"
+        config NIMBLE_LOG_OVERRIDE_COLOR_INFO_GREEN
+            bool "Green"
+        config NIMBLE_LOG_OVERRIDE_COLOR_INFO_YELLOW
+            bool "Yellow"
+        config NIMBLE_LOG_OVERRIDE_COLOR_INFO_BLUE
+            bool "Blue"
+        config NIMBLE_LOG_OVERRIDE_COLOR_INFO_PURPLE
+            bool "Purple"
+        config NIMBLE_LOG_OVERRIDE_COLOR_INFO_CYAN
+            bool "Cyan"
+    endchoice #NIMBLE_LOG_OVERRIDE_COLOR_INFO
+
+    choice NIMBLE_LOG_OVERRIDE_COLOR_DEBUG
+        prompt "NimBLE CPP log override color Debug"
+        default NIMBLE_LOG_OVERRIDE_COLOR_DEBUG_NONE
+        help
+            Select NimBLE CPP log override debug color.
+
+        config NIMBLE_LOG_OVERRIDE_COLOR_DEBUG_NONE
+            bool "None"
+        config NIMBLE_LOG_OVERRIDE_COLOR_DEBUG_BLACK
+            bool "Black"
+        config NIMBLE_LOG_OVERRIDE_COLOR_DEBUG_RED
+            bool "Red"
+        config NIMBLE_LOG_OVERRIDE_COLOR_DEBUG_GREEN
+            bool "Green"
+        config NIMBLE_LOG_OVERRIDE_COLOR_DEBUG_YELLOW
+            bool "Yellow"
+        config NIMBLE_LOG_OVERRIDE_COLOR_DEBUG_BLUE
+            bool "Blue"
+        config NIMBLE_LOG_OVERRIDE_COLOR_DEBUG_PURPLE
+            bool "Purple"
+        config NIMBLE_LOG_OVERRIDE_COLOR_DEBUG_CYAN
+            bool "Cyan"
+    endchoice #NIMBLE_LOG_OVERRIDE_COLOR_DEBUG
+endmenu
+
 config NIMBLE_CPP_ENABLE_RETURN_CODE_TEXT
     bool "Show NimBLE return codes as text in debug log."
     default "n"
@@ -77,12 +184,12 @@ config NIMBLE_CPP_DEBUG_ASSERT_ENABLED
         This will use approximately 1kB of flash memory.
 
 config NIMBLE_CPP_FREERTOS_TASK_BLOCK_BIT
-    int "FreeRTOS task block bit"
+    int "FreeRTOS task block bit."
     default 31
     help
         Configure the bit to set in the task notification value when a task is blocked waiting for an event.
         This should be set to a bit that is not used by other notifications in the system.
-        
+
 #
 # BT config
 #
