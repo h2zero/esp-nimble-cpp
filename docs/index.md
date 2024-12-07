@@ -14,7 +14,7 @@ It is more suited to resource constrained devices than bluedroid and has now bee
 <br/>
 
 # ESP-IDF Installation
-### v4.0+
+## v4.0+
 Download as .zip and extract or clone into the components folder in your esp-idf project.
 
 Run menuconfig, go to `Component config->Bluetooth` enable Bluetooth and in `Bluetooth host` NimBLE.  
