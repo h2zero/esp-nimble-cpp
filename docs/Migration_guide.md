@@ -20,12 +20,11 @@ For more information on the improvements and additions please refer to the [clas
     * [Remote characteristics](#remote-characteristics)
     * [Client Callbacks](#client-callbacks)
     * [Security](#client-security)
-* [Scanning](#scan-api)
+* [BLE scan](#ble-scan)
 * [General Security](#security-api)
 * [Configuration](#arduino-configuration)
 <br/>
 
-<a name="general-information"></a>
 ## General Information
 
 ### Header Files
@@ -51,7 +50,6 @@ As this parameter is optional no changes to existing code are needed, it is ment
 `BLEAddress::getNative` is now named `NimBLEAddress::getBase` and returns a pointer to `const ble_addr_t` instead of a pointer to the address value.  
 <br/>
 
-<a name="server-api"></a>
 ## Server API
 Creating a `BLEServer` instance is the same as original, no changes required.
 For example `BLEDevice::createServer()` will work just as it did before.
@@ -81,13 +79,11 @@ onMTUChange(uint16_t MTU, NimBLEConnInfo& connInfo)
 **Note:** All callback methods have default implementations which allows the application to implement only the methods applicable.  
 <br/>
 
-<a name="services"></a>
 ### Services
 Creating a `BLEService` (`NimBLEService`) instance is the same as original, no changes required.
 For example `BLEServer::createService(SERVICE_UUID)` will work just as it did before.  
 <br/>
 
-<a name="characteristics"></a>
 ### Characteristics
 `BLEService::createCharacteristic` (`NimBLEService::createCharacteristic`) is used the same way as originally except the properties parameter has changed.
 
@@ -137,7 +133,6 @@ BLECharacteristic *pCharacteristic = pService->createCharacteristic(
 ```
 <br/>
 
-<a name="characteristic-callbacks"></a>
 #### Characteristic callbacks
 
 `BLECharacteristicCallbacks` (`NimBLECharacteristicCallbacks`) has a new method `NimBLECharacteristicCallbacks::onSubscribe` which is called when a client subscribes to notifications/indications.
@@ -169,7 +164,6 @@ my_struct_t myStruct = pChr->getValue<my_struct_t>();
 ```
 <br/>
 
-<a name="descriptors"></a>
 ### Descriptors
 
 Descriptors are now created using the `NimBLECharacteristic::createDescriptor` method.
@@ -197,7 +191,7 @@ NimBLEDescriptor* createDescriptor(NimBLEUUID uuid,
                                    NIMBLE_PROPERTY::WRITE,
                                    uint16_t max_len = 100);
 ```
-##### Example
+#### Example
 ```
 pDescriptor = pCharacteristic->createDescriptor("ABCD",
                                                 NIMBLE_PROPERTY::READ |
@@ -212,7 +206,6 @@ For the 0x2904, there is a specialized class that is created through `NimBLEChar
 functions for handling the data expect in the Characteristic Presentation Format Descriptor specification.  
 <br/>
 
-<a name="descriptor-callbacks"></a>
 #### Descriptor callbacks
 
 > `BLEDescriptorCallbacks::onRead` (`NimBLEDescriptorCallbacks::onRead`)
@@ -221,7 +214,6 @@ functions for handling the data expect in the Characteristic Presentation Format
 The above descriptor callbacks take an additional (required) parameter `NimBLEConnInfo& connInfo`, which contains the connection information of the peer.
 <br/>
 
-<a name="server-security"></a>
 ### Server Security
 Security is set on the characteristic or descriptor properties by applying one of the following:
 > NIMBLE_PROPERTY::READ_ENC  
@@ -238,7 +230,6 @@ When a peer wants to read or write a characteristic or descriptor with any of th
 This can be changed to use passkey authentication or numeric comparison. See [Security API](#security-api) for details.  
 <br/>
 
-<a name="advertising-api"></a>
 ## Advertising API
 Advertising works the same as the original API except:
 
@@ -251,7 +242,6 @@ Calling `NimBLEAdvertising::setAdvertisementData` will entirely replace any data
 Now takes 2 optional parameters, the first is the duration to advertise for (in milliseconds), the second `NimBLEAddress` to direct advertising to a specific device.  
 <br/>
 
-<a name="client-api"></a>
 ## Client API
 
 Client instances are created just as before with `BLEDevice::createClient` (`NimBLEDevice::createClient`).
@@ -284,7 +274,6 @@ Also now returns a pointer to `std::vector` instead of `std::map`.
 **Added:** `NimBLEClient::discoverAttributes` for the user to discover all the peripheral attributes to replace the the removed automatic functionality.  
 <br/>
 
-<a name="remote-services"></a>
 ### Remote Services
 `BLERemoteService` (`NimBLERemoteService`) Methods remain mostly unchanged with the exceptions of:
 
@@ -299,7 +288,6 @@ This method now takes an optional (bool) parameter to indicate if the characteri
 Also now returns a pointer to `std::vector` instead of `std::map`.  
 <br/>
 
-<a name="remote-characteristics"></a>
 ### Remote Characteristics
 `BLERemoteCharacteristic` (`NimBLERemoteCharacteristic`)
  There have been a few changes to the methods in this class:
@@ -349,7 +337,6 @@ This method now takes an optional (bool) parameter to indicate if the descriptor
 Also now returns a pointer to `std::vector` instead of `std::map`.  
 <br/>
 
-<a name="client-callbacks"></a>
 ### Client callbacks
 
 > `BLEClientCallbacks::onDisconnect` (`NimBLEClientCallbacks::onDisconnect`)
@@ -357,13 +344,11 @@ Also now returns a pointer to `std::vector` instead of `std::map`.
 This now takes a second parameter `int reason` which provides the reason code for disconnection.  
 <br/>
 
-<a name="client-security"></a>
 ### Client Security
 The client will automatically initiate security when the peripheral responds that it's required.
 The default configuration will use "just-works" pairing with no bonding, if you wish to enable bonding see below.  
 <br/>
 
-<a name="scan-api"></a>
 ## BLE Scan
 The scan API is mostly unchanged from the original except for `NimBLEScan::start`, which has the following changes:  
 * The duration parameter is now in milliseconds instead of seconds.
@@ -373,7 +358,6 @@ The scan API is mostly unchanged from the original except for `NimBLEScan::start
  The blocking overload of `NimBLEScan::start` has been replaced by an overload of `NimBLEScan::getResults` with the same parameters. 
 <br/>
 
-<a name="security-api"></a>
 ## Security API
 Security operations have been moved to `BLEDevice` (`NimBLEDevice`).  
 The security callback methods are now incorporated in the `NimBLEServerCallbacks` / `NimBLEClientCallbacks` classes.
@@ -423,7 +407,6 @@ If we are the initiator of the security procedure this sets the keys we will dis
 Sets the keys we are willing to accept from the peer during pairing.  
 <br/>
 
-<a name="arduino-configuration"></a>
 ## Arduino Configuration
 
 Unlike the original library pre-packaged in the esp32-arduino, this library has all the configuration options that are normally set in menuconfig available in the *src/nimconfig.h* file.
