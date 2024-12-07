@@ -4,7 +4,7 @@ This guide describes the required changes to existing projects migrating from th
 
 **The changes listed here are only the required changes that must be made**, and a short overview of options for migrating existing applications.
 
-For more information on the improvements and additions please refer to the [class documentation](https://h2zero.github.io/esp-nimble-cpp/annotated.html) and [Improvements and updates](Improvements_and_updates.md)
+For more information on the improvements and additions please refer to the [class documentation](https://h2zero.github.io/esp-nimble-cpp/annotated.html)
 
 * [General Changes](#general-information)
 * [Server](#server-api)

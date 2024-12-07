@@ -38,9 +38,7 @@ This library is intended to be compatible with the original ESP32 BLE functions 
 
 If you have not used the original Bluedroid library please refer to the [New user guide](New_user_guide.md).
 
-If you are familiar with the original library, see: [The migration guide](Migration_guide.md) for details.  
-
-Also see [Improvements and updates](Improvements_and_updates.md) for information about non-breaking changes.  
+If you are familiar with the original library, see: [The migration guide](Migration_guide.md) for details.   
 
 For more advanced usage see [Usage tips](Usage_tips.md) for more performance and optimization.  
 <br/>
