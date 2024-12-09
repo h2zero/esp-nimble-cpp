@@ -6,7 +6,6 @@
  *
  *  Created: on November 4, 2024
  *      Author: H2zero
- *
  */
 
 #include <NimBLEDevice.h>
@@ -30,6 +29,7 @@ class scanCallbacks : public NimBLEScanCallbacks {
         if (advertisedDevice->haveName() && advertisedDevice->getName() == "NimBLE-Server") {
             printf("Found Our Device\n");
 
+            /** Async connections can be made directly in the scan callbacks */
             auto pClient = NimBLEDevice::getDisconnectedClient();
             if (!pClient) {
                 pClient = NimBLEDevice::createClient(advertisedDevice->getAddress());
@@ -56,7 +56,7 @@ class scanCallbacks : public NimBLEScanCallbacks {
 
 extern "C" void app_main(void) {
     printf("Starting NimBLE Async Client\n");
-    NimBLEDevice::init("");
+    NimBLEDevice::init("Async-Client");
     NimBLEDevice::setPower(3); /** +3db */
 
     NimBLEScan* pScan = NimBLEDevice::getScan();
