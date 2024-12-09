@@ -9,21 +9,22 @@
  *
  *  Created: on March 24 2020
  *      Author: H2zero
- *
  */
 
-#include "NimBLEDevice.h"
+#include <NimBLEDevice.h>
 
 static constexpr uint32_t scanTime = 30 * 1000; // 30 seconds scan time.
 
 class scanCallbacks : public NimBLEScanCallbacks {
-    // Initial discovery, advertisement data only.
+    /** Initial discovery, advertisement data only. */
     void onDiscovered(const NimBLEAdvertisedDevice* advertisedDevice) override {
         printf("Discovered Device: %s\n", advertisedDevice->toString().c_str());
     }
 
-    // If active scanning the result here will have the scan response data.
-    // If not active scanning then this will be the same as onDiscovered.
+    /**
+     *  If active scanning the result here will have the scan response data.
+     *  If not active scanning then this will be the same as onDiscovered.
+     */
     void onResult(const NimBLEAdvertisedDevice* advertisedDevice) override {
         printf("Device result: %s\n", advertisedDevice->toString().c_str());
     }
@@ -32,7 +33,7 @@ class scanCallbacks : public NimBLEScanCallbacks {
         printf("Scan ended reason = %d; restarting scan\n", reason);
         NimBLEDevice::getScan()->start(scanTime, false, true);
     }
-} scanCallbacks; // create a callback class instance.
+} scanCallbacks;
 
 extern "C" void app_main() {
     NimBLEDevice::init("");                         // Initialize the device, you can specify a device name if you want.
