@@ -476,6 +476,7 @@ void NimBLEScan::clearResults() {
  */
 void NimBLEScanResults::dump() const {
     for (const auto& dev : m_deviceVec) {
+        (void)dev; // suppress unused variable warning when log level is less than info
         NIMBLE_LOGI(LOG_TAG, "- %s", dev->toString().c_str());
     }
 } // dump

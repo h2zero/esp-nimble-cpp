@@ -66,7 +66,6 @@ NimBLETaskData::NimBLETaskData(void* pInstance, int flags, void* buf)
 NimBLETaskData::~NimBLETaskData() {
 # if !defined INC_FREERTOS_H
     if (m_pHandle != nullptr) {
-        ble_npl_sem_deinit(static_cast<ble_npl_sem*>(m_pHandle));
         delete static_cast<ble_npl_sem*>(m_pHandle);
     }
 # endif

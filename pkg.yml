@@ -1,0 +1,20 @@
+pkg.name: esp-nimble-cpp
+pkg.type: lib
+pkg.description: NimBLE CPP wrapper
+pkg.author: "Ryan Powell"
+pkg.homepage: "http://mynewt.apache.org/"
+pkg.keywords:
+
+pkg.deps:
+    - "@apache-mynewt-nimble/nimble"
+    - "@apache-mynewt-nimble/nimble/host"
+    - "@apache-mynewt-nimble/nimble/host/services/gap"
+    - "@apache-mynewt-nimble/nimble/host/services/gatt"
+    - "@apache-mynewt-nimble/nimble/host/store/config"
+    - "@apache-mynewt-nimble/nimble/host/util"
+
+pkg.source_dirs:
+    - src
+
+pkg.include_dirs:
+    - src

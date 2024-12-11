@@ -39,7 +39,12 @@
 #   include "nimble/esp_port/esp-hci/include/esp_nimble_hci.h"
 #  endif
 # else
-#  include "nimble/nimble/controller/include/controller/ble_phy.h"
+//#  include "nimble/nimble/controller/include/controller/ble_phy.h"
+#    include "controller/ble_phy.h"
+#    include "host/ble_hs.h"
+#    include "host/util/util.h"
+#    include "services/gap/ble_svc_gap.h"
+#    include "services/gatt/ble_svc_gatt.h"
 # endif
 
 # ifndef CONFIG_NIMBLE_CPP_IDF
@@ -512,7 +517,7 @@ int NimBLEDevice::getPower() {
     return 0;
 #  endif
 # else
-    return ble_phy_txpwr_get();
+    return ble_phy_tx_power_get(); //ble_phy_txpwr_get();
 # endif
 } // getPower
 
@@ -809,9 +814,18 @@ void NimBLEDevice::onSync(void) {
  */
 void NimBLEDevice::host_task(void* param) {
     NIMBLE_LOGI(LOG_TAG, "BLE Host Task Started");
+#ifndef MYNEWT
     nimble_port_run(); // This function will return only when nimble_port_stop() is executed
     nimble_port_freertos_deinit();
+#else
+    while (1) {
+        os_eventq_run(os_eventq_dflt_get());
+    }
+#endif
 } // host_task
+
+static struct os_task ble_nimble_task;
+static os_stack_t ble_nimble_stack[1024];
 
 /**
  * @brief Initialize the BLE environment.
@@ -875,8 +889,10 @@ bool NimBLEDevice::init(const std::string& deviceName) {
         }
 #  endif
 # endif
-        nimble_port_init();
 
+#ifndef MYNEWT
+        nimble_port_init();
+#endif
         // Setup callbacks for host events
         ble_hs_cfg.reset_cb = NimBLEDevice::onReset;
         ble_hs_cfg.sync_cb  = NimBLEDevice::onSync;
@@ -891,8 +907,13 @@ bool NimBLEDevice::init(const std::string& deviceName) {
         ble_hs_cfg.store_status_cb   = ble_store_util_status_rr; /*TODO: Implement handler for this*/
 
         setDeviceName(deviceName);
+#ifndef MYNEWT
         ble_store_config_init();
         nimble_port_freertos_init(NimBLEDevice::host_task);
+#else
+        os_task_init(&ble_nimble_task, "ble_nimble_task", NimBLEDevice::host_task, NULL, 8,
+                     OS_WAIT_FOREVER, ble_nimble_stack, 1024);
+#endif
     }
 
     // Wait for host and controller to sync before returning and accepting new tasks
@@ -914,6 +935,7 @@ bool NimBLEDevice::init(const std::string& deviceName) {
 bool NimBLEDevice::deinit(bool clearAll) {
     int rc = 0;
     if (m_initialized) {
+#ifndef MYNEWT
         rc = nimble_port_stop();
         if (rc == 0) {
             nimble_port_deinit();
@@ -925,6 +947,10 @@ bool NimBLEDevice::deinit(bool clearAll) {
             }
 #  endif
 # endif
+#else
+        rc = ble_hs_shutdown(0);
+        if (rc == 0) {
+#endif
             m_initialized = false;
             m_synced      = false;
         }

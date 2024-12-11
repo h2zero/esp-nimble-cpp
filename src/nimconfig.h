@@ -6,7 +6,7 @@
  */
 
 #pragma once
-
+#ifdef ESP_PLATFORM
 #include "sdkconfig.h"
 #include "nimconfig_rename.h"
 
@@ -150,3 +150,25 @@ void nimble_cpp_assert(const char *file, unsigned line) __attribute((weak, noret
 #define CONFIG_BT_NIMBLE_TASK_STACK_SIZE 4096
 
 #endif // _DOXYGEN_
+#else
+#include "syscfg/syscfg.h"
+#define CONFIG_BT_ENABLED
+#define CONFIG_BT_NIMBLE_ROLE_OBSERVER
+#define CONFIG_BT_NIMBLE_ROLE_BROADCASTER
+#define CONFIG_BT_NIMBLE_ROLE_CENTRAL
+#define CONFIG_BT_NIMBLE_ROLE_PERIPHERAL
+#define CONFIG_NIMBLE_CPP_IDF
+#define CONFIG_BT_NIMBLE_MAX_CONNECTIONS 3
+#define CONFIG_NIMBLE_CPP_LOG_LEVEL 0
+#if CONFIG_NIMBLE_CPP_DEBUG_ASSERT_ENABLED && !defined NDEBUG
+void nimble_cpp_assert(const char *file, unsigned line) __attribute((weak, noreturn));
+# define NIMBLE_ATT_VAL_FILE  (__builtin_strrchr(__FILE__, '/') ? \
+                            __builtin_strrchr (__FILE__, '/') + 1 : __FILE__)
+# define NIMBLE_CPP_DEBUG_ASSERT(cond) \
+    if (!(cond)) { \
+        nimble_cpp_assert(NIMBLE_ATT_VAL_FILE, __LINE__); \
+    }
+#else
+# define NIMBLE_CPP_DEBUG_ASSERT(cond) (void(0))
+#endif
+#endif // ESP_PLATFORM
