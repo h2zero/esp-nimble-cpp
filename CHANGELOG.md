@@ -60,6 +60,7 @@ All notable changes to this project will be documented in this file.
 - `NimBLEService::getCharacteristics` now returns a `const std::vector<NimBLECharacteristic*>&` instead of std::vector<NimBLECharacteristic *>.
 - `NimBLEUUID::getNative` method replaced with `NimBLEUUID::getBase` which returns a read-only pointer to the underlying `ble_uuid_t` struct.
 - `NimBLEUUID`; `msbFirst` parameter has been removed from constructor, caller should reverse the data first or call the new `reverseByteOrder` method after.
+- `NimBLEAddress` constructor; default value for the `type` parameter removed, caller should know the address type and specify it.
 - `NimBLEAddress::getNative` replaced with `NimBLEAddress::getBase` and now returns a pointer to `const ble_addr_t` instead of a pointer to the address value.
 - `NimBLEAddress::equals` method and `NimBLEAddress::== operator` will now also test if the address types are the same.
 - `NimBLEUtils::dumpGapEvent` function removed.
