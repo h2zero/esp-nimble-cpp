@@ -9,8 +9,8 @@
 
 #include <NimBLEDevice.h>
 
-static uint32_t        scanTime = 10 * 1000; // In milliseconds, 0 = scan forever
-static NimBLEScan::Phy scanPhy  = NimBLEScan::Phy::SCAN_ALL;
+static uint32_t        scanTimeMs = 10 * 1000; // In milliseconds, 0 = scan forever
+static NimBLEScan::Phy scanPhy    = NimBLEScan::Phy::SCAN_ALL;
 
 /** Define a class to handle the callbacks when advertisements are received */
 class ScanCallbacks : public NimBLEScanCallbacks {
@@ -43,7 +43,7 @@ class ScanCallbacks : public NimBLEScanCallbacks {
 
         NimBLEScan* pScan = NimBLEDevice::getScan();
         pScan->setPhy(scanPhy);
-        pScan->start(scanTime);
+        pScan->start(scanTimeMs);
     }
 } scanCallbacks;
 
@@ -63,7 +63,7 @@ extern "C" void app_main(void) {
     /** Set the initial PHY's to scan on, default is SCAN_ALL */
     pScan->setPhy(scanPhy);
 
-    /** Start scanning for scanTime */
-    pScan->start(scanTime);
+    /** Start scanning for scanTimeMs */
+    pScan->start(scanTimeMs);
     printf("Scanning for peripherals\n");
 }

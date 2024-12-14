@@ -10,8 +10,8 @@
 #include <NimBLEDevice.h>
 
 static const NimBLEAdvertisedDevice* advDevice;
-static bool                          doConnect = false;
-static uint32_t                      scanTime  = 5000; /** scan time in milliseconds, 0 = scan forever */
+static bool                          doConnect  = false;
+static uint32_t                      scanTimeMs = 5000; /** scan time in milliseconds, 0 = scan forever */
 
 /**  None of these are required as they will be handled by the library with defaults. **
  **                       Remove as you see fit for your needs                        */
@@ -20,7 +20,7 @@ class ClientCallbacks : public NimBLEClientCallbacks {
 
     void onDisconnect(NimBLEClient* pClient, int reason) override {
         printf("%s Disconnected, reason = %d - Starting scan\n", pClient->getPeerAddress().toString().c_str(), reason);
-        NimBLEDevice::getScan()->start(scanTime, false, true);
+        NimBLEDevice::getScan()->start(scanTimeMs, false, true);
     }
 
     /********************* Security handled here *********************/
@@ -48,10 +48,10 @@ class ClientCallbacks : public NimBLEClientCallbacks {
             return;
         }
     }
-} clientCB;
+} clientCallbacks;
 
 /** Define a class to handle the callbacks when scan events are received */
-class scanCallbacks : public NimBLEScanCallbacks {
+class ScanCallbacks : public NimBLEScanCallbacks {
     void onResult(const NimBLEAdvertisedDevice* advertisedDevice) override {
         printf("Advertised Device found: %s\n", advertisedDevice->toString().c_str());
         if (advertisedDevice->isAdvertisingService(NimBLEUUID("DEAD"))) {
@@ -68,9 +68,9 @@ class scanCallbacks : public NimBLEScanCallbacks {
     /** Callback to process the results of the completed scan or restart it */
     void onScanEnd(const NimBLEScanResults& results, int reason) override {
         printf("Scan Ended, reason: %d, device count: %d; Restarting scan\n", reason, results.getCount());
-        NimBLEDevice::getScan()->start(scanTime, false, true);
+        NimBLEDevice::getScan()->start(scanTimeMs, false, true);
     }
-} scanCB;
+} scanCallbacks;
 
 /** Notification / Indication receiving handler callback */
 void notifyCB(NimBLERemoteCharacteristic* pRemoteCharacteristic, uint8_t* pData, size_t length, bool isNotify) {
@@ -121,7 +121,7 @@ bool connectToServer() {
 
         printf("New client created\n");
 
-        pClient->setClientCallbacks(&clientCB, false);
+        pClient->setClientCallbacks(&clientCallbacks, false);
         /**
          *  Set initial connection parameters:
          *  These settings are safe for 3 clients to connect reliably, can go faster if you have less
@@ -241,8 +241,7 @@ bool connectToServer() {
     return true;
 }
 
-extern "C"
-void app_main(void) {
+extern "C" void app_main(void) {
     printf("Starting NimBLE Client\n");
     /** Initialize NimBLE and set the device name */
     NimBLEDevice::init("NimBLE-Client");
@@ -270,7 +269,7 @@ void app_main(void) {
     NimBLEScan* pScan = NimBLEDevice::getScan();
 
     /** Set the callbacks to call when scan events occur, no duplicates */
-    pScan->setScanCallbacks(&scanCB, false);
+    pScan->setScanCallbacks(&scanCallbacks, false);
 
     /** Set scan interval (how often) and window (how long) in milliseconds */
     pScan->setInterval(100);
@@ -283,7 +282,7 @@ void app_main(void) {
     pScan->setActiveScan(true);
 
     /** Start scanning for advertisers */
-    pScan->start(scanTime);
+    pScan->start(scanTimeMs);
     printf("Scanning for peripherals\n");
 
     /** Loop here until we find a device we want to connect to */
@@ -299,7 +298,7 @@ void app_main(void) {
                 printf("Failed to connect, starting scan\n");
             }
 
-            NimBLEDevice::getScan()->start(scanTime, false, true);
+            NimBLEDevice::getScan()->start(scanTimeMs, false, true);
         }
     }
 }

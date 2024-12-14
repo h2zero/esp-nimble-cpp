@@ -1,7 +1,7 @@
 # Changelog
-
 All notable changes to this project will be documented in this file.
-## [Unreleased]
+
+## [2.0.0] 2024-12-14
 
 ## **Breaking changes**
 - All connection oriented callbacks now receive a reference to `NimBLEConnInfo`, the `ble_gap_conn_desc` has also been replace with `NimBLEConnInfo` in the functions that received it.
