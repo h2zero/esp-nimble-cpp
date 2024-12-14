@@ -1,5 +1,4 @@
 # Overview
-
 This is a C++ BLE library for the ESP32 that uses the NimBLE host stack instead of bluedroid.  
 The aim is to maintain, as much as reasonable, the original bluedroid C++ & Arduino BLE API by while adding new features  
 and making improvements in performance, resource use, and stability.  
@@ -23,16 +22,6 @@ Configure settings in `NimBLE Options`.
 Call `NimBLEDevice::init` in `app_main`.  
 <br/>
 
-### v3.2 & v3.3
-The NimBLE component does not come with these versions of IDF (now included in 3.3.2 and above).   
-A backport that works in these versions has been created and is [available here](https://github.com/h2zero/esp-nimble-component).  
-Download or clone that repo into your project/components folder and run menuconfig.
-Configure settings in `main menu -> NimBLE Options`.  
-
-`#include "NimBLEDevice.h"` in main.cpp.  
-Call `NimBLEDevice::init` in `app_main`.  
-<br/>  
-
 # Using
 This library is intended to be compatible with the original ESP32 BLE functions and types with minor changes.  
 
@@ -43,12 +32,13 @@ If you are familiar with the original library, see: [The migration guide](Migrat
 For more advanced usage see [Usage tips](Usage_tips.md) for more performance and optimization.  
 <br/>
 
-# Need help? Have a question or suggestion?
-Come chat on [gitter](https://gitter.im/NimBLE-Arduino/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link) or open an issue at [NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino/issues) or [esp-nimble-cpp](https://github.com/h2zero/esp-nimble-cpp/issues)  
+# Sponsors
+Thank you to all the sponsors who support this project!
+
+If you use this library for a commercial product please consider [sponsoring the development](https://github.com/sponsors/h2zero) to ensure the continued updates and maintenance.  
 <br/>
 
 # Acknowledgments
-
 * [nkolban](https://github.com/nkolban) and [chegewara](https://github.com/chegewara) for the [original esp32 BLE library](https://github.com/nkolban/esp32-snippets/tree/master/cpp_utils) this project was derived from.
 * [beegee-tokyo](https://github.com/beegee-tokyo) for contributing your time to test/debug and contributing the beacon examples.
 * [Jeroen88](https://github.com/Jeroen88) for the amazing help debugging and improving the client code.

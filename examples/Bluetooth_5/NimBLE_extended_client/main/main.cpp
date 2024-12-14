@@ -14,8 +14,8 @@
 #define CHARACTERISTIC_UUID "1234"
 
 static const NimBLEAdvertisedDevice* advDevice;
-static bool                          doConnect = false;
-static uint32_t                      scanTime  = 10 * 1000; // In milliseconds, 0 = scan forever
+static bool                          doConnect  = false;
+static uint32_t                      scanTimeMs = 10 * 1000; // In milliseconds, 0 = scan forever
 
 /** Define the PHY's to use when connecting to peer devices, can be 1, 2, or all 3 (default).*/
 static uint8_t connectPhys = BLE_GAP_LE_PHY_CODED_MASK | BLE_GAP_LE_PHY_1M_MASK /*| BLE_GAP_LE_PHY_2M_MASK */;
@@ -26,7 +26,7 @@ class ClientCallbacks : public NimBLEClientCallbacks {
 
     void onDisconnect(NimBLEClient* pClient, int reason) override {
         printf("%s Disconnected, reason = %d - Starting scan\n", pClient->getPeerAddress().toString().c_str(), reason);
-        NimBLEDevice::getScan()->start(scanTime);
+        NimBLEDevice::getScan()->start(scanTimeMs);
     }
 } clientCallbacks;
 
@@ -123,7 +123,7 @@ extern "C" void app_main(void) {
      *  Start scanning for advertisers for the scan time specified (in milliseconds) 0 = forever
      *  Optional callback for when scanning stops.
      */
-    pScan->start(scanTime);
+    pScan->start(scanTimeMs);
 
     printf("Scanning for peripherals\n");
 
@@ -137,7 +137,7 @@ extern "C" void app_main(void) {
             }
 
             doConnect = false;
-            NimBLEDevice::getScan()->start(scanTime);
+            NimBLEDevice::getScan()->start(scanTimeMs);
         }
         vTaskDelay(pdMS_TO_TICKS(10));
     }
