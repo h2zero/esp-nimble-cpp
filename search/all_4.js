@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['enablescanrequestcallback_76',['enableScanRequestCallback',['../class_nim_b_l_e_ext_advertisement.html#aaf6c44bc23f03a72bc02c3d45a9adf1d',1,'NimBLEExtAdvertisement']]],
-  ['end_77',['end',['../class_nim_b_l_e_att_value.html#a4f797f89e9c2d55dc7bee7ec8993952e',1,'NimBLEAttValue::end()'],['../class_nim_b_l_e_client.html#a0accd665926ea77d85ecb483b2b853fe',1,'NimBLEClient::end()'],['../class_nim_b_l_e_remote_characteristic.html#a333adea9c9f243774c6a2f13beabd873',1,'NimBLERemoteCharacteristic::end()'],['../class_nim_b_l_e_remote_service.html#a10fe635fe9a0661d26c33021faaec53b',1,'NimBLERemoteService::end()'],['../class_nim_b_l_e_scan_results.html#a44e183a7ce0c9fb587d11910ce5ef200',1,'NimBLEScanResults::end()']]],
-  ['equals_78',['equals',['../class_nim_b_l_e_address.html#a826fe8850cbc7d54f0696b8af4637169',1,'NimBLEAddress::equals()'],['../class_nim_b_l_e_u_u_i_d.html#a3d9763ff434905457ed69118e93a35fd',1,'NimBLEUUID::equals()']]],
-  ['erase_79',['erase',['../class_nim_b_l_e_scan.html#a566a9ef25b04e946ac23402bb760cda1',1,'NimBLEScan']]]
+  ['4_200_202022_2007_2031_0',['[1.4.0] - 2022-07-31',['../md__2github_2workspace_2_c_h_a_n_g_e_l_o_g.html#autotoc_md140---2022-07-31',1,'']]],
+  ['4_201_202022_2010_2030_1',['[1.4.1] - 2022-10-30',['../md__2github_2workspace_2_c_h_a_n_g_e_l_o_g.html#autotoc_md141---2022-10-30',1,'']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['bluetooth_205_2ex_20features_835',['Bluetooth 5.x features',['../md__bluetooth_5_features.html',1,'']]]
+  ['1_20x_20to_202_20x_0',['Migrating from 1.x to 2.x',['../md_1_8x__to2_8x__migration__guide.html',1,'']]]
 ];

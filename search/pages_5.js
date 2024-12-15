@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['new_20user_20guide_840',['New User Guide',['../md__new_user_guide.html',1,'']]]
+  ['deprecated_20list_0',['Deprecated List',['../deprecated.html',1,'']]]
 ];

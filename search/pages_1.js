@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['changelog_836',['Changelog',['../md__github_workspace__c_h_a_n_g_e_l_o_g.html',1,'']]]
+  ['2_20x_0',['Migrating from 1.x to 2.x',['../md_1_8x__to2_8x__migration__guide.html',1,'']]]
 ];

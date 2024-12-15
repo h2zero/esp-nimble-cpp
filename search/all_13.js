@@ -1,9 +1,6 @@
 var searchData=
 [
-  ['_7enimbleattvalue_409',['~NimBLEAttValue',['../class_nim_b_l_e_att_value.html#a08f3b04d05cf0c2b76a24cc37cd1f8ab',1,'NimBLEAttValue']]],
-  ['_7enimblecharacteristic_410',['~NimBLECharacteristic',['../class_nim_b_l_e_characteristic.html#a7fe29c5ec571d0513c51b8cbac942f4a',1,'NimBLECharacteristic']]],
-  ['_7enimbledescriptor_411',['~NimBLEDescriptor',['../class_nim_b_l_e_descriptor.html#ad110851335bc7b225f5bea9ac11bedcc',1,'NimBLEDescriptor']]],
-  ['_7enimbleextadvertising_412',['~NimBLEExtAdvertising',['../class_nim_b_l_e_ext_advertising.html#a477c57db99ce3b5e987d6838b661808f',1,'NimBLEExtAdvertising']]],
-  ['_7enimbleremotecharacteristic_413',['~NimBLERemoteCharacteristic',['../class_nim_b_l_e_remote_characteristic.html#a855d591de111b09013ae83c4043d06ed',1,'NimBLERemoteCharacteristic']]],
-  ['_7enimbleremoteservice_414',['~NimBLERemoteService',['../class_nim_b_l_e_remote_service.html#a2803aa5cdfdb622ae8fe255dc939cb1d',1,'NimBLERemoteService']]]
+  ['please_20report_20them_0',['There will be bugs - please report them',['../md__usage__tips.html#there-will-be-bugs---please-report-them',1,'']]],
+  ['properties_1',['The full list of properties',['../md__migration__guide.html#the-full-list-of-properties',1,'']]],
+  ['put_20ble_20functions_20in_20a_20task_20running_20on_20the_20nimble_20stack_20core_2',['Put BLE functions in a task running on the NimBLE stack core',['../md__usage__tips.html#put-ble-functions-in-a-task-running-on-the-nimble-stack-core',1,'']]]
 ];
