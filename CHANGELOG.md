@@ -5,7 +5,10 @@ All notable changes to this project will be documented in this file.
 
 ## Fixed
 - `NimBLEHIDDevice::getOutputReport` will now return the correct characteristic.
-- Compile error when central is disabled.
+- Compile error when central is disabled, class `NimBLEServer` has no member named `m_pClient`.
+
+## Changed
+- Added missing includes for `NimBLEConnInfo` and `NimBLEUtils` to `NimBLEDevice.h`.
 
 ## [2.0.0] 2024-12-14
 
