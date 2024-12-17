@@ -1,5 +1,8 @@
 var NAVTREEINDEX3 =
 {
+"nimconfig_8h.html":[9,0,0,30],
+"nimconfig_8h.html#a07c0fd3908c3466e9f4835f85d913880":[9,0,0,30,18],
+"nimconfig_8h.html#a11ebe4c94e55f9e710be03169b91f964":[9,0,0,30,2],
 "nimconfig_8h.html#a136a5d626ac04aa780c6ec07ee88d242":[9,0,0,30,20],
 "nimconfig_8h.html#a1cfe4f7cfbce0d842fad09e4b668d3df":[9,0,0,30,1],
 "nimconfig_8h.html#a1f39f56a0fe8a36ef7823a7c3e1c6e3b":[9,0,0,30,5],
