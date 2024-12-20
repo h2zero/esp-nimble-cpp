@@ -267,11 +267,32 @@ bool NimBLECharacteristic::notify(const uint8_t* value, size_t length, uint16_t 
 bool NimBLECharacteristic::sendValue(const uint8_t* value, size_t length, bool isNotification, uint16_t connHandle) const {
     int rc = 0;
 
+    auto props = getProperties();
+
+    if (isNotification) {
+        if (!(props & NIMBLE_PROPERTY::NOTIFY)) {
+            return false;
+        }
+    } else {
+        if (!(props & NIMBLE_PROPERTY::INDICATE)) {
+            return false;
+        }
+    }
+
     if (value != nullptr && length > 0) { // custom notification value
         // Notify all connected peers unless a specific handle is provided
         for (const auto& ch : NimBLEDevice::getServer()->getPeerDevices()) {
             if (connHandle != BLE_HS_CONN_HANDLE_NONE && ch != connHandle) {
                 continue; // only send to the specific handle, minor inefficiency but saves code.
+            }
+
+            // check if security requirements are satisfied
+            if ((props & BLE_GATT_CHR_F_READ_AUTHEN) || (props & BLE_GATT_CHR_F_READ_AUTHOR) ||
+                (props & BLE_GATT_CHR_F_READ_ENC)) {
+                ble_gap_conn_desc desc;
+                if (ble_gap_conn_find(ch, &desc) != 0 || !desc.sec_state.encrypted) {
+                    continue;
+                }
             }
 
             // Must re-create the data buffer on each iteration because it is freed by the calls bellow.
@@ -293,6 +314,15 @@ bool NimBLECharacteristic::sendValue(const uint8_t* value, size_t length, bool i
             }
         }
     } else if (connHandle != BLE_HS_CONN_HANDLE_NONE) { // only sending to specific peer
+        // check if security requirements are satisfied
+        if ((props & BLE_GATT_CHR_F_READ_AUTHEN) || (props & BLE_GATT_CHR_F_READ_AUTHOR) ||
+            (props & BLE_GATT_CHR_F_READ_ENC)) {
+            ble_gap_conn_desc desc;
+            if (ble_gap_conn_find(connHandle, &desc) != 0 || !desc.sec_state.encrypted) {
+                return false;
+            }
+        }
+
         // Null buffer will read the value from the characteristic
         if (isNotification) {
             rc = ble_gattc_notify_custom(connHandle, m_handle, NULL);
