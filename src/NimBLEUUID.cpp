@@ -173,6 +173,32 @@ const ble_uuid_t* NimBLEUUID::getBase() const {
 } // getBase
 
 /**
+ * @brief Get the UUID type based on size in bits.
+ * @return BLE_HS_ADV_TYPE_COMP_UUIDS16/32/128 or BLE_HS_ADV_TYPE_INCOMP_UUIDS16/32/128
+ *         for valid input size, else 0.
+ */
+uint8_t NimBLEUUID::getType() const {
+    return NimBLEUtils::getUUIDType(bitSize(), true);
+} // getType
+
+/**
+ * @brief Get the location of the UUID within a payload.
+ * @param [in] dataLoc The data location.
+ * @param [in] payload The payload to search through.
+ * @return >= 0 if found, else -1.
+ */
+int NimBLEUUID::getLoc(int dataLoc, const std::vector<uint8_t> payload) const {
+    uint8_t bytes = bitSize() >> 3;
+    const size_t size = payload.size();
+    for (size_t i = dataLoc + 2; i < size; i += bytes) {
+        if (memcmp(&payload[i], getValue(), bytes) == 0) {
+            return i;
+        }
+    }
+    return -1;
+} // getLoc
+
+/**
  * @brief Compare a UUID against this UUID.
  *
  * @param [in] uuid The UUID to compare against.

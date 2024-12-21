@@ -34,6 +34,7 @@
 
 # include <string>
 # include <cstring>
+# include <vector>
 
 /**
  * @brief A model of a %BLE UUID.
@@ -55,6 +56,8 @@ class NimBLEUUID {
     uint8_t           bitSize() const;
     const uint8_t*    getValue() const;
     const ble_uuid_t* getBase() const;
+    uint8_t           getType() const;
+    int               getLoc(int dataLoc, const std::vector<uint8_t> payload) const;
     bool              equals(const NimBLEUUID& uuid) const;
     std::string       toString() const;
     static NimBLEUUID fromString(const std::string& uuid);

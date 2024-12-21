@@ -53,6 +53,8 @@ class NimBLEUtils {
     static NimBLEAddress generateAddr(bool nrpa);
     static bool          taskWait(const NimBLETaskData& taskData, uint32_t timeout);
     static void          taskRelease(const NimBLETaskData& taskData, int rc = 0);
+    static uint8_t       getUUIDType(uint8_t size, bool complete = true);
+    static uint8_t       getServiceType(uint8_t size);
 };
 
 #endif // CONFIG_BT_ENABLED

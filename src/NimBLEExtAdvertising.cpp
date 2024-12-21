@@ -688,20 +688,10 @@ bool NimBLEExtAdvertisement::setName(const std::string& name, bool isComplete) {
  * @param [in] serviceUUID The UUID of the service to expose.
  */
 bool NimBLEExtAdvertisement::addServiceUUID(const NimBLEUUID& serviceUUID) {
-    uint8_t bytes = serviceUUID.bitSize() / 8;
-    int     type;
-    switch (bytes) {
-        case 2:
-            type = BLE_HS_ADV_TYPE_COMP_UUIDS16;
-            break;
-        case 4:
-            type = BLE_HS_ADV_TYPE_COMP_UUIDS32;
-            break;
-        case 16:
-            type = BLE_HS_ADV_TYPE_COMP_UUIDS128;
-            break;
-        default:
-            return false;
+    uint8_t bytes = serviceUUID.bitSize() >> 3;
+    uint8_t type  = serviceUUID.getType();
+    if (type == 0) {
+        return false;
     }
 
     int     dataLoc = getDataLocation(type);
@@ -743,20 +733,10 @@ bool NimBLEExtAdvertisement::addServiceUUID(const char* serviceUUID) {
  * @return True if successful or uuid not found, false if uuid error or data could not be reset.
  */
 bool NimBLEExtAdvertisement::removeServiceUUID(const NimBLEUUID& serviceUUID) {
-    uint8_t bytes = serviceUUID.bitSize() / 8;
-    int     type;
-    switch (bytes) {
-        case 2:
-            type = BLE_HS_ADV_TYPE_COMP_UUIDS16;
-            break;
-        case 4:
-            type = BLE_HS_ADV_TYPE_COMP_UUIDS32;
-            break;
-        case 16:
-            type = BLE_HS_ADV_TYPE_COMP_UUIDS128;
-            break;
-        default:
-            return false;
+    uint8_t bytes = serviceUUID.bitSize() >> 3;
+    uint8_t type  = serviceUUID.getType();
+    if (type == 0) {
+        return false;
     }
 
     int dataLoc = getDataLocation(type);
@@ -764,14 +744,7 @@ bool NimBLEExtAdvertisement::removeServiceUUID(const NimBLEUUID& serviceUUID) {
         return true;
     }
 
-    int uuidLoc = -1;
-    for (size_t i = dataLoc + 2; i < m_payload.size(); i += bytes) {
-        if (memcmp(&m_payload[i], serviceUUID.getValue(), bytes) == 0) {
-            uuidLoc = i;
-            break;
-        }
-    }
-
+    int uuidLoc = serviceUUID.getLoc(dataLoc, m_payload);
     if (uuidLoc == -1) {
         return true;
     }
@@ -866,19 +839,9 @@ bool NimBLEExtAdvertisement::setServices(bool complete, uint8_t size, const std:
     uint8_t header[2];
     uint8_t uuidBytes = size / 8;
     header[0]         = uuidBytes * uuids.size() + 1;
-
-    switch (size) {
-        case 16:
-            header[1] = complete ? BLE_HS_ADV_TYPE_COMP_UUIDS16 : BLE_HS_ADV_TYPE_INCOMP_UUIDS16;
-            break;
-        case 32:
-            header[1] = complete ? BLE_HS_ADV_TYPE_COMP_UUIDS32 : BLE_HS_ADV_TYPE_INCOMP_UUIDS32;
-            break;
-        case 128:
-            header[1] = complete ? BLE_HS_ADV_TYPE_COMP_UUIDS128 : BLE_HS_ADV_TYPE_INCOMP_UUIDS128;
-            break;
-        default:
-            return false;
+    header[1]         = NimBLEUtils::getUUIDType(size, complete);
+    if (header[1] == 0) {
+        return false;
     }
 
     if (addData(header, 2)) {
@@ -913,26 +876,16 @@ bool NimBLEExtAdvertisement::setServices(bool complete, uint8_t size, const std:
  * @return True if successful, false if data length is too long or could not be set.
  */
 bool NimBLEExtAdvertisement::setServiceData(const NimBLEUUID& uuid, const uint8_t* data, size_t length) {
-    uint8_t uuidBytes = uuid.bitSize() / 8;
+    uint8_t uuidBytes = uuid.bitSize() >> 3;
     uint8_t sDataLen  = 2 + uuidBytes + length;
 
     if (m_payload.size() + sDataLen > CONFIG_BT_NIMBLE_MAX_EXT_ADV_DATA_LEN) {
         return false;
     }
 
-    uint8_t type;
-    switch (uuidBytes) {
-        case 2:
-            type = BLE_HS_ADV_TYPE_SVC_DATA_UUID16;
-            break;
-        case 4:
-            type = BLE_HS_ADV_TYPE_SVC_DATA_UUID32;
-            break;
-        case 16:
-            type = BLE_HS_ADV_TYPE_SVC_DATA_UUID128;
-            break;
-        default:
-            return false;
+    uint8_t type = NimBLEUtils::getServiceType(uuidBytes);
+    if (type == 0) {
+        return false;
     }
 
     if (length == 0) {

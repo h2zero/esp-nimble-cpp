@@ -572,4 +572,42 @@ NimBLEAddress NimBLEUtils::generateAddr(bool nrpa) {
     return NimBLEAddress{addr};
 } // generateAddr
 
+/**
+ * @brief Get the UUID type based on size.
+ * @param [in] size The size of the UUID in bits.
+ * @param [in] complete False if the UUID is truncated, else True.
+ * @return BLE_HS_ADV_TYPE_COMP_UUIDS16/32/128 or BLE_HS_ADV_TYPE_INCOMP_UUIDS16/32/128
+ *         for valid input size, else 0.
+ */
+uint8_t NimBLEUtils::getUUIDType(uint8_t size, bool complete) {
+    switch (size) {
+        case 16:
+            return complete ? BLE_HS_ADV_TYPE_COMP_UUIDS16 : BLE_HS_ADV_TYPE_INCOMP_UUIDS16;
+        case 32:
+            return complete ? BLE_HS_ADV_TYPE_COMP_UUIDS32 : BLE_HS_ADV_TYPE_INCOMP_UUIDS32;
+        case 128:
+            return complete ? BLE_HS_ADV_TYPE_COMP_UUIDS128 : BLE_HS_ADV_TYPE_INCOMP_UUIDS128;
+        default:
+            return 0;
+    }
+} // getUUIDType
+
+/**
+ * @brief Get the service data UUID type based on size.
+ * @param [in] size The size of the UUID in bytes.
+ * @return BLE_HS_ADV_TYPE_SVC_DATA_UUID16/32/128 for valid input size, else 0.
+ */
+uint8_t NimBLEUtils::getServiceType(uint8_t size) {
+    switch (size) {
+        case 2:
+            return BLE_HS_ADV_TYPE_SVC_DATA_UUID16;
+        case 4:
+            return BLE_HS_ADV_TYPE_SVC_DATA_UUID32;
+        case 16:
+            return BLE_HS_ADV_TYPE_SVC_DATA_UUID128;
+        default:
+            return 0;
+    }
+} // getServiceType
+
 #endif // CONFIG_BT_ENABLED
