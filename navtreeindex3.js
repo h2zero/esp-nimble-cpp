@@ -1,5 +1,8 @@
 var NAVTREEINDEX3 =
 {
+"md__usage__tips.html#only-retrieve-the-services-and-characteristics-needed":[6,2],
+"md__usage__tips.html#put-ble-functions-in-a-task-running-on-the-nimble-stack-core":[6,0],
+"md__usage__tips.html#there-will-be-bugs---please-report-them":[6,4],
 "nimconfig_8h.html":[9,0,0,30],
 "nimconfig_8h.html#a07c0fd3908c3466e9f4835f85d913880":[9,0,0,30,18],
 "nimconfig_8h.html#a11ebe4c94e55f9e710be03169b91f964":[9,0,0,30,2],
