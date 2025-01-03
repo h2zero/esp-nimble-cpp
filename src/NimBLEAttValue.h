@@ -325,6 +325,10 @@ class NimBLEAttValue {
     /** @brief Subscript operator */
     uint8_t operator[](int pos) const {
         NIMBLE_CPP_DEBUG_ASSERT(pos < m_attr_len);
+        if (pos >= m_attr_len) {
+            NIMBLE_LOGE("NimBLEAttValue", "pos >= len, pos=%u, len=%u", pos, m_attr_len);
+            return 0;
+        }
         return m_attr_value[pos];
     }
 
