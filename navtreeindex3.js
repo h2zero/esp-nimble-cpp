@@ -1,5 +1,9 @@
 var NAVTREEINDEX3 =
 {
+"md__new__user__guide.html#using-the-library":[5,1],
+"md__usage__tips.html":[6],
+"md__usage__tips.html#check-return-values":[6,3],
+"md__usage__tips.html#do-not-delete-client-instances-unless-necessary-or-unused":[6,1],
 "md__usage__tips.html#only-retrieve-the-services-and-characteristics-needed":[6,2],
 "md__usage__tips.html#put-ble-functions-in-a-task-running-on-the-nimble-stack-core":[6,0],
 "md__usage__tips.html#there-will-be-bugs---please-report-them":[6,4],

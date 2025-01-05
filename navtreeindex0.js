@@ -243,11 +243,11 @@ var NAVTREEINDEX0 =
 "class_nim_b_l_e_characteristic.html#a7676bd1b73979101c394471299d71c0b":[8,0,8,21],
 "class_nim_b_l_e_characteristic.html#a7fe29c5ec571d0513c51b8cbac942f4a":[8,0,8,2],
 "class_nim_b_l_e_characteristic.html#a8afe29701cd595d8b3c34cc59400b86b":[8,0,8,12],
-"class_nim_b_l_e_characteristic.html#a95e454eacf23ae8e1e251b76d7857954":[8,0,8,19],
 "class_nim_b_l_e_characteristic.html#a95e454eacf23ae8e1e251b76d7857954":[8,0,8,20],
+"class_nim_b_l_e_characteristic.html#a95e454eacf23ae8e1e251b76d7857954":[8,0,8,19],
 "class_nim_b_l_e_characteristic.html#aa5eb7de28ee6ec5661acac5c07abb11c":[8,0,8,16],
-"class_nim_b_l_e_characteristic.html#aa824e4b90d8f9418d7c9ccc8735a6e31":[8,0,8,14],
 "class_nim_b_l_e_characteristic.html#aa824e4b90d8f9418d7c9ccc8735a6e31":[8,0,8,15],
+"class_nim_b_l_e_characteristic.html#aa824e4b90d8f9418d7c9ccc8735a6e31":[8,0,8,14],
 "class_nim_b_l_e_characteristic.html#aa9817ffdcc2d57e65e4ec3d88836af3f":[8,0,8,5],
 "class_nim_b_l_e_characteristic.html#aabdc2745d2523239a9ab3f02e39aa3cf":[8,0,8,17]
 };
