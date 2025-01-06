@@ -157,6 +157,20 @@ config NIMBLE_CPP_ENABLE_ADVERTISEMENT_TYPE_TEXT
         while scanning as text messages in the debug log.
         This will use approximately 250 bytes of flash memory.
 
+config NIMBLE_CPP_ADDR_FMT_INCLUDE_DELIMITER
+    bool "Show colon characters when printing address."
+    default "y"
+    help
+        Enabling this option will format MAC addresses with
+        colon characters included when printing.
+
+config NIMBLE_CPP_ADDR_FMT_UPPERCASE
+    bool "Use uppercase letters when printing address."
+    default "n"
+    help
+        Enabling this option will format MAC addresses in
+        uppercase letters when printing.
+
 config NIMBLE_CPP_ATT_VALUE_TIMESTAMP_ENABLED
     bool "Enable timestamps to be stored with attribute values."
     default "n"
