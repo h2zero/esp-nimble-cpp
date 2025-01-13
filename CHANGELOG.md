@@ -1,6 +1,22 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.1.0] 2025-01-12
+
+## Fixed
+- Crash when retrieving descriptors if more than one exists.
+- Incorrect TX power value being advertised.
+- New user guide code for 2.x
+- Potential race condition if `NimBLEScan::clearResults1 is called from multiple tasks.
+
+## Changed
+- If privacy is not enabled identity keys will not be shared.
+- `NimBLEDevice::setPower` and `NimBLEDevice::getPower` now take an additional parameter `NimBLETxPowerType` to set/get the power level for different operations.
+
+## Added
+- Config option `CONFIG_NIMBLE_CPP_ADDR_FMT_EXCLUDE_DELIMITER`, if defined will remove the ":" delimiter from the BLE address string.
+- Config option `CONFIG_NIMBLE_CPP_ADDR_FMT_UPPERCASE` if defined will make the BLE address strings uppercase.
+
 ## [2.0.3] 2025-01-05
 
 ## Fixed
