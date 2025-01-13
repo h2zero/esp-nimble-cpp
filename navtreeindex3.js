@@ -1,5 +1,9 @@
 var NAVTREEINDEX3 =
 {
+"md__new__user__guide.html":[5],
+"md__new__user__guide.html#creating-a-client":[5,3],
+"md__new__user__guide.html#creating-a-server":[5,2],
+"md__new__user__guide.html#include-files":[5,0],
 "md__new__user__guide.html#using-the-library":[5,1],
 "md__usage__tips.html":[6],
 "md__usage__tips.html#check-return-values":[6,3],
