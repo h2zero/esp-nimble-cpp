@@ -633,7 +633,7 @@ NimBLERemoteService* NimBLEClient::getService(const NimBLEUUID& uuid) {
     NimBLERemoteService *pSvc = nullptr;
 
     NimBLEUtils::getAttr(uuid, pSvc, m_svcVec, [this](const NimBLEUUID* u, void* arg) {
-        return retrieveServices(u, (NimBLERemoteService*)arg);
+        return retrieveServices(u, static_cast<NimBLERemoteService*>(arg));
     });
 
     NIMBLE_LOGD(LOG_TAG, "<< getService: %sfound", !pSvc ? "not " : "");

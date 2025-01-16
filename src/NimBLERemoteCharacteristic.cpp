@@ -141,7 +141,7 @@ NimBLERemoteDescriptor* NimBLERemoteCharacteristic::getDescriptor(const NimBLEUU
     NimBLERemoteDescriptor* pDsc = nullptr;
 
     NimBLEUtils::getAttr(uuid, pDsc, m_vDescriptors, [this](const NimBLEUUID* u, void* arg) {
-        return retrieveDescriptors(u, (NimBLERemoteDescriptor*)arg);
+        return retrieveDescriptors(u, static_cast<NimBLERemoteDescriptor*>(arg));
     });
 
     NIMBLE_LOGD(LOG_TAG, "<< getDescriptor: %sfound", !pDsc ? "not " : "");

@@ -79,7 +79,7 @@ NimBLERemoteCharacteristic* NimBLERemoteService::getCharacteristic(const NimBLEU
     NimBLERemoteCharacteristic* pChar = nullptr;
 
     NimBLEUtils::getAttr(uuid, pChar, m_vChars, [this](const NimBLEUUID* u, void* arg) {
-        return retrieveCharacteristics(u, (NimBLERemoteCharacteristic*)arg);
+        return retrieveCharacteristics(u, static_cast<NimBLERemoteCharacteristic*>(arg));
     });
 
     NIMBLE_LOGD(LOG_TAG, "<< getCharacteristic: %sfound", !pChar ? "not " : "");
