@@ -76,50 +76,13 @@ NimBLERemoteCharacteristic* NimBLERemoteService::getCharacteristic(const char* u
  */
 NimBLERemoteCharacteristic* NimBLERemoteService::getCharacteristic(const NimBLEUUID& uuid) const {
     NIMBLE_LOGD(LOG_TAG, ">> getCharacteristic: uuid: %s", uuid.toString().c_str());
-    NimBLERemoteCharacteristic* pChar     = nullptr;
-    size_t                      prev_size = m_vChars.size();
+    NimBLERemoteCharacteristic* pChar = nullptr;
 
-    for (const auto& it : m_vChars) {
-        if (it->getUUID() == uuid) {
-            pChar = it;
-            goto Done;
-        }
-    }
+    NimBLEUtils::getAttr(uuid, pChar, m_vChars, [this](const NimBLEUUID* u, void* arg) {
+        return retrieveCharacteristics(u, (NimBLERemoteCharacteristic*)arg);
+    });
 
-    if (retrieveCharacteristics(&uuid)) {
-        if (m_vChars.size() > prev_size) {
-            pChar = m_vChars.back();
-            goto Done;
-        }
-
-        // If the request was successful but 16/32 bit uuid not found
-        // try again with the 128 bit uuid.
-        if (uuid.bitSize() == BLE_UUID_TYPE_16 || uuid.bitSize() == BLE_UUID_TYPE_32) {
-            NimBLEUUID uuid128(uuid);
-            uuid128.to128();
-            if (retrieveCharacteristics(&uuid128)) {
-                if (m_vChars.size() > prev_size) {
-                    pChar = m_vChars.back();
-                }
-            }
-        } else {
-            // If the request was successful but the 128 bit uuid not found
-            // try again with the 16 bit uuid.
-            NimBLEUUID uuid16(uuid);
-            uuid16.to16();
-            // if the uuid was 128 bit but not of the BLE base type this check will fail
-            if (uuid16.bitSize() == BLE_UUID_TYPE_16) {
-                if (retrieveCharacteristics(&uuid16)) {
-                    if (m_vChars.size() > prev_size) {
-                        pChar = m_vChars.back();
-                    }
-                }
-            }
-        }
-    }
-
-Done:
-    NIMBLE_LOGD(LOG_TAG, "<< Characteristic %sfound", pChar ? "" : "not ");
+    NIMBLE_LOGD(LOG_TAG, "<< getCharacteristic: %sfound", !pChar ? "not " : "");
     return pChar;
 } // getCharacteristic
 
@@ -143,47 +106,39 @@ const std::vector<NimBLERemoteCharacteristic*>& NimBLERemoteService::getCharacte
  * @brief Callback for Characteristic discovery.
  * @return success == 0 or error code.
  */
-int NimBLERemoteService::characteristicDiscCB(uint16_t              conn_handle,
+int NimBLERemoteService::characteristicDiscCB(uint16_t              connHandle,
                                               const ble_gatt_error* error,
                                               const ble_gatt_chr*   chr,
                                               void*                 arg) {
-    NIMBLE_LOGD(LOG_TAG,
-                "Characteristic Discovery >> status: %d handle: %d",
-                error->status,
-                (error->status == 0) ? chr->def_handle : -1);
+    const int  rc        = error->status;
     auto       pTaskData = (NimBLETaskData*)arg;
     const auto pSvc      = (NimBLERemoteService*)pTaskData->m_pInstance;
-
-    if (error->status == BLE_HS_ENOTCONN) {
-        NIMBLE_LOGE(LOG_TAG, "<< Characteristic Discovery; Not connected");
-        NimBLEUtils::taskRelease(*pTaskData, error->status);
-        return error->status;
-    }
+    NIMBLE_LOGD(LOG_TAG, "Characteristic Discovery >> status: %d handle: %d", rc, (rc == 0) ? chr->def_handle : -1);
 
     // Make sure the discovery is for this device
-    if (pSvc->getClient()->getConnHandle() != conn_handle) {
+    if (pSvc->getClient()->getConnHandle() != connHandle) {
         return 0;
     }
 
-    if (error->status == 0) {
+    if (rc == 0) {
         pSvc->m_vChars.push_back(new NimBLERemoteCharacteristic(pSvc, chr));
         return 0;
     }
 
-    NimBLEUtils::taskRelease(*pTaskData, error->status);
-    NIMBLE_LOGD(LOG_TAG, "<< Characteristic Discovery");
-    return error->status;
+    NimBLEUtils::taskRelease(*pTaskData, rc);
+    NIMBLE_LOGD(LOG_TAG, "<< Characteristic Discovery%s", (rc == BLE_HS_ENOTCONN) ? "; Not connected" : "");
+    return rc;
 }
 
 /**
  * @brief Retrieve all the characteristics for this service.
  * This function will not return until we have all the characteristics.
- * @return True if successful.
+ * @return True if successfully retrieved, success = BLE_HS_EDONE.
  */
-bool NimBLERemoteService::retrieveCharacteristics(const NimBLEUUID* uuidFilter) const {
+bool NimBLERemoteService::retrieveCharacteristics(const NimBLEUUID* uuidFilter, NimBLERemoteCharacteristic* out) const {
     NIMBLE_LOGD(LOG_TAG, ">> retrieveCharacteristics()");
-    int            rc = 0;
     NimBLETaskData taskData(const_cast<NimBLERemoteService*>(this));
+    int            rc = 0;
 
     if (uuidFilter == nullptr) {
         rc = ble_gattc_disc_all_chrs(m_pClient->getConnHandle(),
@@ -207,13 +162,14 @@ bool NimBLERemoteService::retrieveCharacteristics(const NimBLEUUID* uuidFilter) 
 
     NimBLEUtils::taskWait(taskData, BLE_NPL_TIME_FOREVER);
     rc = taskData.m_flags;
-    if (rc == 0 || rc == BLE_HS_EDONE) {
-        NIMBLE_LOGD(LOG_TAG, "<< retrieveCharacteristics()");
-        return true;
+    if (rc != BLE_HS_EDONE) {
+        NIMBLE_LOGE(LOG_TAG, "<< retrieveCharacteristics(): failed: rc=%d %s", rc, NimBLEUtils::returnCodeToString(rc));
+        return false;
     }
 
-    NIMBLE_LOGE(LOG_TAG, "<< retrieveCharacteristics() rc=%d %s", rc, NimBLEUtils::returnCodeToString(rc));
-    return false;
+    out = m_vChars.back();
+    NIMBLE_LOGD(LOG_TAG, "<< retrieveCharacteristics(): found %d characteristics.", m_vChars.size());
+    return true;
 } // retrieveCharacteristics
 
 /**
@@ -231,11 +187,8 @@ NimBLEClient* NimBLERemoteService::getClient() const {
  */
 NimBLEAttValue NimBLERemoteService::getValue(const NimBLEUUID& uuid) const {
     const auto pChar = getCharacteristic(uuid);
-    if (pChar) {
-        return pChar->readValue();
-    }
-
-    return NimBLEAttValue{};
+    return pChar ? pChar->readValue()
+                 : NimBLEAttValue{};
 } // readValue
 
 /**
@@ -246,11 +199,8 @@ NimBLEAttValue NimBLERemoteService::getValue(const NimBLEUUID& uuid) const {
  */
 bool NimBLERemoteService::setValue(const NimBLEUUID& uuid, const NimBLEAttValue& value) const {
     const auto pChar = getCharacteristic(uuid);
-    if (pChar) {
-        return pChar->writeValue(value);
-    }
-
-    return false;
+    return pChar ? pChar->writeValue(value)
+                 : false;
 } // setValue
 
 /**
@@ -260,8 +210,8 @@ bool NimBLERemoteService::setValue(const NimBLEUUID& uuid, const NimBLEAttValue&
  * them. This method does just that.
  */
 void NimBLERemoteService::deleteCharacteristics() const {
-    for (const auto& it : m_vChars) {
-        delete it;
+    for (const auto& chr : m_vChars) {
+        delete chr;
     }
     std::vector<NimBLERemoteCharacteristic*>{}.swap(m_vChars);
 } // deleteCharacteristics

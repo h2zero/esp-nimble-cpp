@@ -27,17 +27,17 @@
 
 # include <climits>
 
-typedef struct {
-    const NimBLEUUID* uuid;
-    void*             task_data;
-} desc_filter_t;
+struct desc_filter_t {
+    const NimBLEUUID*       uuid;
+    void*                   taskData;
+};
 
 static const char* LOG_TAG = "NimBLERemoteCharacteristic";
 
 /**
  * @brief Constructor.
  * @param [in] svc A pointer to the service this characteristic belongs to.
- * @param [in] ble_gatt_chr struct defined as:
+ * @param [in] chr struct defined as:
  *  struct ble_gatt_chr {
  *      uint16_t def_handle;
  *      uint16_t val_handle;
@@ -62,57 +62,56 @@ NimBLERemoteCharacteristic::~NimBLERemoteCharacteristic() {
 /**
  * @brief Callback used by the API when a descriptor is discovered or search complete.
  */
-int NimBLERemoteCharacteristic::descriptorDiscCB(
-    uint16_t conn_handle, const ble_gatt_error* error, uint16_t chr_val_handle, const ble_gatt_dsc* dsc, void* arg) {
-    int rc = error->status;
+int NimBLERemoteCharacteristic::descriptorDiscCB(uint16_t connHandle,
+                                                 const ble_gatt_error* error,
+                                                 uint16_t chrHandle,
+                                                 const ble_gatt_dsc* dsc,
+                                                 void* arg) {
+    int        rc        = error->status;
+    auto       filter    = (desc_filter_t*)arg;
+    auto       pTaskData = (NimBLETaskData*)filter->taskData;
+    const auto pChr      = (NimBLERemoteCharacteristic*)pTaskData->m_pInstance;
+    const auto uuid      = filter->uuid; // UUID to filter for
     NIMBLE_LOGD(LOG_TAG, "Descriptor Discovery >> status: %d handle: %d", rc, (rc == 0) ? dsc->handle : -1);
 
-    auto              filter     = (desc_filter_t*)arg;
-    auto              pTaskData  = (NimBLETaskData*)filter->task_data;
-    const auto        pChr       = (NimBLERemoteCharacteristic*)pTaskData->m_pInstance;
-    const NimBLEUUID* uuidFilter = filter->uuid;
-
-    if (pChr->getHandle() != chr_val_handle) {
-        return 0; // Descriptor not for this characteristic
-    }
-
-    if (rc == 0) {
-        if (uuidFilter != nullptr) {
-            if (ble_uuid_cmp(uuidFilter->getBase(), &dsc->uuid.u) == 0) {
-                rc = BLE_HS_EDONE; // Found the descriptor, stop the search
-            } else {
-                return 0; // Not the descriptor we are looking for
-            }
-        }
-
+    // Results for chrHandle added until rc != 0
+    // Must find specified UUID if filter is used
+    if (rc == 0 && pChr->getHandle() == chrHandle
+      && (!uuid || 0 == ble_uuid_cmp(uuid->getBase(), &dsc->uuid.u))) {
+        // Return BLE_HS_EDONE if the descriptor was found, stop the search
         pChr->m_vDescriptors.push_back(new NimBLERemoteDescriptor(pChr, dsc));
-        return 0;
+        rc = !!uuid * BLE_HS_EDONE;
     }
 
-    NimBLEUtils::taskRelease(*pTaskData, rc);
-    NIMBLE_LOGD(LOG_TAG, "<< Descriptor Discovery");
+    if (rc != 0) {
+        NimBLEUtils::taskRelease(*pTaskData, rc);
+        NIMBLE_LOGD(LOG_TAG, "<< Descriptor Discovery");
+    }
     return rc;
 }
 
 /**
  * @brief Populate the descriptors (if any) for this characteristic.
- * @param [in] the end handle of the characteristic, or the service, whichever comes first.
+ * @param [in] filter Structure containing pointers to descriptor, UUID, and task data.
+ * @return True if successfully retrieved, success = BLE_HS_EDONE.
  */
-bool NimBLERemoteCharacteristic::retrieveDescriptors(const NimBLEUUID* uuidFilter) const {
+bool NimBLERemoteCharacteristic::retrieveDescriptors(const NimBLEUUID* uuidFilter, NimBLERemoteDescriptor* out) const {
     NIMBLE_LOGD(LOG_TAG, ">> retrieveDescriptors() for characteristic: %s", getUUID().toString().c_str());
 
+    NimBLETaskData taskData(const_cast<NimBLERemoteCharacteristic*>(this));
+    desc_filter_t  filter   = {uuidFilter, &taskData};
+    const uint16_t handle    = getHandle();
+    const uint16_t svcHandle = getRemoteService()->getEndHandle();
+
     // If this is the last handle then there are no descriptors
-    if (getHandle() == getRemoteService()->getEndHandle()) {
-      NIMBLE_LOGD(LOG_TAG, "<< retrieveDescriptors(): found 0 descriptors.");
-      return true;
+    if (handle == svcHandle) {
+        NIMBLE_LOGD(LOG_TAG, "<< retrieveDescriptors(): found 0 descriptors.");
+        return true;
     }
 
-    NimBLETaskData taskData(const_cast<NimBLERemoteCharacteristic*>(this));
-    desc_filter_t  filter = {uuidFilter, &taskData};
-
     int rc = ble_gattc_disc_all_dscs(getClient()->getConnHandle(),
-                                     getHandle(),
-                                     getRemoteService()->getEndHandle(),
+                                     handle,
+                                     svcHandle,
                                      NimBLERemoteCharacteristic::descriptorDiscCB,
                                      &filter);
     if (rc != 0) {
@@ -122,13 +121,14 @@ bool NimBLERemoteCharacteristic::retrieveDescriptors(const NimBLEUUID* uuidFilte
 
     NimBLEUtils::taskWait(taskData, BLE_NPL_TIME_FOREVER);
     rc = taskData.m_flags;
-    if (rc == 0 || rc == BLE_HS_EDONE) {
-        NIMBLE_LOGD(LOG_TAG, "<< retrieveDescriptors(): found %d descriptors.", m_vDescriptors.size());
-        return true;
+    if (rc != BLE_HS_EDONE) {
+        NIMBLE_LOGE(LOG_TAG, "<< retrieveDescriptors(): failed: rc=%d %s", rc, NimBLEUtils::returnCodeToString(rc));
+        return false;
     }
 
-    NIMBLE_LOGE(LOG_TAG, "<< retrieveDescriptors(): failed: rc=%d %s", rc, NimBLEUtils::returnCodeToString(rc));
-    return false;
+    out = m_vDescriptors.back();
+    NIMBLE_LOGD(LOG_TAG, "<< retrieveDescriptors(): found %d descriptors.", m_vDescriptors.size());
+    return true;
 } // retrieveDescriptors
 
 /**
@@ -138,50 +138,13 @@ bool NimBLERemoteCharacteristic::retrieveDescriptors(const NimBLEUUID* uuidFilte
  */
 NimBLERemoteDescriptor* NimBLERemoteCharacteristic::getDescriptor(const NimBLEUUID& uuid) const {
     NIMBLE_LOGD(LOG_TAG, ">> getDescriptor: uuid: %s", uuid.toString().c_str());
-    NimBLERemoteDescriptor* pDsc      = nullptr;
-    size_t                  prev_size = m_vDescriptors.size();
+    NimBLERemoteDescriptor* pDsc = nullptr;
 
-    for (const auto& it : m_vDescriptors) {
-        if (it->getUUID() == uuid) {
-            pDsc = it;
-            goto Done;
-        }
-    }
+    NimBLEUtils::getAttr(uuid, pDsc, m_vDescriptors, [this](const NimBLEUUID* u, void* arg) {
+        return retrieveDescriptors(u, (NimBLERemoteDescriptor*)arg);
+    });
 
-    if (retrieveDescriptors(&uuid)) {
-        if (m_vDescriptors.size() > prev_size) {
-            pDsc = m_vDescriptors.back();
-            goto Done;
-        }
-
-        // If the request was successful but 16/32 bit uuid not found
-        // try again with the 128 bit uuid.
-        if (uuid.bitSize() == BLE_UUID_TYPE_16 || uuid.bitSize() == BLE_UUID_TYPE_32) {
-            NimBLEUUID uuid128(uuid);
-            uuid128.to128();
-            if (retrieveDescriptors(&uuid128)) {
-                if (m_vDescriptors.size() > prev_size) {
-                    pDsc = m_vDescriptors.back();
-                }
-            }
-        } else {
-            // If the request was successful but the 128 bit uuid not found
-            // try again with the 16 bit uuid.
-            NimBLEUUID uuid16(uuid);
-            uuid16.to16();
-            // if the uuid was 128 bit but not of the BLE base type this check will fail
-            if (uuid16.bitSize() == BLE_UUID_TYPE_16) {
-                if (retrieveDescriptors(&uuid16)) {
-                    if (m_vDescriptors.size() > prev_size) {
-                        pDsc = m_vDescriptors.back();
-                    }
-                }
-            }
-        }
-    }
-
-Done:
-    NIMBLE_LOGD(LOG_TAG, "<< getDescriptor: %sfound", pDsc ? "" : "not ");
+    NIMBLE_LOGD(LOG_TAG, "<< getDescriptor: %sfound", !pDsc ? "not " : "");
     return pDsc;
 } // getDescriptor
 
@@ -311,7 +274,7 @@ size_t NimBLERemoteCharacteristic::deleteDescriptor(const NimBLEUUID& uuid) cons
  * @return True if supported.
  */
 bool NimBLERemoteCharacteristic::canBroadcast() const {
-    return (m_properties & BLE_GATT_CHR_PROP_BROADCAST) != 0;
+    return (m_properties & BLE_GATT_CHR_PROP_BROADCAST);
 };
 
 /**

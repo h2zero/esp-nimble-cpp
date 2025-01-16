@@ -20,6 +20,8 @@
 
 #include "nimconfig.h"
 #if defined(CONFIG_BT_ENABLED)
+# include "NimBLEUUID.h"
+# include "functional"
 # include <string>
 
 class NimBLEAddress;
@@ -53,6 +55,35 @@ class NimBLEUtils {
     static NimBLEAddress generateAddr(bool nrpa);
     static bool          taskWait(const NimBLETaskData& taskData, uint32_t timeout);
     static void          taskRelease(const NimBLETaskData& taskData, int rc = 0);
+
+    template <typename T, typename S>
+    static void getAttr(const NimBLEUUID& uuid, T* attr, const std::vector<S*> vec, const std::function<bool(const NimBLEUUID*, void*)>& getter) {
+        // Check if already exists.
+        for (const auto& v : vec) {
+            if (v->getUUID() == uuid) {
+                attr = v;
+                return;
+            }
+        }
+
+        // Exit if request failed or uuid was found.
+        if (!getter(&uuid, attr) || attr) {
+            return;
+        }
+
+        // Try again with 128 bit uuid if request succeeded with no uuid found.
+        if (uuid.bitSize() == BLE_UUID_TYPE_16 || uuid.bitSize() == BLE_UUID_TYPE_32) {
+            NimBLEUUID uuid128 = NimBLEUUID(uuid).to128();
+            getter(&uuid128, attr);
+            return;
+        }
+        // Try again with 16 bit uuid if request succeeded with no uuid found.
+        // If the uuid was 128 bit but not of the BLE base type this check will fail.
+        NimBLEUUID uuid16 = NimBLEUUID(uuid).to16();
+        if (uuid16.bitSize() == BLE_UUID_TYPE_16) {
+            getter(&uuid16, attr);
+        }
+    }
 };
 
 #endif // CONFIG_BT_ENABLED
