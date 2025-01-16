@@ -78,8 +78,8 @@ NimBLERemoteCharacteristic* NimBLERemoteService::getCharacteristic(const NimBLEU
     NIMBLE_LOGD(LOG_TAG, ">> getCharacteristic: uuid: %s", uuid.toString().c_str());
     NimBLERemoteCharacteristic* pChar = nullptr;
 
-    NimBLEUtils::getAttr(uuid, pChar, m_vChars, [this](const NimBLEUUID* u, void* arg) {
-        return retrieveCharacteristics(u, static_cast<NimBLERemoteCharacteristic*>(arg));
+    NimBLEUtils::getAttr<NimBLERemoteCharacteristic>(uuid, &pChar, m_vChars, [this](const NimBLEUUID* u, NimBLERemoteCharacteristic** arg) {
+        return retrieveCharacteristics(u, arg);
     });
 
     NIMBLE_LOGD(LOG_TAG, "<< getCharacteristic: %sfound", !pChar ? "not " : "");
@@ -135,7 +135,7 @@ int NimBLERemoteService::characteristicDiscCB(uint16_t              connHandle,
  * This function will not return until we have all the characteristics.
  * @return True if successfully retrieved, success = BLE_HS_EDONE.
  */
-bool NimBLERemoteService::retrieveCharacteristics(const NimBLEUUID* uuidFilter, NimBLERemoteCharacteristic* out) const {
+bool NimBLERemoteService::retrieveCharacteristics(const NimBLEUUID* uuidFilter, NimBLERemoteCharacteristic** out) const {
     NIMBLE_LOGD(LOG_TAG, ">> retrieveCharacteristics()");
     NimBLETaskData taskData(const_cast<NimBLERemoteService*>(this));
     int            rc = 0;
@@ -167,7 +167,7 @@ bool NimBLERemoteService::retrieveCharacteristics(const NimBLEUUID* uuidFilter, 
         return false;
     }
 
-    out = m_vChars.back();
+    *out = m_vChars.back();
     NIMBLE_LOGD(LOG_TAG, "<< retrieveCharacteristics(): found %d characteristics.", m_vChars.size());
     return true;
 } // retrieveCharacteristics

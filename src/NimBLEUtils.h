@@ -56,18 +56,18 @@ class NimBLEUtils {
     static bool          taskWait(const NimBLETaskData& taskData, uint32_t timeout);
     static void          taskRelease(const NimBLETaskData& taskData, int rc = 0);
 
-    template <typename T, typename S>
-    static void getAttr(const NimBLEUUID& uuid, T* attr, const std::vector<S*>& vec, const std::function<bool(const NimBLEUUID*, void*)>& getter) {
+    template <typename T>
+    static void getAttr(const NimBLEUUID& uuid, T** attr, const std::vector<T*>& vec, const std::function<bool(const NimBLEUUID*, T**)>& getter) {
         // Check if already exists.
         for (const auto& v : vec) {
             if (v->getUUID() == uuid) {
-                attr = v;
+                *attr = v;
                 return;
             }
         }
 
         // Exit if request failed or uuid was found.
-        if (!getter(&uuid, attr) || attr) {
+        if (!getter(&uuid, attr) || *attr) {
             return;
         }
 

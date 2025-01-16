@@ -95,7 +95,7 @@ int NimBLERemoteCharacteristic::descriptorDiscCB(uint16_t connHandle,
  * @param [in] filter Structure containing pointers to descriptor, UUID, and task data.
  * @return True if successfully retrieved, success = BLE_HS_EDONE.
  */
-bool NimBLERemoteCharacteristic::retrieveDescriptors(const NimBLEUUID* uuidFilter, NimBLERemoteDescriptor* out) const {
+bool NimBLERemoteCharacteristic::retrieveDescriptors(const NimBLEUUID* uuidFilter, NimBLERemoteDescriptor** out) const {
     NIMBLE_LOGD(LOG_TAG, ">> retrieveDescriptors() for characteristic: %s", getUUID().toString().c_str());
 
     NimBLETaskData taskData(const_cast<NimBLERemoteCharacteristic*>(this));
@@ -126,7 +126,7 @@ bool NimBLERemoteCharacteristic::retrieveDescriptors(const NimBLEUUID* uuidFilte
         return false;
     }
 
-    out = m_vDescriptors.back();
+    *out = m_vDescriptors.back();
     NIMBLE_LOGD(LOG_TAG, "<< retrieveDescriptors(): found %d descriptors.", m_vDescriptors.size());
     return true;
 } // retrieveDescriptors
@@ -140,8 +140,8 @@ NimBLERemoteDescriptor* NimBLERemoteCharacteristic::getDescriptor(const NimBLEUU
     NIMBLE_LOGD(LOG_TAG, ">> getDescriptor: uuid: %s", uuid.toString().c_str());
     NimBLERemoteDescriptor* pDsc = nullptr;
 
-    NimBLEUtils::getAttr(uuid, pDsc, m_vDescriptors, [this](const NimBLEUUID* u, void* arg) {
-        return retrieveDescriptors(u, static_cast<NimBLERemoteDescriptor*>(arg));
+    NimBLEUtils::getAttr<NimBLERemoteDescriptor>(uuid, &pDsc, m_vDescriptors, [this](const NimBLEUUID* u, NimBLERemoteDescriptor** arg) {
+        return retrieveDescriptors(u, arg);
     });
 
     NIMBLE_LOGD(LOG_TAG, "<< getDescriptor: %sfound", !pDsc ? "not " : "");

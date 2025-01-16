@@ -632,8 +632,8 @@ NimBLERemoteService* NimBLEClient::getService(const NimBLEUUID& uuid) {
     NIMBLE_LOGD(LOG_TAG, ">> getService: uuid: %s", uuid.toString().c_str());
     NimBLERemoteService *pSvc = nullptr;
 
-    NimBLEUtils::getAttr(uuid, pSvc, m_svcVec, [this](const NimBLEUUID* u, void* arg) {
-        return retrieveServices(u, static_cast<NimBLERemoteService*>(arg));
+    NimBLEUtils::getAttr<NimBLERemoteService>(uuid, &pSvc, m_svcVec, [this](const NimBLEUUID* u, NimBLERemoteService** arg) {
+        return retrieveServices(u, arg);
     });
 
     NIMBLE_LOGD(LOG_TAG, "<< getService: %sfound", !pSvc ? "not " : "");
@@ -690,7 +690,7 @@ bool NimBLEClient::discoverAttributes() {
  * * Here we ask the server for its set of services and wait until we have received them all.
  * @return true on success otherwise false if an error occurred
  */
-bool NimBLEClient::retrieveServices(const NimBLEUUID* uuidFilter, NimBLERemoteService *out) {
+bool NimBLEClient::retrieveServices(const NimBLEUUID* uuidFilter, NimBLERemoteService **out) {
     if (!isConnected()) {
         NIMBLE_LOGE(LOG_TAG, "Disconnected, could not retrieve services -aborting");
         return false;
@@ -719,7 +719,7 @@ bool NimBLEClient::retrieveServices(const NimBLEUUID* uuidFilter, NimBLERemoteSe
         return false;
     }
 
-    out = m_svcVec.back();
+    *out = m_svcVec.back();
     NIMBLE_LOGD(LOG_TAG, "<< retrieveServices(): found %d services.", m_svcVec.size());
     return true;
 } // getServices
