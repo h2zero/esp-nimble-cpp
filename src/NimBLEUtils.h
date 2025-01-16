@@ -22,6 +22,7 @@
 #if defined(CONFIG_BT_ENABLED)
 # include "NimBLEUUID.h"
 # include "functional"
+# include <vector>
 # include <string>
 
 class NimBLEAddress;
