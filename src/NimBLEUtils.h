@@ -58,33 +58,7 @@ class NimBLEUtils {
     static void          taskRelease(const NimBLETaskData& taskData, int rc = 0);
 
     template <typename T>
-    static void getAttr(const NimBLEUUID& uuid, T** attr, const std::vector<T*>& vec, const std::function<bool(const NimBLEUUID*, T**)>& getter) {
-        // Check if already exists.
-        for (const auto& v : vec) {
-            if (v->getUUID() == uuid) {
-                *attr = v;
-                return;
-            }
-        }
-
-        // Exit if request failed or uuid was found.
-        if (!getter(&uuid, attr) || *attr) {
-            return;
-        }
-
-        // Try again with 128 bit uuid if request succeeded with no uuid found.
-        if (uuid.bitSize() == BLE_UUID_TYPE_16 || uuid.bitSize() == BLE_UUID_TYPE_32) {
-            NimBLEUUID uuid128 = NimBLEUUID(uuid).to128();
-            getter(&uuid128, attr);
-            return;
-        }
-        // Try again with 16 bit uuid if request succeeded with no uuid found.
-        // If the uuid was 128 bit but not of the BLE base type this check will fail.
-        NimBLEUUID uuid16 = NimBLEUUID(uuid).to16();
-        if (uuid16.bitSize() == BLE_UUID_TYPE_16) {
-            getter(&uuid16, attr);
-        }
-    }
+    static void getAttr(const NimBLEUUID& uuid, T** attr, const std::vector<T*>& vec, const std::function<bool(const NimBLEUUID*, T**)>& getter);
 };
 
 #endif // CONFIG_BT_ENABLED

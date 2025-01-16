@@ -20,6 +20,9 @@
 
 # include "NimBLEUtils.h"
 # include "NimBLEAddress.h"
+# include "NimBLERemoteService.h"
+# include "NimBLERemoteDescriptor.h"
+# include "NimBLERemoteCharacteristic.h"
 # include "NimBLELog.h"
 
 # if defined(CONFIG_NIMBLE_CPP_IDF)
@@ -574,5 +577,52 @@ NimBLEAddress NimBLEUtils::generateAddr(bool nrpa) {
 
     return NimBLEAddress{addr};
 } // generateAddr
+
+template <typename T>
+void NimBLEUtils::getAttr(const NimBLEUUID& uuid, T** attr, const std::vector<T*>& vec, const std::function<bool(const NimBLEUUID*, T**)>& getter) {
+    // Check if already exists.
+    for (const auto& v : vec) {
+        if (v->getUUID() == uuid) {
+            *attr = v;
+            return;
+        }
+    }
+
+    // Exit if request failed or uuid was found.
+    if (!getter(&uuid, attr) || *attr) {
+        return;
+    }
+
+    // Try again with 128 bit uuid if request succeeded with no uuid found.
+    if (uuid.bitSize() == BLE_UUID_TYPE_16 || uuid.bitSize() == BLE_UUID_TYPE_32) {
+        NimBLEUUID uuid128 = NimBLEUUID(uuid).to128();
+        getter(&uuid128, attr);
+        return;
+    }
+    // Try again with 16 bit uuid if request succeeded with no uuid found.
+    // If the uuid was 128 bit but not of the BLE base type this check will fail.
+    NimBLEUUID uuid16 = NimBLEUUID(uuid).to16();
+    if (uuid16.bitSize() == BLE_UUID_TYPE_16) {
+        getter(&uuid16, attr);
+    }
+}
+
+template void NimBLEUtils::getAttr<NimBLERemoteService>(
+    const NimBLEUUID&,
+    NimBLERemoteService**,
+    const std::vector<NimBLERemoteService*>&,
+    const std::function<bool(const NimBLEUUID*, NimBLERemoteService**)>&);
+
+template void NimBLEUtils::getAttr<NimBLERemoteDescriptor>(
+    const NimBLEUUID&,
+    NimBLERemoteDescriptor**,
+    const std::vector<NimBLERemoteDescriptor*>&,
+    const std::function<bool(const NimBLEUUID*, NimBLERemoteDescriptor**)>&);
+
+template void NimBLEUtils::getAttr<NimBLERemoteCharacteristic>(
+    const NimBLEUUID&,
+    NimBLERemoteCharacteristic**,
+    const std::vector<NimBLERemoteCharacteristic*>&,
+    const std::function<bool(const NimBLEUUID*, NimBLERemoteCharacteristic**)>&);
 
 #endif // CONFIG_BT_ENABLED
