@@ -607,22 +607,9 @@ void NimBLEUtils::getAttr(const NimBLEUUID& uuid, T** attr, const std::vector<T*
     }
 }
 
-template void NimBLEUtils::getAttr<NimBLERemoteService>(
-    const NimBLEUUID&,
-    NimBLERemoteService**,
-    const std::vector<NimBLERemoteService*>&,
-    const std::function<bool(const NimBLEUUID*, NimBLERemoteService**)>&);
-
-template void NimBLEUtils::getAttr<NimBLERemoteDescriptor>(
-    const NimBLEUUID&,
-    NimBLERemoteDescriptor**,
-    const std::vector<NimBLERemoteDescriptor*>&,
-    const std::function<bool(const NimBLEUUID*, NimBLERemoteDescriptor**)>&);
-
-template void NimBLEUtils::getAttr<NimBLERemoteCharacteristic>(
-    const NimBLEUUID&,
-    NimBLERemoteCharacteristic**,
-    const std::vector<NimBLERemoteCharacteristic*>&,
-    const std::function<bool(const NimBLEUUID*, NimBLERemoteCharacteristic**)>&);
+using svc = NimBLERemoteService; using chr = NimBLERemoteCharacteristic; using dsc = NimBLERemoteDescriptor;
+template void NimBLEUtils::getAttr<svc>(const NimBLEUUID&, svc**, const std::vector<svc*>&, const std::function<bool(const NimBLEUUID*, svc**)>&);
+template void NimBLEUtils::getAttr<chr>(const NimBLEUUID&, chr**, const std::vector<chr*>&, const std::function<bool(const NimBLEUUID*, chr**)>&);
+template void NimBLEUtils::getAttr<dsc>(const NimBLEUUID&, dsc**, const std::vector<dsc*>&, const std::function<bool(const NimBLEUUID*, dsc**)>&);
 
 #endif // CONFIG_BT_ENABLED
