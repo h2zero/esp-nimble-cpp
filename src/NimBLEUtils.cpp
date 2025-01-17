@@ -578,6 +578,13 @@ NimBLEAddress NimBLEUtils::generateAddr(bool nrpa) {
     return NimBLEAddress{addr};
 } // generateAddr
 
+/**
+ * @brief Get an attribute matching a uuid.
+ * @param [in] uuid Search for this uuid.
+ * @param [in] attr Pointer to hold result.
+ * @param [in] vec Vector to search through before trying to get attribute.
+ * @param [in] getter Attribute getter function to call.
+ */
 template <typename T>
 void NimBLEUtils::getAttr(const NimBLEUUID& uuid, T** attr, const std::vector<T*>& vec, const std::function<bool(const NimBLEUUID*, T**)>& getter) {
     // Check if already exists.
@@ -587,12 +594,10 @@ void NimBLEUtils::getAttr(const NimBLEUUID& uuid, T** attr, const std::vector<T*
             return;
         }
     }
-
     // Exit if request failed or uuid was found.
     if (!getter(&uuid, attr) || *attr) {
         return;
     }
-
     // Try again with 128 bit uuid if request succeeded with no uuid found.
     if (uuid.bitSize() == BLE_UUID_TYPE_16 || uuid.bitSize() == BLE_UUID_TYPE_32) {
         NimBLEUUID uuid128 = NimBLEUUID(uuid).to128();

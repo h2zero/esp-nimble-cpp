@@ -78,8 +78,8 @@ NimBLERemoteCharacteristic* NimBLERemoteService::getCharacteristic(const NimBLEU
     NIMBLE_LOGD(LOG_TAG, ">> getCharacteristic: uuid: %s", uuid.toString().c_str());
     NimBLERemoteCharacteristic* pChar = nullptr;
 
-    NimBLEUtils::getAttr<NimBLERemoteCharacteristic>(uuid, &pChar, m_vChars, [this](const NimBLEUUID* u, NimBLERemoteCharacteristic** arg) {
-        return retrieveCharacteristics(u, arg);
+    NimBLEUtils::getAttr<NimBLERemoteCharacteristic>(uuid, &pChar, m_vChars, [this](const NimBLEUUID* u, NimBLERemoteCharacteristic** chr) {
+        return retrieveCharacteristics(u, chr);
     });
 
     NIMBLE_LOGD(LOG_TAG, "<< getCharacteristic: %sfound", !pChar ? "not " : "");

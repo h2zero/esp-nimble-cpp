@@ -27,10 +27,10 @@
 
 # include <climits>
 
-struct desc_filter_t {
-    const NimBLEUUID*       uuid;
-    void*                   taskData;
-};
+typedef struct {
+    const NimBLEUUID* uuid;
+    void*             taskData;
+} desc_filter_t;
 
 static const char* LOG_TAG = "NimBLERemoteCharacteristic";
 
@@ -99,7 +99,7 @@ bool NimBLERemoteCharacteristic::retrieveDescriptors(const NimBLEUUID* uuidFilte
     NIMBLE_LOGD(LOG_TAG, ">> retrieveDescriptors() for characteristic: %s", getUUID().toString().c_str());
 
     NimBLETaskData taskData(const_cast<NimBLERemoteCharacteristic*>(this));
-    desc_filter_t  filter   = {uuidFilter, &taskData};
+    desc_filter_t  filter    = {uuidFilter, &taskData};
     const uint16_t handle    = getHandle();
     const uint16_t svcHandle = getRemoteService()->getEndHandle();
 
@@ -140,8 +140,8 @@ NimBLERemoteDescriptor* NimBLERemoteCharacteristic::getDescriptor(const NimBLEUU
     NIMBLE_LOGD(LOG_TAG, ">> getDescriptor: uuid: %s", uuid.toString().c_str());
     NimBLERemoteDescriptor* pDsc = nullptr;
 
-    NimBLEUtils::getAttr<NimBLERemoteDescriptor>(uuid, &pDsc, m_vDescriptors, [this](const NimBLEUUID* u, NimBLERemoteDescriptor** arg) {
-        return retrieveDescriptors(u, arg);
+    NimBLEUtils::getAttr<NimBLERemoteDescriptor>(uuid, &pDsc, m_vDescriptors, [this](const NimBLEUUID* u, NimBLERemoteDescriptor** dsc) {
+        return retrieveDescriptors(u, dsc);
     });
 
     NIMBLE_LOGD(LOG_TAG, "<< getDescriptor: %sfound", !pDsc ? "not " : "");
