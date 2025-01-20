@@ -57,6 +57,7 @@ idf_component_register(
     "src/NimBLEHIDDevice.cpp"
     "src/NimBLERemoteCharacteristic.cpp"
     "src/NimBLERemoteDescriptor.cpp"
+    "src/NimBLERemoteGattUtils.cpp"
     "src/NimBLERemoteService.cpp"
     "src/NimBLERemoteValueAttribute.cpp"
     "src/NimBLEScan.cpp"

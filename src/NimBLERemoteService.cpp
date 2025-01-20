@@ -20,6 +20,7 @@
 
 # include "NimBLERemoteService.h"
 # include "NimBLERemoteCharacteristic.h"
+# include "NimBLERemoteGattUtils.h"
 # include "NimBLEClient.h"
 # include "NimBLEAttValue.h"
 # include "NimBLEUtils.h"
@@ -78,7 +79,8 @@ NimBLERemoteCharacteristic* NimBLERemoteService::getCharacteristic(const NimBLEU
     NIMBLE_LOGD(LOG_TAG, ">> getCharacteristic: uuid: %s", uuid.toString().c_str());
     NimBLERemoteCharacteristic* pChar = nullptr;
 
-    NimBLEUtils::getAttr<NimBLERemoteCharacteristic>(uuid, &pChar, m_vChars, [this](const NimBLEUUID* u, NimBLERemoteCharacteristic** chr) {
+    NimBLERemoteGattUtils::getAttr<NimBLERemoteCharacteristic>(uuid, &pChar, m_vChars,
+      [this](const NimBLEUUID* u, NimBLERemoteCharacteristic** chr) {
         return retrieveCharacteristics(u, chr);
     });
 

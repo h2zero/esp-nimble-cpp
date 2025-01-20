@@ -20,9 +20,6 @@
 
 #include "nimconfig.h"
 #if defined(CONFIG_BT_ENABLED)
-# include "NimBLEUUID.h"
-# include <functional>
-# include <vector>
 # include <string>
 
 class NimBLEAddress;
@@ -56,9 +53,6 @@ class NimBLEUtils {
     static NimBLEAddress generateAddr(bool nrpa);
     static bool          taskWait(const NimBLETaskData& taskData, uint32_t timeout);
     static void          taskRelease(const NimBLETaskData& taskData, int rc = 0);
-    template <typename T>
-    static void getAttr(const NimBLEUUID& uuid, T** attr, const std::vector<T*>& vec,
-                        const std::function<bool(const NimBLEUUID*, T**)>& getter);
 };
 
 #endif // CONFIG_BT_ENABLED

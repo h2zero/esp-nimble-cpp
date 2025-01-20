@@ -20,6 +20,7 @@
 
 # include "NimBLERemoteCharacteristic.h"
 # include "NimBLERemoteDescriptor.h"
+# include "NimBLERemoteGattUtils.h"
 # include "NimBLERemoteService.h"
 # include "NimBLEClient.h"
 # include "NimBLEUtils.h"
@@ -140,7 +141,8 @@ NimBLERemoteDescriptor* NimBLERemoteCharacteristic::getDescriptor(const NimBLEUU
     NIMBLE_LOGD(LOG_TAG, ">> getDescriptor: uuid: %s", uuid.toString().c_str());
     NimBLERemoteDescriptor* pDsc = nullptr;
 
-    NimBLEUtils::getAttr<NimBLERemoteDescriptor>(uuid, &pDsc, m_vDescriptors, [this](const NimBLEUUID* u, NimBLERemoteDescriptor** dsc) {
+    NimBLERemoteGattUtils::getAttr<NimBLERemoteDescriptor>(uuid, &pDsc, m_vDescriptors,
+      [this](const NimBLEUUID* u, NimBLERemoteDescriptor** dsc) {
         return retrieveDescriptors(u, dsc);
     });
 

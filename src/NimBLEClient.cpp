@@ -21,6 +21,7 @@
 # include "NimBLEClient.h"
 # include "NimBLERemoteService.h"
 # include "NimBLERemoteCharacteristic.h"
+# include "NimBLERemoteGattUtils.h"
 # include "NimBLEDevice.h"
 # include "NimBLELog.h"
 
@@ -632,7 +633,8 @@ NimBLERemoteService* NimBLEClient::getService(const NimBLEUUID& uuid) {
     NIMBLE_LOGD(LOG_TAG, ">> getService: uuid: %s", uuid.toString().c_str());
     NimBLERemoteService *pSvc = nullptr;
 
-    NimBLEUtils::getAttr<NimBLERemoteService>(uuid, &pSvc, m_svcVec, [this](const NimBLEUUID* u, NimBLERemoteService** svc) {
+    NimBLERemoteGattUtils::getAttr<NimBLERemoteService>(uuid, &pSvc, m_svcVec,
+      [this](const NimBLEUUID* u, NimBLERemoteService** svc) {
         return retrieveServices(u, svc);
     });
 
