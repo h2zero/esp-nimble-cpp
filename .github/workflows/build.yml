@@ -12,6 +12,7 @@ jobs:
     name: Build with ESP-IDF ${{ matrix.idf_ver }} for ${{ matrix.idf_target }}
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         # The version names here correspond to the versions of espressif/idf Docker image.
         # See https://hub.docker.com/r/espressif/idf/tags and
