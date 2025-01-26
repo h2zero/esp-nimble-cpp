@@ -103,18 +103,15 @@ bool NimBLERemoteCharacteristic::retrieveDescriptors(const NimBLEUUID* uuidFilte
     desc_filter_t  filter    = {uuidFilter, &taskData};
     const uint16_t handle    = getHandle();
     const uint16_t svcHandle = getRemoteService()->getEndHandle();
+    const uint16_t cltHandle = getClient()->getConnHandle();
 
-    // If this is the last handle then there are no descriptors
+    // If this is the last handle then there are no more descriptors
     if (handle == svcHandle) {
-        NIMBLE_LOGD(LOG_TAG, "<< retrieveDescriptors(): found 0 descriptors.");
+        NIMBLE_LOGD(LOG_TAG, "<< retrieveDescriptors(): found %d descriptors.", m_vDescriptors.size());
         return true;
     }
 
-    int rc = ble_gattc_disc_all_dscs(getClient()->getConnHandle(),
-                                     handle,
-                                     svcHandle,
-                                     NimBLERemoteCharacteristic::descriptorDiscCB,
-                                     &filter);
+    int rc = ble_gattc_disc_all_dscs(cltHandle, handle, svcHandle, descriptorDiscCB, &filter);
     if (rc != 0) {
         NIMBLE_LOGE(LOG_TAG, "ble_gattc_disc_all_dscs: rc=%d %s", rc, NimBLEUtils::returnCodeToString(rc));
         return false;
