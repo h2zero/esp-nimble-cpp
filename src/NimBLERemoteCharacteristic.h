@@ -25,8 +25,10 @@
 # include <vector>
 # include <functional>
 
+class NimBLEUUID;
 class NimBLERemoteService;
 class NimBLERemoteDescriptor;
+struct NimBLEDescriptorFilter;
 
 /**
  * @brief A model of a remote BLE characteristic.
