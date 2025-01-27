@@ -692,20 +692,17 @@ bool NimBLEClient::discoverAttributes() {
  * * Here we ask the server for its set of services and wait until we have received them all.
  * @return true on success otherwise false if an error occurred
  */
-bool NimBLEClient::retrieveServices(const NimBLEUUID* uuidFilter, NimBLERemoteService **out) {
+bool NimBLEClient::retrieveServices(const NimBLEUUID* uuid, NimBLERemoteService **out) {
+    NIMBLE_LOGD(LOG_TAG, ">> retrieveServices()");
+    NimBLETaskData taskData(this);
     if (!isConnected()) {
         NIMBLE_LOGE(LOG_TAG, "Disconnected, could not retrieve services -aborting");
         return false;
     }
 
-    int            rc = 0;
-    NimBLETaskData taskData(this);
-
-    if (uuidFilter == nullptr) {
-        rc = ble_gattc_disc_all_svcs(m_connHandle, NimBLEClient::serviceDiscCB, &taskData);
-    } else {
-        rc = ble_gattc_disc_svc_by_uuid(m_connHandle, uuidFilter->getBase(), NimBLEClient::serviceDiscCB, &taskData);
-    }
+    int rc = (uuid == nullptr)
+           ? ble_gattc_disc_all_svcs(m_connHandle, svcDiscCB, &taskData)
+           : ble_gattc_disc_svc_by_uuid(m_connHandle, uuid->getBase(), svcDiscCB, &taskData);
 
     if (rc != 0) {
         NIMBLE_LOGE(LOG_TAG, "ble_gattc_disc_all_svcs: rc=%d %s", rc, NimBLEUtils::returnCodeToString(rc));
@@ -731,10 +728,10 @@ bool NimBLEClient::retrieveServices(const NimBLEUUID* uuidFilter, NimBLERemoteSe
  * @details When a service is found or there is none left or there was an error
  * the API will call this and report findings.
  */
-int NimBLEClient::serviceDiscCB(uint16_t                     connHandle,
-                                const struct ble_gatt_error* error,
-                                const struct ble_gatt_svc*   service,
-                                void*                        arg) {
+int NimBLEClient::svcDiscCB(uint16_t                     connHandle,
+                            const struct ble_gatt_error* error,
+                            const struct ble_gatt_svc*   service,
+                            void*                        arg) {
     const int   rc        = error->status;
     auto        pTaskData = (NimBLETaskData*)arg;
     auto        pClient   = (NimBLEClient*)pTaskData->m_pInstance;
@@ -751,7 +748,7 @@ int NimBLEClient::serviceDiscCB(uint16_t                     connHandle,
     }
 
     NimBLEUtils::taskRelease(*pTaskData, error->status);
-    NIMBLE_LOGD(LOG_TAG, "<< Service Discovered%s", (rc == BLE_HS_ENOTCONN) ? "; Disconnected" : "");
+    NIMBLE_LOGD(LOG_TAG, "<< Service Discovered%s", (rc == BLE_HS_ENOTCONN) ? "; Not connected" : "");
     return error->status;
 } // serviceDiscCB
 

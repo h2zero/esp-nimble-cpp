@@ -53,12 +53,12 @@ class NimBLERemoteService : public NimBLEAttribute {
 
     NimBLERemoteService(NimBLEClient* pClient, const struct ble_gatt_svc* service);
     ~NimBLERemoteService();
-    bool       retrieveCharacteristics(const NimBLEUUID* uuidFilter = nullptr,
+    bool       retrieveCharacteristics(const NimBLEUUID* uuid = nullptr,
                                        NimBLERemoteCharacteristic** out = nullptr) const;
-    static int characteristicDiscCB(uint16_t                     connHandle,
-                                    const struct ble_gatt_error* error,
-                                    const struct ble_gatt_chr*   chr,
-                                    void*                        arg);
+    static int chrDiscCB(uint16_t                     connHandle,
+                         const struct ble_gatt_error* error,
+                         const struct ble_gatt_chr*   chr,
+                         void*                        arg);
 
     mutable std::vector<NimBLERemoteCharacteristic*> m_vChars{};
     NimBLEClient*                                    m_pClient{nullptr};

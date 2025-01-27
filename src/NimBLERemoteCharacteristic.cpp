@@ -63,11 +63,11 @@ NimBLERemoteCharacteristic::~NimBLERemoteCharacteristic() {
 /**
  * @brief Callback used by the API when a descriptor is discovered or search complete.
  */
-int NimBLERemoteCharacteristic::descriptorDiscCB(uint16_t connHandle,
-                                                 const ble_gatt_error* error,
-                                                 uint16_t chrHandle,
-                                                 const ble_gatt_dsc* dsc,
-                                                 void* arg) {
+int NimBLERemoteCharacteristic::dscDiscCB(uint16_t              connHandle,
+                                          const ble_gatt_error* error,
+                                          uint16_t              chrHandle,
+                                          const ble_gatt_dsc*   dsc,
+                                          void*                 arg) {
     int        rc        = error->status;
     auto       filter    = (desc_filter_t*)arg;
     auto       pTaskData = (NimBLETaskData*)filter->taskData;
@@ -94,24 +94,23 @@ int NimBLERemoteCharacteristic::descriptorDiscCB(uint16_t connHandle,
 /**
  * @brief Populate the descriptors (if any) for this characteristic.
  * @param [in] filter Structure containing pointers to descriptor, UUID, and task data.
+ * @param out Pointer to hold result.
  * @return True if successfully retrieved, success = BLE_HS_EDONE.
  */
-bool NimBLERemoteCharacteristic::retrieveDescriptors(const NimBLEUUID* uuidFilter, NimBLERemoteDescriptor** out) const {
+bool NimBLERemoteCharacteristic::retrieveDescriptors(const NimBLEUUID* uuid, NimBLERemoteDescriptor** out) const {
     NIMBLE_LOGD(LOG_TAG, ">> retrieveDescriptors() for characteristic: %s", getUUID().toString().c_str());
-
     NimBLETaskData taskData(const_cast<NimBLERemoteCharacteristic*>(this));
-    desc_filter_t  filter    = {uuidFilter, &taskData};
-    const uint16_t handle    = getHandle();
-    const uint16_t svcHandle = getRemoteService()->getEndHandle();
-    const uint16_t cltHandle = getClient()->getConnHandle();
-
+    desc_filter_t  filter      = {uuid, &taskData};
+    const uint16_t endHandle   = getRemoteService()->getEndHandle();
+    const uint16_t connHandle  = getClient()->getConnHandle();
+    const uint16_t starthandle = getHandle();
     // If this is the last handle then there are no more descriptors
-    if (handle == svcHandle) {
+    if (starthandle == endHandle) {
         NIMBLE_LOGD(LOG_TAG, "<< retrieveDescriptors(): found %d descriptors.", m_vDescriptors.size());
         return true;
     }
 
-    int rc = ble_gattc_disc_all_dscs(cltHandle, handle, svcHandle, descriptorDiscCB, &filter);
+    int rc = ble_gattc_disc_all_dscs(connHandle, starthandle, endHandle, dscDiscCB, &filter);
     if (rc != 0) {
         NIMBLE_LOGE(LOG_TAG, "ble_gattc_disc_all_dscs: rc=%d %s", rc, NimBLEUtils::returnCodeToString(rc));
         return false;

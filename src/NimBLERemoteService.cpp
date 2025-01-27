@@ -108,10 +108,10 @@ const std::vector<NimBLERemoteCharacteristic*>& NimBLERemoteService::getCharacte
  * @brief Callback for Characteristic discovery.
  * @return success == 0 or error code.
  */
-int NimBLERemoteService::characteristicDiscCB(uint16_t              connHandle,
-                                              const ble_gatt_error* error,
-                                              const ble_gatt_chr*   chr,
-                                              void*                 arg) {
+int NimBLERemoteService::chrDiscCB(uint16_t connHandle,
+                                   const ble_gatt_error* error,
+                                   const ble_gatt_chr*   chr,
+                                   void*                 arg) {
     const int  rc        = error->status;
     auto       pTaskData = (NimBLETaskData*)arg;
     const auto pSvc      = (NimBLERemoteService*)pTaskData->m_pInstance;
@@ -137,25 +137,21 @@ int NimBLERemoteService::characteristicDiscCB(uint16_t              connHandle,
  * This function will not return until we have all the characteristics.
  * @return True if successfully retrieved, success = BLE_HS_EDONE.
  */
-bool NimBLERemoteService::retrieveCharacteristics(const NimBLEUUID* uuidFilter, NimBLERemoteCharacteristic** out) const {
-    NIMBLE_LOGD(LOG_TAG, ">> retrieveCharacteristics()");
+bool NimBLERemoteService::retrieveCharacteristics(const NimBLEUUID* uuid, NimBLERemoteCharacteristic** out) const {
+    NIMBLE_LOGD(LOG_TAG, ">> retrieveCharacteristics() for service: %s", getUUID().toString().c_str());
     NimBLETaskData taskData(const_cast<NimBLERemoteService*>(this));
-    int            rc = 0;
-
-    if (uuidFilter == nullptr) {
-        rc = ble_gattc_disc_all_chrs(m_pClient->getConnHandle(),
-                                     getHandle(),
-                                     getEndHandle(),
-                                     NimBLERemoteService::characteristicDiscCB,
-                                     &taskData);
-    } else {
-        rc = ble_gattc_disc_chrs_by_uuid(m_pClient->getConnHandle(),
-                                         getHandle(),
-                                         getEndHandle(),
-                                         uuidFilter->getBase(),
-                                         NimBLERemoteService::characteristicDiscCB,
-                                         &taskData);
+    const uint16_t hdlConn  = m_pClient->getConnHandle();
+    const uint16_t hdlEnd   = getEndHandle();
+    const uint16_t hdlStart = getHandle();
+    // If this is the last handle then there are no more characteristics
+    if (hdlStart == hdlEnd) {
+        NIMBLE_LOGD(LOG_TAG, "<< retrieveCharacteristics(): found %d characteristics.", m_vChars.size());
+        return true;
     }
+
+    int rc = (uuid == nullptr)
+           ? ble_gattc_disc_all_chrs(hdlConn, hdlStart, hdlEnd, chrDiscCB, &taskData)
+           : ble_gattc_disc_chrs_by_uuid(hdlConn, hdlStart, hdlEnd, uuid->getBase(), chrDiscCB, &taskData);
 
     if (rc != 0) {
         NIMBLE_LOGE(LOG_TAG, "ble_gattc_disc_chrs rc=%d %s", rc, NimBLEUtils::returnCodeToString(rc));

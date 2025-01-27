@@ -68,7 +68,7 @@ class NimBLERemoteCharacteristic : public NimBLERemoteValueAttribute {
     bool retrieveDescriptors(const NimBLEUUID* uuidFilter = nullptr,
                              NimBLERemoteDescriptor** out = nullptr) const;
 
-    static int descriptorDiscCB(
+    static int dscDiscCB(
         uint16_t connHandle, const ble_gatt_error* error, uint16_t chrHandle, const ble_gatt_dsc* dsc, void* arg);
 
     const NimBLERemoteService*                   m_pRemoteService{nullptr};
