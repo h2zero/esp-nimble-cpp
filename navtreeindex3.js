@@ -1,5 +1,7 @@
 var NAVTREEINDEX3 =
 {
+"md__migration__guide.html#services-1":[4,1,0],
+"md__migration__guide.html#the-full-list-of-properties":[4,1,1,2],
 "md__new__user__guide.html":[5],
 "md__new__user__guide.html#creating-a-client":[5,3],
 "md__new__user__guide.html#creating-a-server":[5,2],
