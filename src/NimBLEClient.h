@@ -116,7 +116,7 @@ class NimBLEClient {
     NimBLEClient(const NimBLEClient&)            = delete;
     NimBLEClient& operator=(const NimBLEClient&) = delete;
 
-    bool       retrieveServices(const NimBLEUUID* uuid = nullptr, NimBLERemoteService **out = nullptr);
+    bool       retrieveServices(const NimBLEUUID* uuid = nullptr);
     static int exchangeMTUCB(uint16_t connHandle, const ble_gatt_error* error, uint16_t mtu, void* arg);
     static int handleGapEvent(struct ble_gap_event* event, void* arg);
     static int svcDiscCB(uint16_t                     connHandle,

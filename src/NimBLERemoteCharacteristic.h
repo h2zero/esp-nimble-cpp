@@ -65,8 +65,7 @@ class NimBLERemoteCharacteristic : public NimBLERemoteValueAttribute {
     ~NimBLERemoteCharacteristic();
 
     bool setNotify(uint16_t val, notify_callback notifyCallback = nullptr, bool response = true) const;
-    bool retrieveDescriptors(const NimBLEUUID* uuidFilter = nullptr,
-                             NimBLERemoteDescriptor** out = nullptr) const;
+    bool retrieveDescriptors(const NimBLEUUID* uuid = nullptr) const;
 
     static int dscDiscCB(
         uint16_t connHandle, const ble_gatt_error* error, uint16_t chrHandle, const ble_gatt_dsc* dsc, void* arg);

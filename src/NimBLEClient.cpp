@@ -631,11 +631,10 @@ NimBLERemoteService* NimBLEClient::getService(const char* uuid) {
  */
 NimBLERemoteService* NimBLEClient::getService(const NimBLEUUID& uuid) {
     NIMBLE_LOGD(LOG_TAG, ">> getService: uuid: %s", uuid.toString().c_str());
-    NimBLERemoteService *pSvc = nullptr;
 
-    NimBLERemoteGattUtils::getAttr<NimBLERemoteService>(uuid, &pSvc, m_svcVec,
-      [this](const NimBLEUUID* u, NimBLERemoteService** svc) {
-        return retrieveServices(u, svc);
+    auto pSvc = NimBLERemoteGattUtils::getAttr<NimBLERemoteService>
+      (uuid, m_svcVec, [this](const NimBLEUUID* u) {
+        return retrieveServices(u);
     });
 
     NIMBLE_LOGD(LOG_TAG, "<< getService: %sfound", !pSvc ? "not " : "");
@@ -652,11 +651,7 @@ NimBLERemoteService* NimBLEClient::getService(const NimBLEUUID& uuid) {
 const std::vector<NimBLERemoteService*>& NimBLEClient::getServices(bool refresh) {
     if (refresh) {
         deleteServices();
-        if (!retrieveServices()) {
-            NIMBLE_LOGE(LOG_TAG, "Error: Failed to get services");
-        } else {
-            NIMBLE_LOGI(LOG_TAG, "Found %d services", m_svcVec.size());
-        }
+        retrieveServices();
     }
 
     return m_svcVec;
@@ -692,7 +687,7 @@ bool NimBLEClient::discoverAttributes() {
  * * Here we ask the server for its set of services and wait until we have received them all.
  * @return true on success otherwise false if an error occurred
  */
-bool NimBLEClient::retrieveServices(const NimBLEUUID* uuid, NimBLERemoteService **out) {
+bool NimBLEClient::retrieveServices(const NimBLEUUID* uuid) {
     NIMBLE_LOGD(LOG_TAG, ">> retrieveServices()");
     NimBLETaskData taskData(this);
     if (!isConnected()) {
@@ -705,7 +700,7 @@ bool NimBLEClient::retrieveServices(const NimBLEUUID* uuid, NimBLERemoteService 
            : ble_gattc_disc_svc_by_uuid(m_connHandle, uuid->getBase(), svcDiscCB, &taskData);
 
     if (rc != 0) {
-        NIMBLE_LOGE(LOG_TAG, "ble_gattc_disc_all_svcs: rc=%d %s", rc, NimBLEUtils::returnCodeToString(rc));
+        NIMBLE_LOGE_RC(rc, LOG_TAG, "ble_gattc_disc_all_svcs");
         m_lastErr = rc;
         return false;
     }
@@ -713,12 +708,11 @@ bool NimBLEClient::retrieveServices(const NimBLEUUID* uuid, NimBLERemoteService 
     NimBLEUtils::taskWait(taskData, BLE_NPL_TIME_FOREVER);
     rc = taskData.m_flags;
     if (rc != BLE_HS_EDONE) {
+        NIMBLE_LOGE_RC(rc, LOG_TAG, "Could not retrieve services");
         m_lastErr = rc;
-        NIMBLE_LOGE(LOG_TAG, "Could not retrieve services, rc=%d %s", rc, NimBLEUtils::returnCodeToString(rc));
         return false;
     }
 
-    *out = m_svcVec.back();
     NIMBLE_LOGD(LOG_TAG, "<< retrieveServices(): found %d services.", m_svcVec.size());
     return true;
 } // getServices

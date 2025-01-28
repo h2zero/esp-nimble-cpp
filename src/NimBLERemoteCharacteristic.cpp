@@ -97,7 +97,7 @@ int NimBLERemoteCharacteristic::dscDiscCB(uint16_t              connHandle,
  * @param out Pointer to hold result.
  * @return True if successfully retrieved, success = BLE_HS_EDONE.
  */
-bool NimBLERemoteCharacteristic::retrieveDescriptors(const NimBLEUUID* uuid, NimBLERemoteDescriptor** out) const {
+bool NimBLERemoteCharacteristic::retrieveDescriptors(const NimBLEUUID* uuid) const {
     NIMBLE_LOGD(LOG_TAG, ">> retrieveDescriptors() for characteristic: %s", getUUID().toString().c_str());
     NimBLETaskData taskData(const_cast<NimBLERemoteCharacteristic*>(this));
     desc_filter_t  filter      = {uuid, &taskData};
@@ -112,18 +112,17 @@ bool NimBLERemoteCharacteristic::retrieveDescriptors(const NimBLEUUID* uuid, Nim
 
     int rc = ble_gattc_disc_all_dscs(connHandle, starthandle, endHandle, dscDiscCB, &filter);
     if (rc != 0) {
-        NIMBLE_LOGE(LOG_TAG, "ble_gattc_disc_all_dscs: rc=%d %s", rc, NimBLEUtils::returnCodeToString(rc));
+        NIMBLE_LOGE_RC(rc, LOG_TAG, "ble_gattc_disc_all_dscs");
         return false;
     }
 
     NimBLEUtils::taskWait(taskData, BLE_NPL_TIME_FOREVER);
     rc = taskData.m_flags;
     if (rc != BLE_HS_EDONE) {
-        NIMBLE_LOGE(LOG_TAG, "<< retrieveDescriptors(): failed: rc=%d %s", rc, NimBLEUtils::returnCodeToString(rc));
+        NIMBLE_LOGE_RC(rc, LOG_TAG, "<< retrieveDescriptors(): failed");
         return false;
     }
 
-    *out = m_vDescriptors.back();
     NIMBLE_LOGD(LOG_TAG, "<< retrieveDescriptors(): found %d descriptors.", m_vDescriptors.size());
     return true;
 } // retrieveDescriptors
@@ -135,11 +134,10 @@ bool NimBLERemoteCharacteristic::retrieveDescriptors(const NimBLEUUID* uuid, Nim
  */
 NimBLERemoteDescriptor* NimBLERemoteCharacteristic::getDescriptor(const NimBLEUUID& uuid) const {
     NIMBLE_LOGD(LOG_TAG, ">> getDescriptor: uuid: %s", uuid.toString().c_str());
-    NimBLERemoteDescriptor* pDsc = nullptr;
 
-    NimBLERemoteGattUtils::getAttr<NimBLERemoteDescriptor>(uuid, &pDsc, m_vDescriptors,
-      [this](const NimBLEUUID* u, NimBLERemoteDescriptor** dsc) {
-        return retrieveDescriptors(u, dsc);
+    auto pDsc = NimBLERemoteGattUtils::getAttr<NimBLERemoteDescriptor>
+      (uuid, m_vDescriptors, [this](const NimBLEUUID* u) {
+        return retrieveDescriptors(u);
     });
 
     NIMBLE_LOGD(LOG_TAG, "<< getDescriptor: %sfound", !pDsc ? "not " : "");

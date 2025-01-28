@@ -31,8 +31,8 @@
 class NimBLERemoteGattUtils {
   public:
     template <typename T>
-    static void getAttr(const NimBLEUUID& uuid, T** attr, const std::vector<T*>& vec,
-                        const std::function<bool(const NimBLEUUID*, T**)>& getter);
+    static T* getAttr(const NimBLEUUID& uuid, const std::vector<T*>& vec,
+                      const std::function<bool(const NimBLEUUID*)>& getter);
 }; // NimBLERemoteGattUtils
 
 #endif /* CONFIG_BT_ENABLED */

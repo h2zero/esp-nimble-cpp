@@ -77,15 +77,14 @@ NimBLERemoteCharacteristic* NimBLERemoteService::getCharacteristic(const char* u
  */
 NimBLERemoteCharacteristic* NimBLERemoteService::getCharacteristic(const NimBLEUUID& uuid) const {
     NIMBLE_LOGD(LOG_TAG, ">> getCharacteristic: uuid: %s", uuid.toString().c_str());
-    NimBLERemoteCharacteristic* pChar = nullptr;
 
-    NimBLERemoteGattUtils::getAttr<NimBLERemoteCharacteristic>(uuid, &pChar, m_vChars,
-      [this](const NimBLEUUID* u, NimBLERemoteCharacteristic** chr) {
-        return retrieveCharacteristics(u, chr);
+    auto pChr = NimBLERemoteGattUtils::getAttr<NimBLERemoteCharacteristic>
+      (uuid, m_vChars, [this](const NimBLEUUID* u) {
+        return retrieveCharacteristics(u);
     });
 
-    NIMBLE_LOGD(LOG_TAG, "<< getCharacteristic: %sfound", !pChar ? "not " : "");
-    return pChar;
+    NIMBLE_LOGD(LOG_TAG, "<< getCharacteristic: %sfound", !pChr ? "not " : "");
+    return pChr;
 } // getCharacteristic
 
 /**
@@ -137,7 +136,7 @@ int NimBLERemoteService::chrDiscCB(uint16_t connHandle,
  * This function will not return until we have all the characteristics.
  * @return True if successfully retrieved, success = BLE_HS_EDONE.
  */
-bool NimBLERemoteService::retrieveCharacteristics(const NimBLEUUID* uuid, NimBLERemoteCharacteristic** out) const {
+bool NimBLERemoteService::retrieveCharacteristics(const NimBLEUUID* uuid) const {
     NIMBLE_LOGD(LOG_TAG, ">> retrieveCharacteristics() for service: %s", getUUID().toString().c_str());
     NimBLETaskData taskData(const_cast<NimBLERemoteService*>(this));
     const uint16_t hdlConn  = m_pClient->getConnHandle();
@@ -154,18 +153,17 @@ bool NimBLERemoteService::retrieveCharacteristics(const NimBLEUUID* uuid, NimBLE
            : ble_gattc_disc_chrs_by_uuid(hdlConn, hdlStart, hdlEnd, uuid->getBase(), chrDiscCB, &taskData);
 
     if (rc != 0) {
-        NIMBLE_LOGE(LOG_TAG, "ble_gattc_disc_chrs rc=%d %s", rc, NimBLEUtils::returnCodeToString(rc));
+        NIMBLE_LOGE_RC(rc, LOG_TAG, "ble_gattc_disc_chrs rc");
         return false;
     }
 
     NimBLEUtils::taskWait(taskData, BLE_NPL_TIME_FOREVER);
     rc = taskData.m_flags;
     if (rc != BLE_HS_EDONE) {
-        NIMBLE_LOGE(LOG_TAG, "<< retrieveCharacteristics(): failed: rc=%d %s", rc, NimBLEUtils::returnCodeToString(rc));
+        NIMBLE_LOGE_RC(rc, LOG_TAG, "<< retrieveCharacteristics(): failed");
         return false;
     }
 
-    *out = m_vChars.back();
     NIMBLE_LOGD(LOG_TAG, "<< retrieveCharacteristics(): found %d characteristics.", m_vChars.size());
     return true;
 } // retrieveCharacteristics
