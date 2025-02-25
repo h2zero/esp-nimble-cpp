@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.2.0] 2025-02-24
+
+## Fixed
+- Crash when calling `NimBLEClient::DiscoverAttributes`.
+
+## Added
+- Conditional macros for logging.
+- `NimBLEDeviceCallbacks` class with a callback for handling bond storage.
+
 ## [2.1.1] 2025-01-26
 
 ## Fixed

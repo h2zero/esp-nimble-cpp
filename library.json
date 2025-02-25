@@ -1,6 +1,6 @@
 {
   "name": "esp-nimble-cpp",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "C++ wrapper for the NimBLE BLE stack",
   "keywords": [
     "BLE",
