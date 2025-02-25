@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+## Fixed
+- Added back `NimBLEClient::connect` overload with `NimBLEAdvertisedDevice` parameter to resolve connection error due to NULL address.
+
 ## [2.2.0] 2025-02-24
 
 ## Fixed
