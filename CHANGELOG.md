@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.2.0] 2025-02-24
+
+## Added
+- Conditional macros for logging.
+- `NimBLEDevicecallbacks` class with a callback for handling bond storage.
+
 ## [2.1.1] 2025-01-26
 
 ## Fixed
