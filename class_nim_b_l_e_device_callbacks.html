@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>esp-nimble-cpp: NimBLERemoteDescriptor Class Reference</title>
+<title>esp-nimble-cpp: NimBLEDeviceCallbacks Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,7 +63,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('class_nim_b_l_e_remote_descriptor.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('class_nim_b_l_e_device_callbacks.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -91,68 +91,67 @@ $(document).ready(function(){initNavTree('class_nim_b_l_e_remote_descriptor.html
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="class_nim_b_l_e_remote_descriptor-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">NimBLERemoteDescriptor Class Reference</div></div>
+<a href="class_nim_b_l_e_device_callbacks-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">NimBLEDeviceCallbacks Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>A model of remote BLE descriptor.  
- <a href="class_nim_b_l_e_remote_descriptor.html#details">More...</a></p>
+<p>Callbacks associated with a BLE device.  
+ <a href="class_nim_b_l_e_device_callbacks.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="_nim_b_l_e_remote_descriptor_8h_source.html">NimBLERemoteDescriptor.h</a>&gt;</code></p>
-
-<p>Inherits NimBLERemoteValueAttribute.</p>
+<p><code>#include &lt;<a class="el" href="_nim_b_l_e_device_8h_source.html">NimBLEDevice.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a05befb3c020c14f6b49439fd784a868c" id="r_a05befb3c020c14f6b49439fd784a868c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_nim_b_l_e_remote_characteristic.html">NimBLERemoteCharacteristic</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nim_b_l_e_remote_descriptor.html#a05befb3c020c14f6b49439fd784a868c">getRemoteCharacteristic</a> () const</td></tr>
-<tr class="memdesc:a05befb3c020c14f6b49439fd784a868c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the characteristic that owns this descriptor.  <br /></td></tr>
-<tr class="separator:a05befb3c020c14f6b49439fd784a868c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeea50cff665118bfa5ac755934755735" id="r_aeea50cff665118bfa5ac755934755735"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nim_b_l_e_remote_descriptor.html#aeea50cff665118bfa5ac755934755735">toString</a> (void) const</td></tr>
-<tr class="memdesc:aeea50cff665118bfa5ac755934755735"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a string representation of this Remote Descriptor.  <br /></td></tr>
-<tr class="separator:aeea50cff665118bfa5ac755934755735"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0584e7aee6b90e377fc7ef34e89b419" id="r_aa0584e7aee6b90e377fc7ef34e89b419"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nim_b_l_e_device_callbacks.html#aa0584e7aee6b90e377fc7ef34e89b419">onStoreStatus</a> (struct ble_store_status_event *event, void *arg)</td></tr>
+<tr class="memdesc:aa0584e7aee6b90e377fc7ef34e89b419"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates an inability to perform a store operation. This callback should do one of two things: -Address the problem and return 0, indicating that the store operation should proceed. -Return nonzero to indicate that the store operation should be aborted.  <br /></td></tr>
+<tr class="separator:aa0584e7aee6b90e377fc7ef34e89b419"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A model of remote BLE descriptor. </p>
+<div class="textblock"><p>Callbacks associated with a BLE device. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a05befb3c020c14f6b49439fd784a868c" name="a05befb3c020c14f6b49439fd784a868c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a05befb3c020c14f6b49439fd784a868c">&#9670;&#160;</a></span>getRemoteCharacteristic()</h2>
+<a id="aa0584e7aee6b90e377fc7ef34e89b419" name="aa0584e7aee6b90e377fc7ef34e89b419"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0584e7aee6b90e377fc7ef34e89b419">&#9670;&#160;</a></span>onStoreStatus()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_nim_b_l_e_remote_characteristic.html">NimBLERemoteCharacteristic</a> * NimBLERemoteDescriptor::getRemoteCharacteristic </td>
+          <td class="memname">int NimBLEDeviceCallbacks::onStoreStatus </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td class="paramtype">struct ble_store_status_event *&#160;</td>
+          <td class="paramname"><em>event</em>, </td>
         </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the characteristic that owns this descriptor. </p>
-<dl class="section return"><dt>Returns</dt><dd>The characteristic that owns this descriptor. </dd></dl>
-
-</div>
-</div>
-<a id="aeea50cff665118bfa5ac755934755735" name="aeea50cff665118bfa5ac755934755735"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeea50cff665118bfa5ac755934755735">&#9670;&#160;</a></span>toString()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
         <tr>
-          <td class="memname">std::string NimBLERemoteDescriptor::toString </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>arg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Return a string representation of this Remote Descriptor. </p>
-<dl class="section return"><dt>Returns</dt><dd>A string representation of this Remote Descriptor. </dd></dl>
+<p>Indicates an inability to perform a store operation. This callback should do one of two things: -Address the problem and return 0, indicating that the store operation should proceed. -Return nonzero to indicate that the store operation should be aborted. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">event</td><td>Describes the store event being reported. BLE_STORE_EVENT_FULL; or BLE_STORE_EVENT_OVERFLOW </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if the store operation should proceed; nonzero if the store operation should be aborted. </dd></dl>
 
 </div>
 </div>
@@ -161,7 +160,7 @@ Public Member Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="class_nim_b_l_e_remote_descriptor.html">NimBLERemoteDescriptor</a></li>
+    <li class="navelem"><a class="el" href="class_nim_b_l_e_device_callbacks.html">NimBLEDeviceCallbacks</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
