@@ -1,5 +1,9 @@
 var NAVTREEINDEX3 =
 {
+"md__migration__guide.html#header-files":[4,0,0],
+"md__migration__guide.html#is-now":[4,1,1,1],
+"md__migration__guide.html#originally":[4,1,1,0],
+"md__migration__guide.html#remote-characteristics-1":[4,3,1],
 "md__migration__guide.html#remote-services-1":[4,3,0],
 "md__migration__guide.html#security-api":[4,5],
 "md__migration__guide.html#server-api":[4,1],
