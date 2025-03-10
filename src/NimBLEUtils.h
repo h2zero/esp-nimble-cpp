@@ -30,7 +30,7 @@ class NimBLEAddress;
  * All items are optional, the m_pHandle will be set in taskWait().
  */
 struct NimBLETaskData {
-    NimBLETaskData(void* pInstance = nullptr, int flags = 0, void* buf = nullptr);
+    explicit NimBLETaskData(void* pInstance = nullptr, int flags = 0, void* buf = nullptr);
     ~NimBLETaskData();
     void*       m_pInstance{nullptr};
     mutable int m_flags{0};
