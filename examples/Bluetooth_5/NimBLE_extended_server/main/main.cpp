@@ -65,8 +65,7 @@ class AdvertisingCallbacks : public NimBLEExtAdvertisingCallbacks {
     }
 } advertisingCallbacks;
 
-extern "C"
-void app_main(void) {
+extern "C" void app_main(void) {
     /** Initialize NimBLE and set the device name */
     NimBLEDevice::init("Extended advertiser");
 
@@ -105,7 +104,6 @@ void app_main(void) {
                                       "This example message is 226 bytes long "
                                       "and is using CODED_PHY for long range."));
 
-    extAdv.setCompleteServices16({NimBLEUUID(SERVICE_UUID)});
     extAdv.setName("Extended advertiser");
 
     /** When extended advertising is enabled `NimBLEDevice::getAdvertising` returns a pointer to `NimBLEExtAdvertising */
