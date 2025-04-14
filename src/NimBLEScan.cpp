@@ -54,6 +54,11 @@ int NimBLEScan::handleGapEvent(ble_gap_event* event, void* arg) {
     (void)arg;
     NimBLEScan* pScan = NimBLEDevice::getScan();
 
+    if (!pScan->isScanning()) {
+        NIMBLE_LOGI(LOG_TAG, "Scan stopped, ignoring event");
+        return 0;
+    }
+
     switch (event->type) {
         case BLE_GAP_EVENT_EXT_DISC:
         case BLE_GAP_EVENT_DISC: {
