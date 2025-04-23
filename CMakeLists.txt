@@ -55,6 +55,8 @@ idf_component_register(
     "src/NimBLEEddystoneTLM.cpp"
     "src/NimBLEExtAdvertising.cpp"
     "src/NimBLEHIDDevice.cpp"
+    "src/NimBLEL2CAPChannel.cpp"
+    "src/NimBLEL2CAPServer.cpp"
     "src/NimBLERemoteCharacteristic.cpp"
     "src/NimBLERemoteDescriptor.cpp"
     "src/NimBLERemoteService.cpp"
