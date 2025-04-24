@@ -76,7 +76,7 @@ extern "C" void ble_store_config_init(void);
 /**
  * Singletons for the NimBLEDevice.
  */
-NimBLEDeviceCallbacks NimBLEDevice::defaultDeviceCallbacks{};
+NimBLEDeviceCallbacks  NimBLEDevice::defaultDeviceCallbacks{};
 NimBLEDeviceCallbacks* NimBLEDevice::m_pDeviceCallbacks = &defaultDeviceCallbacks;
 
 # if defined(CONFIG_BT_NIMBLE_ROLE_OBSERVER)
@@ -476,14 +476,14 @@ bool NimBLEDevice::setPower(int8_t dbm, NimBLETxPowerType type) {
         dbm++; // round up to the next multiple of 3 to be able to target 20dbm
     }
 
-    bool success = false;
-    esp_power_level_t espPwr = static_cast<esp_power_level_t>(dbm / 3 + ESP_PWR_LVL_N0);
+    bool              success = false;
+    esp_power_level_t espPwr  = static_cast<esp_power_level_t>(dbm / 3 + ESP_PWR_LVL_N0);
     if (type == NimBLETxPowerType::All) {
         success  = setPowerLevel(espPwr, ESP_BLE_PWR_TYPE_ADV);
         success &= setPowerLevel(espPwr, ESP_BLE_PWR_TYPE_SCAN);
         success &= setPowerLevel(espPwr, ESP_BLE_PWR_TYPE_DEFAULT);
     } else if (type == NimBLETxPowerType::Advertise) {
-        success = setPowerLevel(espPwr,  ESP_BLE_PWR_TYPE_ADV);
+        success = setPowerLevel(espPwr, ESP_BLE_PWR_TYPE_ADV);
     } else if (type == NimBLETxPowerType::Scan) {
         success = setPowerLevel(espPwr, ESP_BLE_PWR_TYPE_SCAN);
     } else if (type == NimBLETxPowerType::Connection) {
@@ -739,7 +739,6 @@ NimBLEAddress NimBLEDevice::getWhiteListAddress(size_t index) {
 /*                               STACK FUNCTIONS                              */
 /* -------------------------------------------------------------------------- */
 
-# if CONFIG_BT_NIMBLE_EXT_ADV || defined(_DOXYGEN_)
 /**
  * @brief Set the preferred default phy to use for connections.
  * @param [in] txPhyMask TX PHY. Can be mask of following:
@@ -762,7 +761,6 @@ bool NimBLEDevice::setDefaultPhy(uint8_t txPhyMask, uint8_t rxPhyMask) {
 
     return rc == 0;
 }
-# endif
 
 /**
  * @brief Host reset, we pass the message so we don't make calls until re-synced.
@@ -844,7 +842,7 @@ bool NimBLEDevice::init(const std::string& deviceName) {
     if (!m_initialized) {
 # ifdef ESP_PLATFORM
 
-#  if defined(CONFIG_ENABLE_ARDUINO_DEPENDS) && SOC_BT_SUPPORTED 
+#  if defined(CONFIG_ENABLE_ARDUINO_DEPENDS) && SOC_BT_SUPPORTED
         // make sure the linker includes esp32-hal-bt.c so Arduino init doesn't release BLE memory.
         btStarted();
 #  endif
