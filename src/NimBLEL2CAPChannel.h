@@ -20,10 +20,11 @@
 
 class NimBLEClient;
 class NimBLEL2CAPChannelCallbacks;
+struct NimBLETaskData;
 
 /**
  * @brief Encapsulates a L2CAP channel.
- * 
+ *
  * This class is used to encapsulate a L2CAP connection oriented channel, both
  * from the "server" (which waits for the connection to be opened) and the "client"
  * (which opens the connection) point of view.
@@ -80,7 +81,7 @@ private:
 
     // Runtime handling
     std::atomic<bool> stalled{false};
-    SemaphoreHandle_t stalledSemaphore = nullptr;
+    NimBLETaskData* m_pTaskData{nullptr};
 
     // Allocate / deallocate NimBLE memory pool
     bool setupMemPool();

@@ -16,7 +16,7 @@
 #define CEIL_DIVIDE(a, b) (((a) + (b) - 1) / (b))
 #define ROUND_DIVIDE(a, b) (((a) + (b) / 2) / (b))
 // Retry
-constexpr TickType_t RetryTimeout = pdMS_TO_TICKS(50);
+constexpr uint32_t RetryTimeout = 50;
 constexpr int RetryCounter = 3;
 
 NimBLEL2CAPChannel::NimBLEL2CAPChannel(uint16_t psm, uint16_t mtu, NimBLEL2CAPChannelCallbacks* callbacks)
@@ -65,8 +65,6 @@ bool NimBLEL2CAPChannel::setupMemPool() {
         return false;
     }
 
-    this->stalledSemaphore = xSemaphoreCreateBinary();
-
     return true;
 }
 
@@ -83,7 +81,10 @@ int NimBLEL2CAPChannel::writeFragment(std::vector<uint8_t>::const_iterator begin
 
     if (stalled) {
         NIMBLE_LOGD(LOG_TAG, "L2CAP Channel waiting for unstall...");
-        xSemaphoreTake(this->stalledSemaphore, portMAX_DELAY);
+        NimBLETaskData taskData;
+        m_pTaskData = &taskData;
+        NimBLEUtils::taskWait(m_pTaskData, BLE_NPL_TIME_FOREVER);
+        m_pTaskData = nullptr;
         stalled = false;
         NIMBLE_LOGD(LOG_TAG, "L2CAP Channel unstalled!");
     }
@@ -125,7 +126,7 @@ int NimBLEL2CAPChannel::writeFragment(std::vector<uint8_t>::const_iterator begin
             case BLE_HS_EBUSY:
                 NIMBLE_LOGD(LOG_TAG, "ble_l2cap_send returned %d. Retrying shortly...", res);
                 os_mbuf_free_chain(txd);
-                vTaskDelay(RetryTimeout);
+                ble_npl_time_delay(ble_npl_time_ms_to_ticks32(RetryTimeout));
                 continue;
 
             case ESP_OK:
@@ -247,8 +248,11 @@ int NimBLEL2CAPChannel::handleDataReceivedEvent(struct ble_l2cap_event* event) {
 }
 
 int NimBLEL2CAPChannel::handleTxUnstalledEvent(struct ble_l2cap_event* event) {
+    if (m_pTaskData != nullptr) {
+        NimBLEUtils::taskRelease(*m_pTaskData, event->tx_unstalled.status);
+    }
+
     NIMBLE_LOGI(LOG_TAG, "L2CAP COC 0x%04X transmit unstalled.", psm);
-    xSemaphoreGive(this->stalledSemaphore);
     return 0;
 }
 
@@ -268,7 +272,7 @@ int NimBLEL2CAPChannel::handleL2capEvent(struct ble_l2cap_event *event, void *ar
     int returnValue = 0;
 
     switch (event->type) {
-        case BLE_L2CAP_EVENT_COC_CONNECTED: 
+        case BLE_L2CAP_EVENT_COC_CONNECTED:
             returnValue = self->handleConnectionEvent(event);
             break;
 
