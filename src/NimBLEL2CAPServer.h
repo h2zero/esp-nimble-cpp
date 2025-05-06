@@ -11,15 +11,14 @@
 class NimBLEL2CAPChannel;
 class NimBLEL2CAPChannelCallbacks;
 
-
 /**
  * @brief L2CAP server class.
- * 
+ *
  * Encapsulates a L2CAP server that can hold multiple services. Every service is represented by a channel object
  * and an assorted set of callbacks.
  */
 class NimBLEL2CAPServer {
-public:
+  public:
     /// @brief Register a new L2CAP service instance.
     /// @param psm The port multiplexor service number.
     /// @param mtu The maximum transmission unit.
@@ -27,7 +26,7 @@ public:
     /// @return the newly created object, if the server registration was successful.
     NimBLEL2CAPChannel* createService(const uint16_t psm, const uint16_t mtu, NimBLEL2CAPChannelCallbacks* callbacks);
 
-private:
+  private:
     NimBLEL2CAPServer();
     ~NimBLEL2CAPServer();
     std::vector<NimBLEL2CAPChannel*> services;

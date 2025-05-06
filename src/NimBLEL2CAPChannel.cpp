@@ -7,21 +7,18 @@
 #include "NimBLELog.h"
 #include "NimBLEUtils.h"
 
-#include "nimble/nimble_port.h"
-
 // L2CAP buffer block size
-#define L2CAP_BUF_BLOCK_SIZE (250)
+#define L2CAP_BUF_BLOCK_SIZE            (250)
 #define L2CAP_BUF_SIZE_MTUS_PER_CHANNEL (3)
 // Round-up integer division
-#define CEIL_DIVIDE(a, b) (((a) + (b) - 1) / (b))
-#define ROUND_DIVIDE(a, b) (((a) + (b) / 2) / (b))
+#define CEIL_DIVIDE(a, b)               (((a) + (b) - 1) / (b))
+#define ROUND_DIVIDE(a, b)              (((a) + (b) / 2) / (b))
 // Retry
 constexpr uint32_t RetryTimeout = 50;
 constexpr int RetryCounter = 3;
 
 NimBLEL2CAPChannel::NimBLEL2CAPChannel(uint16_t psm, uint16_t mtu, NimBLEL2CAPChannelCallbacks* callbacks)
-                   :psm(psm), mtu(mtu), callbacks(callbacks) {
-
+    : psm(psm), mtu(mtu), callbacks(callbacks) {
     assert(mtu);            // fail here, if MTU is too little
     assert(callbacks);      // fail here, if no callbacks are given
     assert(setupMemPool()); // fail here, if the memory pool could not be setup
@@ -30,14 +27,12 @@ NimBLEL2CAPChannel::NimBLEL2CAPChannel(uint16_t psm, uint16_t mtu, NimBLEL2CAPCh
 };
 
 NimBLEL2CAPChannel::~NimBLEL2CAPChannel() {
-
     teardownMemPool();
 
     NIMBLE_LOGI(LOG_TAG, "L2CAP COC 0x%04X shutdown and freed.", this->psm);
 }
 
 bool NimBLEL2CAPChannel::setupMemPool() {
-
     const size_t buf_blocks = CEIL_DIVIDE(mtu, L2CAP_BUF_BLOCK_SIZE) * L2CAP_BUF_SIZE_MTUS_PER_CHANNEL;
     NIMBLE_LOGD(LOG_TAG, "Computed number of buf_blocks = %d", buf_blocks);
 
@@ -59,7 +54,7 @@ bool NimBLEL2CAPChannel::setupMemPool() {
         return false;
     }
 
-    this->receiveBuffer = (uint8_t*) malloc(mtu);
+    this->receiveBuffer = (uint8_t*)malloc(mtu);
     if (!this->receiveBuffer) {
         NIMBLE_LOGE(LOG_TAG, "Can't malloc receive buffer: %d, %s", errno, strerror(errno));
         return false;
@@ -69,14 +64,18 @@ bool NimBLEL2CAPChannel::setupMemPool() {
 }
 
 void NimBLEL2CAPChannel::teardownMemPool() {
-
-    if (this->callbacks) { delete this->callbacks; }
-    if (this->receiveBuffer) { free(this->receiveBuffer); }
-    if (_coc_memory) { free(_coc_memory); }
+    if (this->callbacks) {
+        delete this->callbacks;
+    }
+    if (this->receiveBuffer) {
+        free(this->receiveBuffer);
+    }
+    if (_coc_memory) {
+        free(_coc_memory);
+    }
 }
 
 int NimBLEL2CAPChannel::writeFragment(std::vector<uint8_t>::const_iterator begin, std::vector<uint8_t>::const_iterator end) {
-
     auto toSend = end - begin;
 
     if (stalled) {
@@ -101,7 +100,6 @@ int NimBLEL2CAPChannel::writeFragment(std::vector<uint8_t>::const_iterator begin
     auto retries = RetryCounter;
 
     while (retries--) {
-
         auto txd = os_mbuf_get_pkthdr(&_coc_mbuf_pool, 0);
         if (!txd) {
             NIMBLE_LOGE(LOG_TAG, "Can't os_mbuf_get_pkthdr.");
@@ -115,10 +113,15 @@ int NimBLEL2CAPChannel::writeFragment(std::vector<uint8_t>::const_iterator begin
 
         auto res = ble_l2cap_send(channel, txd);
         switch (res) {
+            case 0:
+                NIMBLE_LOGD(LOG_TAG, "L2CAP COC 0x%04X sent %d bytes.", this->psm, toSend);
+                return 0;
+
             case BLE_HS_ESTALLED:
                 stalled = true;
                 NIMBLE_LOGD(LOG_TAG, "L2CAP COC 0x%04X sent %d bytes.", this->psm, toSend);
-                NIMBLE_LOGW(LOG_TAG, "ble_l2cap_send returned BLE_HS_ESTALLED. Next send will wait for unstalled event...");
+                NIMBLE_LOGW(LOG_TAG,
+                            "ble_l2cap_send returned BLE_HS_ESTALLED. Next send will wait for unstalled event...");
                 return 0;
 
             case BLE_HS_ENOMEM:
@@ -129,14 +132,9 @@ int NimBLEL2CAPChannel::writeFragment(std::vector<uint8_t>::const_iterator begin
                 ble_npl_time_delay(ble_npl_time_ms_to_ticks32(RetryTimeout));
                 continue;
 
-            case ESP_OK:
-                NIMBLE_LOGD(LOG_TAG, "L2CAP COC 0x%04X sent %d bytes.", this->psm, toSend);
-                return 0;
-
             default:
                 NIMBLE_LOGE(LOG_TAG, "ble_l2cap_send failed: %d", res);
                 return res;
-
         }
     }
     NIMBLE_LOGE(LOG_TAG, "Retries exhausted, dropping %d bytes to send.", toSend);
@@ -144,10 +142,14 @@ int NimBLEL2CAPChannel::writeFragment(std::vector<uint8_t>::const_iterator begin
 }
 
 #if defined(CONFIG_BT_ENABLED) && defined(CONFIG_BT_NIMBLE_ROLE_CENTRAL)
-NimBLEL2CAPChannel* NimBLEL2CAPChannel::connect(NimBLEClient* client, uint16_t psm, uint16_t mtu, NimBLEL2CAPChannelCallbacks* callbacks) {
-
+NimBLEL2CAPChannel* NimBLEL2CAPChannel::connect(NimBLEClient*                client,
+                                                uint16_t                     psm,
+                                                uint16_t                     mtu,
+                                                NimBLEL2CAPChannelCallbacks* callbacks) {
     if (!client->isConnected()) {
-        NIMBLE_LOGE(LOG_TAG, "Client is not connected. Before connecting via L2CAP, a GAP connection must have been established");
+        NIMBLE_LOGE(
+            LOG_TAG,
+            "Client is not connected. Before connecting via L2CAP, a GAP connection must have been established");
         return nullptr;
     };
 
@@ -167,7 +169,6 @@ NimBLEL2CAPChannel* NimBLEL2CAPChannel::connect(NimBLEClient* client, uint16_t p
 #endif // CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_CENTRAL
 
 bool NimBLEL2CAPChannel::write(const std::vector<uint8_t>& bytes) {
-
     if (!this->channel) {
         NIMBLE_LOGW(LOG_TAG, "L2CAP Channel not open");
         return false;
@@ -176,7 +177,6 @@ bool NimBLEL2CAPChannel::write(const std::vector<uint8_t>& bytes) {
     struct ble_l2cap_chan_info info;
     ble_l2cap_get_chan_info(channel, &info);
     auto mtu = info.peer_coc_mtu < info.our_coc_mtu ? info.peer_coc_mtu : info.our_coc_mtu;
-
 
     auto start = bytes.begin();
     while (start != bytes.end()) {
@@ -191,12 +191,16 @@ bool NimBLEL2CAPChannel::write(const std::vector<uint8_t>& bytes) {
 
 // private
 int NimBLEL2CAPChannel::handleConnectionEvent(struct ble_l2cap_event* event) {
-
     channel = event->connect.chan;
     struct ble_l2cap_chan_info info;
     ble_l2cap_get_chan_info(channel, &info);
-    NIMBLE_LOGI(LOG_TAG, "L2CAP COC 0x%04X connected. Local MTU = %d [%d], remote MTU = %d [%d].", psm,
-        info.our_coc_mtu, info.our_l2cap_mtu, info.peer_coc_mtu, info.peer_l2cap_mtu);
+    NIMBLE_LOGI(LOG_TAG,
+                "L2CAP COC 0x%04X connected. Local MTU = %d [%d], remote MTU = %d [%d].",
+                psm,
+                info.our_coc_mtu,
+                info.our_l2cap_mtu,
+                info.peer_coc_mtu,
+                info.peer_l2cap_mtu);
     if (info.our_coc_mtu > info.peer_coc_mtu) {
         NIMBLE_LOGW(LOG_TAG, "L2CAP COC 0x%04X connected, but local MTU is bigger than remote MTU.", psm);
     }
@@ -212,7 +216,7 @@ int NimBLEL2CAPChannel::handleAcceptEvent(struct ble_l2cap_event* event) {
         return -1;
     }
 
-    struct os_mbuf *sdu_rx = os_mbuf_get_pkthdr(&_coc_mbuf_pool, 0);
+    struct os_mbuf* sdu_rx = os_mbuf_get_pkthdr(&_coc_mbuf_pool, 0);
     assert(sdu_rx != NULL);
     ble_l2cap_recv_ready(event->accept.chan, sdu_rx);
     return 0;
@@ -264,8 +268,7 @@ int NimBLEL2CAPChannel::handleDisconnectionEvent(struct ble_l2cap_event* event) 
 }
 
 /* STATIC */
-int NimBLEL2CAPChannel::handleL2capEvent(struct ble_l2cap_event *event, void *arg) {
-
+int NimBLEL2CAPChannel::handleL2capEvent(struct ble_l2cap_event* event, void* arg) {
     NIMBLE_LOGD(LOG_TAG, "handleL2capEvent: handling l2cap event %d", event->type);
     NimBLEL2CAPChannel* self = reinterpret_cast<NimBLEL2CAPChannel*>(arg);
 

@@ -3,20 +3,26 @@
 //
 #pragma once
 #ifndef NIMBLEL2CAPCHANNEL_H
-#define NIMBLEL2CAPCHANNEL_H
+# define NIMBLEL2CAPCHANNEL_H
 
-#include "inttypes.h"
-#include "host/ble_l2cap.h"
-#include "os/os_mbuf.h"
-#include "os/os_mempool.h"
+# include "nimconfig.h"
+
+# include "inttypes.h"
+# if defined(CONFIG_NIMBLE_CPP_IDF)
+#  include "host/ble_l2cap.h"
+#  include "os/os_mbuf.h"
+# else
+#  include "nimble/nimble/host/include/host/ble_l2cap.h"
+#  include "nimble/porting/nimble/include/os/os_mbuf.h"
+# endif
 
 /****  FIX COMPILATION ****/
 # undef min
 # undef max
 /**************************/
 
-#include <vector>
-#include <atomic>
+# include <vector>
+# include <atomic>
 
 class NimBLEClient;
 class NimBLEL2CAPChannelCallbacks;
@@ -30,8 +36,7 @@ struct NimBLETaskData;
  * (which opens the connection) point of view.
  */
 class NimBLEL2CAPChannel {
-
-public:
+  public:
     /// @brief Open an L2CAP channel via the specified PSM and MTU.
     /// @param[in] psm The PSM to use.
     /// @param[in] mtu The MTU to use. Note that this is the local MTU. Upon opening the channel,
@@ -53,8 +58,7 @@ public:
     /// @return True, if the channel is connected. False, otherwise.
     bool isConnected() const { return !!channel; }
 
-protected:
-
+  protected:
     NimBLEL2CAPChannel(uint16_t psm, uint16_t mtu, NimBLEL2CAPChannelCallbacks* callbacks);
     ~NimBLEL2CAPChannel();
 
@@ -64,19 +68,19 @@ protected:
     int handleTxUnstalledEvent(struct ble_l2cap_event* event);
     int handleDisconnectionEvent(struct ble_l2cap_event* event);
 
-private:
+  private:
     friend class NimBLEL2CAPServer;
     static constexpr const char* LOG_TAG = "NimBLEL2CAPChannel";
 
-    const uint16_t psm; // PSM of the channel
-    const uint16_t mtu; // The requested (local) MTU of the channel, might be larger than negotiated MTU
-    struct ble_l2cap_chan* channel = nullptr;
+    const uint16_t               psm; // PSM of the channel
+    const uint16_t               mtu; // The requested (local) MTU of the channel, might be larger than negotiated MTU
+    struct ble_l2cap_chan*       channel = nullptr;
     NimBLEL2CAPChannelCallbacks* callbacks;
-    uint8_t* receiveBuffer = nullptr; // buffers a full (local) MTU
+    uint8_t*                     receiveBuffer = nullptr; // buffers a full (local) MTU
 
     // NimBLE memory pool
-    void* _coc_memory = nullptr;
-    struct os_mempool _coc_mempool;
+    void*               _coc_memory = nullptr;
+    struct os_mempool   _coc_mempool;
     struct os_mbuf_pool _coc_mbuf_pool;
 
     // Runtime handling
@@ -91,16 +95,15 @@ private:
     int writeFragment(std::vector<uint8_t>::const_iterator begin, std::vector<uint8_t>::const_iterator end);
 
     // L2CAP event handler
-    static int handleL2capEvent(struct ble_l2cap_event* event, void *arg);
+    static int handleL2capEvent(struct ble_l2cap_event* event, void* arg);
 };
 
 /**
  * @brief Callbacks base class for the L2CAP channel.
  */
 class NimBLEL2CAPChannelCallbacks {
-
-public:
-    NimBLEL2CAPChannelCallbacks() = default;
+  public:
+    NimBLEL2CAPChannelCallbacks()          = default;
     virtual ~NimBLEL2CAPChannelCallbacks() = default;
 
     /// Called when the client attempts to open a channel on the server.
