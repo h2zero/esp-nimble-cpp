@@ -116,13 +116,13 @@ class NimBLEClient {
     NimBLEClient(const NimBLEClient&)            = delete;
     NimBLEClient& operator=(const NimBLEClient&) = delete;
 
-    bool       retrieveServices(const NimBLEUUID* uuidFilter = nullptr);
+    bool       retrieveServices(const NimBLEUUID* uuidFilter = nullptr, NimBLERemoteService *out = nullptr);
     static int handleGapEvent(struct ble_gap_event* event, void* arg);
-    static int exchangeMTUCb(uint16_t conn_handle, const ble_gatt_error* error, uint16_t mtu, void* arg);
-    static int serviceDiscoveredCB(uint16_t                     connHandle,
-                                   const struct ble_gatt_error* error,
-                                   const struct ble_gatt_svc*   service,
-                                   void*                        arg);
+    static int exchangeMTUCB(uint16_t connHandle, const ble_gatt_error* error, uint16_t mtu, void* arg);
+    static int svcDiscCB(uint16_t                     connHandle,
+                         const struct ble_gatt_error* error,
+                         const struct ble_gatt_svc*   service,
+                         void*                        arg);
 
     NimBLEAddress                     m_peerAddress;
     mutable int                       m_lastErr;
