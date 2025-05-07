@@ -17,8 +17,8 @@ jobs:
         # See https://hub.docker.com/r/espressif/idf/tags and
         # https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/tools/idf-docker-image.html
         # for details.
-        idf_ver: ["release-v4.4", "release-v5.1", "v5.3.2"]
-        idf_target: ["esp32", "esp32s3", "esp32c2", "esp32c3", "esp32c6", "esp32h2", "esp32p4"]
+        idf_ver: ["release-v4.4", "release-v5.4"]
+        idf_target: ["esp32", "esp32s3", "esp32c2", "esp32c3", "esp32c5", "esp32c6", "esp32h2", "esp32p4"]
         example:
           - NimBLE_Client
           - NimBLE_Server
@@ -31,6 +31,8 @@ jobs:
             example: Bluetooth_5/NimBLE_extended_server
           - idf_ver: release-v4.4
             idf_target: "esp32c2"
+          - idf_ver: release-v4.4
+            idf_target: "esp32c5"
           - idf_ver: release-v4.4
             idf_target: "esp32c6"
           - idf_ver: release-v4.4
