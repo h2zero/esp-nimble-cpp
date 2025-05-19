@@ -1,6 +1,27 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.3.0] 2025-05-19
+
+## Fixed
+- Incorrect `NimBLECharacteristic::onSubscribe` value when indications are set.
+- `NimBLECharacteristic::onRead` callback not called in some cases.
+- Clear attribute value when zero length value is written.
+- Notify/Indicate incorrectly returning success with custom value.
+- Corrected NimBLEClient array initialization.
+- Prevent potential exception when scan is restarted.
+- Attribute getValue failing with some data types
+- Incorrectly passing a pointer to a function taking const reference.
+
+## Added
+- Support for esp32c5
+- L2CAP infrastructure.
+- Scan duplicate cache reset time.
+
+## Changed
+- Cleaned up examples.
+- Allow PHY updates without enabling extended advertising.
+
 ## [2.2.1] 2025-02-28
 
 ## Fixed
