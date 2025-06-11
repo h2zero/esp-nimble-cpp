@@ -15,16 +15,6 @@
 // Allows cpp wrapper to select the correct include paths when using esp-idf
 #define CONFIG_NIMBLE_CPP_IDF
 
-/* Cannot use client without scan */
-#if defined(CONFIG_BT_NIMBLE_ROLE_CENTRAL) && !defined(CONFIG_BT_NIMBLE_ROLE_OBSERVER)
-#define CONFIG_BT_NIMBLE_ROLE_OBSERVER
-#endif
-
-/* Cannot use server without advertise */
-#if defined(CONFIG_BT_NIMBLE_ROLE_PERIPHERAL) && !defined(CONFIG_BT_NIMBLE_ROLE_BROADCASTER)
-#define CONFIG_BT_NIMBLE_ROLE_BROADCASTER
-#endif
-
 /* Enables the use of Arduino String class for attribute values */
 #if defined __has_include
 #  if __has_include (<Arduino.h>)
