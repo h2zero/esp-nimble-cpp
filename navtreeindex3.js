@@ -1,12 +1,5 @@
 var NAVTREEINDEX3 =
 {
-"md__bluetooth_015_01features.html#about-extended-advertising":[3,0],
-"md__bluetooth_015_01features.html#enabling-extended-advertising":[3,1],
-"md__migration__guide.html":[4],
-"md__migration__guide.html#advertising-api":[4,2],
-"md__migration__guide.html#arduino-configuration":[4,6],
-"md__migration__guide.html#ble-addresses-1":[4,0,2],
-"md__migration__guide.html#ble-scan":[4,4],
 "md__migration__guide.html#characteristic-callbacks-1":[4,1,1,3],
 "md__migration__guide.html#characteristics-1":[4,1,1],
 "md__migration__guide.html#class-names":[4,0,1],
@@ -63,7 +56,7 @@ var NAVTREEINDEX3 =
 "nimconfig_8h.html#abe2e5c7dbca929d3ed6cf70a73aced23":[9,0,0,33,17],
 "nimconfig_8h_source.html":[9,0,0,33],
 "pages.html":[],
-"struct_nim_b_l_e_task_data.html":[8,0,35],
-"struct_nim_b_l_e_task_data.html#a7b08f7ba2161d6309da1fc40c83027c4":[8,0,35,0],
-"struct_nim_b_l_e_task_data.html#af2d5d10d7cc8801cf4d001f89bf301c6":[8,0,35,1]
+"struct_nim_b_l_e_task_data.html":[8,0,32],
+"struct_nim_b_l_e_task_data.html#a7b08f7ba2161d6309da1fc40c83027c4":[8,0,32,0],
+"struct_nim_b_l_e_task_data.html#af2d5d10d7cc8801cf4d001f89bf301c6":[8,0,32,1]
 };
