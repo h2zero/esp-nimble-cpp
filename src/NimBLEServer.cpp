@@ -16,7 +16,7 @@
  */
 
 #include "NimBLEServer.h"
-#include "NimBLEReadEventArgs.h"
+#include "NimBLEEventArgs.h"
 #if CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_PERIPHERAL
 
 # include "NimBLEDevice.h"
@@ -632,7 +632,7 @@ int NimBLEServer::handleGattEvent(uint16_t connHandle, uint16_t attrHandle, ble_
         case BLE_GATT_ACCESS_OP_READ_CHR: {
             // Don't call readEvent if the buffer len is 0 (this is a follow up to a previous read),
             // or if this is an internal read (handle is NONE)
-            auto eventArgs = NimBLEReadEventArgs();
+            NimBLEReadEventArgs eventArgs = NimBLEReadEventArgs();
             if (ctxt->om->om_len > 0 && connHandle != BLE_HS_CONN_HANDLE_NONE) {
                 pAtt->readEvent(peerInfo, eventArgs);
             }
@@ -660,18 +660,23 @@ int NimBLEServer::handleGattEvent(uint16_t connHandle, uint16_t attrHandle, ble_
             uint8_t buf[maxLen];
             memcpy(buf, ctxt->om->om_data, len);
 
+
             os_mbuf* next;
             next = SLIST_NEXT(ctxt->om, om_next);
             while (next != NULL) {
                 if ((len + next->om_len) > maxLen) {
                     return BLE_ATT_ERR_INVALID_ATTR_VALUE_LEN;
                 }
-                memcpy(&buf[len], next->om_data, next->om_len);
+                    memcpy(&buf[len], next->om_data, next->om_len);
                 len  += next->om_len;
                 next  = SLIST_NEXT(next, om_next);
             }
 
-            pAtt->writeEvent(buf, len, peerInfo);
+            auto oldData = std::string((char*)pAtt->getValue().data());
+            auto newData = std::string((char*)buf);
+
+            NimBLEWriteEventArgs eventArgs = NimBLEWriteEventArgs(oldData, newData);
+            pAtt->writeEvent(buf, len, peerInfo, eventArgs);
             return 0;
         }
 

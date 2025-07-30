@@ -15,8 +15,14 @@
  * limitations under the License.
  */
 
+
 #ifndef NIMBLE_CPP_DEVICE_H_
 #define NIMBLE_CPP_DEVICE_H_
+
+class buffer;
+class NimBLEReadEventArgs;
+class NimBLEWriteEventArgs;
+
 
 #include "nimconfig.h"
 #if CONFIG_BT_ENABLED
@@ -68,8 +74,10 @@ class NimBLEL2CAPServer;
 class NimBLEConnInfo;
 # endif
 
+
 class NimBLEAddress;
 class NimBLEDeviceCallbacks;
+
 
 # define BLEDevice                    NimBLEDevice
 # define BLEClient                    NimBLEClient

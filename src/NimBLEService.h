@@ -23,7 +23,7 @@
 
 class NimBLEService;
 
-# include "NimBLEAttribute.h"
+# include "NimBLEDevice.h"
 # include "NimBLEServer.h"
 # include "NimBLECharacteristic.h"
 
