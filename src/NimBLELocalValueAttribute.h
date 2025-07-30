@@ -18,6 +18,7 @@
 #ifndef NIMBLE_LOCAL_VALUE_ATTRIBUTE_H_
 #define NIMBLE_LOCAL_VALUE_ATTRIBUTE_H_
 
+#include "NimBLEReadEventArgs.h"
 #include "nimconfig.h"
 #if CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_PERIPHERAL
 
@@ -113,7 +114,7 @@ class NimBLELocalValueAttribute : public NimBLELocalAttribute, public NimBLEValu
      * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
      * @details This function is called by NimBLEServer when a read request is received.
      */
-    virtual void readEvent(NimBLEConnInfo& connInfo) = 0;
+    virtual void readEvent(NimBLEConnInfo& connInfo, NimBLEReadEventArgs& args) = 0;
 
     /**
      * @brief Callback function to support a write request.

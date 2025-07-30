@@ -321,8 +321,8 @@ done:
     return true;
 } // sendValue
 
-void NimBLECharacteristic::readEvent(NimBLEConnInfo& connInfo) {
-    m_pCallbacks->onRead(this, connInfo);
+void NimBLECharacteristic::readEvent(NimBLEConnInfo& connInfo, NimBLEReadEventArgs& args) {
+    m_pCallbacks->onRead(this, connInfo, args);
 } // readEvent
 
 void NimBLECharacteristic::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) {
@@ -374,7 +374,7 @@ std::string NimBLECharacteristic::toString() const {
  * @param [in] pCharacteristic The characteristic that is the source of the event.
  * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
  */
-void NimBLECharacteristicCallbacks::onRead(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo) {
+void NimBLECharacteristicCallbacks::onRead(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo, NimBLEReadEventArgs& args) {
     NIMBLE_LOGD("NimBLECharacteristicCallbacks", "onRead: default");
 } // onRead
 

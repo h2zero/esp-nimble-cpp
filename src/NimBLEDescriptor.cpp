@@ -120,7 +120,7 @@ std::string NimBLEDescriptor::toString() const {
     return res;
 } // toString
 
-void NimBLEDescriptor::readEvent(NimBLEConnInfo& connInfo) {
+void NimBLEDescriptor::readEvent(NimBLEConnInfo& connInfo, NimBLEReadEventArgs& args) {
     m_pCallbacks->onRead(this, connInfo);
 } // readEvent
 

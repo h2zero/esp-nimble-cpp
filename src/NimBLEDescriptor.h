@@ -49,7 +49,7 @@ class NimBLEDescriptor : public NimBLELocalValueAttribute {
     friend class NimBLEService;
 
     void setCharacteristic(NimBLECharacteristic* pChar);
-    void readEvent(NimBLEConnInfo& connInfo) override;
+    void readEvent(NimBLEConnInfo& connInfo, NimBLEReadEventArgs& args) override;
     void writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) override;
 
     NimBLEDescriptorCallbacks* m_pCallbacks{nullptr};

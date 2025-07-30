@@ -25,6 +25,7 @@
 #endif
 
 #include "NimBLEAddress.h"
+#include "buffer.h"
 
 /**
  * @brief Connection information.
