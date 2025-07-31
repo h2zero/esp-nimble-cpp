@@ -672,8 +672,8 @@ int NimBLEServer::handleGattEvent(uint16_t connHandle, uint16_t attrHandle, ble_
                 next  = SLIST_NEXT(next, om_next);
             }
 
-            auto oldData = std::string((char*)pAtt->getValue().data());
-            auto newData = std::string((char*)buf);
+            auto oldData = std::string((char*)pAtt->getValue().data(), pAtt->getValue().length());
+            auto newData = std::string((char*)buf, len);
 
             NimBLEWriteEventArgs eventArgs = NimBLEWriteEventArgs(oldData, newData);
             pAtt->writeEvent(buf, len, peerInfo, eventArgs);
