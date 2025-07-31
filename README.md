@@ -3,7 +3,7 @@
 
 > [!IMPORTANT]
 > Diese Library ist ein Fork von diesem [Github repo](https://github.com/h2zero/esp-nimble-cpp).
-> Alle Änderungen zum Original werden im [Wiki](/wiki/Änderungen) festgehalten.
+> Alle Änderungen zum Original werden im [Wiki](../wiki/Änderungen) festgehalten.
 
 # esp-nimble-cpp
 
