@@ -933,9 +933,16 @@ int NimBLEClient::handleGapEvent(struct ble_gap_event* event, void* arg) {
 
     switch (event->type) {
         case BLE_GAP_EVENT_DISCONNECT: {
+
             // workaround for bug in NimBLE stack where disconnect event argument is not passed correctly
-            pClient = NimBLEDevice::getClientByHandle(event->disconnect.conn.conn_handle);
+            pClient = NimBLEDevice::getClientByPeerAddress(event->disconnect.conn.peer_ota_addr);
             if (pClient == nullptr) {
+                pClient = NimBLEDevice::getClientByPeerAddress(event->disconnect.conn.peer_id_addr);
+            }
+
+            if (pClient == nullptr) {
+                NIMBLE_LOGE(LOG_TAG, "Disconnected client not found, conn_handle=%d",
+                            event->disconnect.conn.conn_handle);
                 return 0;
             }
 
@@ -960,7 +967,9 @@ int NimBLEClient::handleGapEvent(struct ble_gap_event* event, void* arg) {
             pClient->m_asyncSecureAttempt = 0;
 
             // Don't call the disconnect callback if we are waiting for a connection to complete and it fails
-            if (rc != (BLE_HS_ERR_HCI_BASE + BLE_ERR_CONN_ESTABLISHMENT) || pClient->m_config.asyncConnect) {
+            if (rc == (BLE_HS_ERR_HCI_BASE + BLE_ERR_CONN_ESTABLISHMENT) && pClient->m_config.asyncConnect) {
+                pClient->m_pClientCallbacks->onConnectFail(pClient, rc);
+            } else {
                 pClient->m_pClientCallbacks->onDisconnect(pClient, rc);
             }
 
