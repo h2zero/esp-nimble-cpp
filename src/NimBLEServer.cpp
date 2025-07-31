@@ -16,11 +16,11 @@
  */
 
 #include "NimBLEServer.h"
-#include "NimBLEEventArgs.h"
 #if CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_PERIPHERAL
 
 # include "NimBLEDevice.h"
 # include "NimBLELog.h"
+#include "NimBLEEventArgs.h"
 
 # if CONFIG_BT_NIMBLE_ROLE_CENTRAL
 #  include "NimBLEClient.h"

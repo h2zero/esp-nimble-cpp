@@ -5,7 +5,7 @@
 #ifndef NIMBLEEVENTS_H
 #define NIMBLEEVENTS_H
 
-#include "NimBLEDevice.h"
+#if CONFIG_BT_ENABLED && (CONFIG_BT_NIMBLE_ROLE_PERIPHERAL || CONFIG_BT_NIMBLE_ROLE_CENTRAL)
 #include "buffer.h"
 #include <cstring>
 #include <string>
@@ -62,4 +62,5 @@ private:
     bool canceled = false;
 };
 
+#endif
 #endif //NIMBLEEVENTS_H

@@ -18,6 +18,9 @@
 #include "NimBLEDescriptor.h"
 #if CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_PERIPHERAL
 
+# include "NimBLELocalAttribute.h"
+# include "NimBLEValueAttribute.h"
+# include "NimBLELocalValueAttribute.h"
 # include "NimBLEService.h"
 # include "NimBLELog.h"
 
