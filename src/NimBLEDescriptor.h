@@ -21,8 +21,8 @@
 #include "nimconfig.h"
 #if CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_PERIPHERAL
 
+#include "NimBLELocalValueAttribute.h"
 # include "NimBLEDevice.h"
-# include "NimBLELocalValueAttribute.h"
 # include <string>
 
 class NimBLECharacteristic;

@@ -21,6 +21,7 @@
 # include "NimBLE2904.h"
 # include "NimBLEDevice.h"
 # include "NimBLELog.h"
+# include "NimBLELocalValueAttribute.h"
 
 static NimBLECharacteristicCallbacks defaultCallback;
 static const char*                   LOG_TAG = "NimBLECharacteristic";
