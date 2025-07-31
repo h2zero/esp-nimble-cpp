@@ -18,6 +18,9 @@
 #include "NimBLEDescriptor.h"
 #if CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_PERIPHERAL
 
+# include "NimBLELocalAttribute.h"
+# include "NimBLEValueAttribute.h"
+# include "NimBLELocalValueAttribute.h"
 # include "NimBLEService.h"
 # include "NimBLELog.h"
 
@@ -121,12 +124,14 @@ std::string NimBLEDescriptor::toString() const {
 } // toString
 
 void NimBLEDescriptor::readEvent(NimBLEConnInfo& connInfo, NimBLEReadEventArgs& args) {
-    m_pCallbacks->onRead(this, connInfo);
+    m_pCallbacks->onRead(this, connInfo, args);
 } // readEvent
 
-void NimBLEDescriptor::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) {
-    setValue(val, len);
-    m_pCallbacks->onWrite(this, connInfo);
+void NimBLEDescriptor::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo, NimBLEWriteEventArgs& args) {
+    m_pCallbacks->onWrite(this, connInfo, args);
+    if(!args.isCanceled()) {
+        setValue(val, len);
+    }
 } // writeEvent
 
 /**
@@ -134,7 +139,7 @@ void NimBLEDescriptor::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnIn
  * @param [in] pDescriptor The descriptor that is the source of the event.
  * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
  */
-void NimBLEDescriptorCallbacks::onRead(NimBLEDescriptor* pDescriptor, NimBLEConnInfo& connInfo) {
+void NimBLEDescriptorCallbacks::onRead(NimBLEDescriptor* pDescriptor, NimBLEConnInfo& connInfo, NimBLEReadEventArgs& args) {
     NIMBLE_LOGD("NimBLEDescriptorCallbacks", "onRead: default");
 } // onRead
 
@@ -143,7 +148,7 @@ void NimBLEDescriptorCallbacks::onRead(NimBLEDescriptor* pDescriptor, NimBLEConn
  * @param [in] pDescriptor The descriptor that is the source of the event.
  * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
  */
-void NimBLEDescriptorCallbacks::onWrite(NimBLEDescriptor* pDescriptor, NimBLEConnInfo& connInfo) {
+void NimBLEDescriptorCallbacks::onWrite(NimBLEDescriptor* pDescriptor, NimBLEConnInfo& connInfo, NimBLEWriteEventArgs& args) {
     NIMBLE_LOGD("NimBLEDescriptorCallbacks", "onWrite: default");
 } // onWrite
 
