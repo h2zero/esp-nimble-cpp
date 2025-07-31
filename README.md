@@ -2,8 +2,8 @@
 ![Release Date](https://img.shields.io/github/release-date/h2zero/esp-nimble-cpp.svg?style=plastic)](https://github.com/h2zero/esp-nimble-cpp/releases/latest/)  
 
 > [!IMPORTANT]
-> Version 2 is now released!
-> Check out the [1.x to 2.x Migration Guide](docs/1.x_to2.x_migration_guide.md) and [Release Notes](https://github.com/h2zero/esp-nimble-cpp/releases/latest/)
+> Diese Library ist ein Fork von diesem [Github repo](https://github.com/h2zero/esp-nimble-cpp).
+> Alle Änderungen zum Original werden im [Wiki](/wiki/Änderungen) festgehalten.
 
 # esp-nimble-cpp
 
