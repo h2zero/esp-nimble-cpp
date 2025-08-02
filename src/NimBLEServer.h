@@ -34,6 +34,7 @@
 
 # include <vector>
 # include <array>
+# include "NimBLEEventArgs.h"
 
 # define NIMBLE_ATT_REMOVE_HIDE   1
 # define NIMBLE_ATT_REMOVE_DELETE 2

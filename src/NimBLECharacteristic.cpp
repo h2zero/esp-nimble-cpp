@@ -21,6 +21,7 @@
 # include "NimBLE2904.h"
 # include "NimBLEDevice.h"
 # include "NimBLELog.h"
+# include "NimBLELocalValueAttribute.h"
 
 static NimBLECharacteristicCallbacks defaultCallback;
 static const char*                   LOG_TAG = "NimBLECharacteristic";
@@ -321,13 +322,15 @@ done:
     return true;
 } // sendValue
 
-void NimBLECharacteristic::readEvent(NimBLEConnInfo& connInfo) {
-    m_pCallbacks->onRead(this, connInfo);
+void NimBLECharacteristic::readEvent(NimBLEConnInfo& connInfo, NimBLEReadEventArgs& args) {
+    m_pCallbacks->onRead(this, connInfo, args);
 } // readEvent
 
-void NimBLECharacteristic::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) {
-    setValue(val, len);
-    m_pCallbacks->onWrite(this, connInfo);
+void NimBLECharacteristic::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo, NimBLEWriteEventArgs& args) {
+    m_pCallbacks->onWrite(this, connInfo, args);
+    if(!args.isCanceled()) {
+        setValue(val, len);
+    }
 } // writeEvent
 
 /**
@@ -374,7 +377,7 @@ std::string NimBLECharacteristic::toString() const {
  * @param [in] pCharacteristic The characteristic that is the source of the event.
  * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
  */
-void NimBLECharacteristicCallbacks::onRead(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo) {
+void NimBLECharacteristicCallbacks::onRead(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo, NimBLEReadEventArgs& args) {
     NIMBLE_LOGD("NimBLECharacteristicCallbacks", "onRead: default");
 } // onRead
 
@@ -383,7 +386,7 @@ void NimBLECharacteristicCallbacks::onRead(NimBLECharacteristic* pCharacteristic
  * @param [in] pCharacteristic The characteristic that is the source of the event.
  * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
  */
-void NimBLECharacteristicCallbacks::onWrite(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo) {
+void NimBLECharacteristicCallbacks::onWrite(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo, NimBLEWriteEventArgs& args) {
     NIMBLE_LOGD("NimBLECharacteristicCallbacks", "onWrite: default");
 } // onWrite
 
