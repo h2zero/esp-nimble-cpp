@@ -36,6 +36,18 @@ framework =
 	NewNimBLE-esp32
 </code>
 
+# platform.io Kconfig
+Kconfig is used by the platform.io menuconfig (accessed by running: pio run -t menuconfig) to interactively manage the various #ifdef statements throughout the espidf and supporting libraries. The menuconfig process generates the sdkconfig file which is ultimately used behind the scenes by espidf compile+build process.
+
+Make sure to append or symlink this Kconfig content in lib/NewNimBLE-esp32 into the Kconfig.project file locted in the /src folder of your project.
+
+You symlink (or copy) the included Kconfig into your platform.io projects src directory. The file should be named Kconfig.projbuild in your projects src\ directory
+
+ Once  Kconfig.projbuild is working then you will be able to choose the configurations according to your setup or the NewNimBLE-esp32 libraries will be compiled. Although you might also need to delete your .pio/build directory before the options appear .. again, the pio run -t menuconfig doens't always notice the new Kconfig files!
+
+menuconfig will shoe on the main first screen as "NewNimBLE-esp32 configuration  --->     " line
+
+
 # Using 
 This library is intended to be compatible with the original ESP32 BLE functions and types with minor changes.  
 
