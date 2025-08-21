@@ -1,6 +1,6 @@
 {
-  "name": "esp-nimble-cpp",
-  "version": "2.3.1",
+  "name": "NewNimBLE-esp32",
+  "version": "2.3.3",
   "description": "C++ wrapper for the NimBLE BLE stack",
   "keywords": [
     "BLE",
@@ -12,12 +12,12 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/h2zero/esp-nimble-cpp"
+    "url": "https://github.com/synapse-2/NewNimBLE-esp32.git"
   },
   "authors": {
-    "name": "Ryan Powell",
-    "email": "ryan@nable-embedded.io",
-    "url": "https://github.com/h2zero/esp-nimble-cpp",
+    "name": "bhanu mittal",
+    "email": "",
+    "url": "https://github.com/synapse-2/NewNimBLE-esp32.git",
     "maintainer": true
   }
 }

@@ -1,11 +1,11 @@
 ## IDF Component Manager Manifest File
-version: "2.3.1"
+version: "2.3.3"
 license: "Apache-2.0"
 description: "C++ wrapper for the NimBLE BLE stack"
-url: "https://github.com/h2zero/esp-nimble-cpp"
-repository: "https://github.com/h2zero/esp-nimble-cpp"
+url: "https://github.com/synapse-2/NewNimBLE-esp32.git"
+repository: "https://github.com/synapse-2/NewNimBLE-esp32.git"
 maintainers:
-  - Ryan Powell <ryan@nable-embedded.io>
+  - Bhanu Mittal
 documentation: "https://h2zero.github.io/esp-nimble-cpp/"
 tags:
   - BLE

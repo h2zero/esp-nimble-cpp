@@ -1,4 +1,4 @@
-menu "ESP-NimBLE-CPP configuration"
+menu "NewNimBLE-esp32 configuration"
 
 choice NIMBLE_CPP_LOG_LEVEL
     prompt "NimBLE CPP log verbosity"
