@@ -1,3 +1,0 @@
-dependencies:
-  local/esp-nimble-cpp:
-    path: ../../../../../esp-nimble-cpp/
