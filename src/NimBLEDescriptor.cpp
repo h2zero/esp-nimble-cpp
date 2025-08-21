@@ -53,10 +53,10 @@ NimBLEDescriptor::NimBLEDescriptor(const NimBLEUUID& uuid, uint16_t properties, 
 
     // convert uint16_t properties to uint8_t for descriptor properties
     uint8_t descProperties = 0;
-    if (properties & NIMBLE_PROPERTY::READ) {
+    if (properties & NIMBLE_PROPERTY::BLE_READ) {
         descProperties |= BLE_ATT_F_READ;
     }
-    if (properties & (NIMBLE_PROPERTY::WRITE_NR | NIMBLE_PROPERTY::WRITE)) {
+    if (properties & (NIMBLE_PROPERTY::WRITE_NR | NIMBLE_PROPERTY::BLE_WRITE)) {
         descProperties |= BLE_ATT_F_WRITE;
     }
     if (properties & NIMBLE_PROPERTY::READ_ENC) {
