@@ -11,6 +11,8 @@ NimBLE CPP library for use with ESP32 that attempts to maintain compatibility wi
 
 **An Arduino version of this library, including NimBLE, can be [found here.](https://github.com/h2zero/NimBLE-Arduino)**
 
+Bluetooth low energy (BLE) library for Arduino based on NimBLE. this is based on https://github.com/h2zero/esp-nimble-cpp but it is updated to work with #ArduinoIoT and also with esp32 #Arduino 3.3.0 core
+
 This library **significantly** reduces resource usage and improves performance for ESP32 BLE applications as compared    
 with the bluedroid based library. The goal is to maintain, as much as reasonable, compatibility with the original   
 library but using the NimBLE stack. In addition, this library will be more actively developed and maintained   
