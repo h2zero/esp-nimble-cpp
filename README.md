@@ -24,6 +24,17 @@ Configure settings in `NimBLE Options`.
 `#include "NimBLEDevice.h"` in main.cpp.  
 Call `NimBLEDevice::init("");` in `app_main`.  
 <br/>
+### vscode platformio.ini example
+
+<code>
+platform = https://github.com/pioarduino/platform-espressif32/releases/download/stable/platform-espressif32.zip
+board = esp32s3-n16r8-USBOTG
+framework = 
+	arduino
+	espidf
+ lib_deps = 
+	NewNimBLE-esp32
+</code>
 
 # Using 
 This library is intended to be compatible with the original ESP32 BLE functions and types with minor changes.  
