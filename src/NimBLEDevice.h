@@ -71,6 +71,7 @@ class NimBLEConnInfo;
 class NimBLEAddress;
 class NimBLEDeviceCallbacks;
 
+# define BLEHIDDevice                 NimBLEHIDDevice
 # define BLEDevice                    NimBLEDevice
 # define BLEClient                    NimBLEClient
 # define BLERemoteService             NimBLERemoteService
