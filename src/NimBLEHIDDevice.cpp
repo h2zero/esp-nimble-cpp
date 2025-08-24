@@ -178,11 +178,13 @@ NimBLECharacteristic* NimBLEHIDDevice::locateReportCharacteristicByIdAndType(uin
 NimBLECharacteristic* NimBLEHIDDevice::getInputReport(uint8_t reportId) {
     NimBLECharacteristic* inputReportChr = locateReportCharacteristicByIdAndType(reportId, 0x01);
     if (inputReportChr == nullptr) {
+
+        // update the input report to be writable also, the RC HID wants this to be true update to orignal nimble fork 
         inputReportChr =
             m_hidSvc->createCharacteristic(inputReportChrUuid,
-                                           NIMBLE_PROPERTY::BLE_READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC);
+                                           NIMBLE_PROPERTY::BLE_READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::BLE_WRITE | NIMBLE_PROPERTY::WRITE_ENC);
         NimBLEDescriptor* inputReportDsc =
-            inputReportChr->createDescriptor(featureReportDscUuid, NIMBLE_PROPERTY::BLE_READ | NIMBLE_PROPERTY::READ_ENC);
+            inputReportChr->createDescriptor(featureReportDscUuid, NIMBLE_PROPERTY::BLE_READ | NIMBLE_PROPERTY::READ_ENC| NIMBLE_PROPERTY::BLE_WRITE | NIMBLE_PROPERTY::WRITE_ENC);
 
         uint8_t desc1_val[] = {reportId, 0x01};
         inputReportDsc->setValue(desc1_val, 2);

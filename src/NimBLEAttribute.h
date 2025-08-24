@@ -54,6 +54,29 @@ class NimBLEAttribute {
 
     const NimBLEUUID m_uuid{};
     uint16_t         m_handle{0};
+
+    // added to convert to hex not in nimble
+
+  protected:
+    char* bytes2hex(size_t maxlen, const unsigned char* in, size_t len) const {
+        char* out = (char*)malloc(maxlen);
+        if (!out) {
+            char* str = (char*)malloc(1);
+            return str;
+        }
+
+        for (size_t i = 0; i < len; i++) {
+            if (i * 2 + 1 < maxlen) {
+                sprintf(out + (i * 2), "%02x", in[i]);
+            }
+        }
+        return out;
+    }
+    // added to convert to hex not in nimble
+    char* bytes2hex(const uint8_t* in, const size_t len) const {
+        size_t maxlen = len * 2 + 1;
+        return bytes2hex(maxlen, in, len);
+    }
 };
 
 #endif // CONFIG_BT_ENABLED && (CONFIG_BT_NIMBLE_ROLE_PERIPHERAL || CONFIG_BT_NIMBLE_ROLE_CENTRAL)

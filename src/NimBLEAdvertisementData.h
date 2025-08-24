@@ -19,6 +19,8 @@
 #define NIMBLE_CPP_ADVERTISEMENT_DATA_H_
 
 #include "nimconfig.h"
+#include "NimClassOfDeviceType.h"
+
 #if (CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_BROADCASTER && !CONFIG_BT_NIMBLE_EXT_ADV) || defined(_DOXYGEN_)
 
 # include <cstdint>
@@ -30,10 +32,14 @@ class NimBLEUUID;
  * @brief Advertisement data set by the programmer to be published by the BLE server.
  */
 class NimBLEAdvertisementData {
+    // added not in nimble class of device for the on off button
+
     // Only a subset of the possible BLE architected advertisement fields are currently exposed.  Others will
     // be exposed on demand/request or as time permits.
     //
   public:
+
+    bool setCODData(const NimClassOfDeviceType::bluetooth_cod_t cod);
     bool addData(const uint8_t* data, size_t length);
     bool addData(const std::vector<uint8_t>& data);
     bool setAppearance(uint16_t appearance);
@@ -59,7 +65,7 @@ class NimBLEAdvertisementData {
     bool setPartialServices32(const std::vector<NimBLEUUID>& uuids);
     bool setServiceData(const NimBLEUUID& uuid, const uint8_t* data, size_t length);
     bool setServiceData(const NimBLEUUID& uuid, const std::string& data);
-    bool setServiceData(const NimBLEUUID& uuid, const std::vector<uint8_t>& data);
+    bool setServiceData(const NimBLEUUID& uuid, const std::vector<uint8_t>& data); 
     bool removeData(uint8_t type);
     void clearData();
     int  getDataLocation(uint8_t type) const;
