@@ -45,8 +45,8 @@ bluetooth_cod_t encodeClassOfDevice(service_class_t services, major_device_class
     
     NIMBLE_LOGE(LOG_TAG,
                 "Making servies %s, major %s, minor 0x%02x RAW HEX cod value only three bytes are used %s",
-                ((magic_enum::enum_name(NimClassOfDeviceType::getH_LService(cod)))).data(),
-                ((magic_enum::enum_name((major_device_class_t)cod.bit_field.major_device))).data(),
+                ((magic_enum::enum_name(NimClassOfDeviceType::getH_LService(cod)))),
+                ((magic_enum::enum_name((major_device_class_t)cod.bit_field.major_device))),
                 minor,
                 HEXBuilder::bytes2hex((((const unsigned char*)&cod)), 3).c_str());
 
