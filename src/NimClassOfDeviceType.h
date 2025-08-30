@@ -3,8 +3,13 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <WString.h>
-#include "magicEnum/magic_enum.hpp"
-#include "magicEnum/magic_enum_iostream.hpp"
+#include <string>
+#include <vector>
+
+#if defined(CONFIG_NIMBLE_USE_MAGIC_ENUM)
+# include "magicEnum/magic_enum.hpp"
+# include "magicEnum/magic_enum_iostream.hpp"
+#endif
 
 #define BLE_HS_ADV_TYPE_CLASS_OF_DEVICE 0x0d
 
@@ -16,9 +21,9 @@ namespace NimClassOfDeviceType {
 // note esp 32 is liitle edian. ie byte0 is least significant and byte 2 is most
 typedef union {
     struct {
-        uint8_t format_type : 2;    // Bits 0-1 (least significant)
-        uint8_t minor_device : 6;   // Bits 2-8
-        uint8_t major_device : 5;   // Bits 8-12
+        uint8_t format_type : 2;  // Bits 0-1 (least significant)
+        uint8_t minor_device : 6; // Bits 2-8
+        uint8_t major_device : 5; // Bits 8-12
         uint8_t service_classL : 3; // Bits 13-15 (out of 13 - 23) we have to break the serivce class as it core dumps other wise
         uint8_t service_classH : 8; // Bits 16-23 (out of 13 - 23) we have to break the serivce class as it core dumps other wise
     } __attribute__((packed)) bit_field;
@@ -210,7 +215,48 @@ static service_class_t getH_LService(bluetooth_cod_t cod);
 bluetooth_cod_t        encodeClassOfDevice(service_class_t services, major_device_class_t major, uint8_t minor);
 
 std::string decodeClassOfDevice(bluetooth_cod_t cod);
+std::string decodeClassOfDevice(service_class_t services, major_device_class_t major, uint8_t minor);
+std::string decodeMajorMinor(major_device_class_t major, uint8_t minor);
 
 std::vector<uint8_t> makeATT_Payload_CodeClassOfDevice(bluetooth_cod_t cod);
 
 } // namespace NimClassOfDeviceType
+
+#if defined(CONFIG_NIMBLE_USE_MAGIC_ENUM)
+namespace magic_enum::customize {
+
+// enable flag use by the magic enum for debug print
+constexpr auto magic_enum_is_flags(NimClassOfDeviceType::service_class_t) -> std::true_type;
+
+// enable flag use by the magic enum for debug print
+constexpr auto magic_enum_is_flags(NimClassOfDeviceType::major_device_class_t) -> std::true_type;
+
+// enable flag use by the magic enum for debug print
+constexpr auto magic_enum_is_flags(NimClassOfDeviceType::phone_minor_class_t) -> std::true_type;
+
+// enable flag use by the magic enum for debug print
+constexpr auto magic_enum_is_flags(NimClassOfDeviceType::lan_minor_class_t) -> std::true_type;
+
+// enable flag use by the magic enum for debug print
+constexpr auto magic_enum_is_flags(NimClassOfDeviceType::av_minor_class_t) -> std::true_type;
+
+// enable flag use by the magic enum for debug print
+constexpr auto magic_enum_is_flags(NimClassOfDeviceType::peripheral_pointing_device_t) -> std::true_type;
+
+// enable flag use by the magic enum for debug print
+constexpr auto magic_enum_is_flags(NimClassOfDeviceType::imaging_minor_class_t) -> std::true_type;
+
+// enable flag use by the magic enum for debug print
+constexpr auto magic_enum_is_flags(NimClassOfDeviceType::wearable_minor_class_t) -> std::true_type;
+
+// enable flag use by the magic enum for debug print
+constexpr auto magic_enum_is_flags(NimClassOfDeviceType::toy_minor_class_t) -> std::true_type;
+
+// enable flag use by the magic enum for debug print
+constexpr auto magic_enum_is_flags(NimClassOfDeviceType::health_minor_class_t) -> std::true_type;
+
+// enable flag use by the magic enum for debug print
+constexpr auto magic_enum_is_flags(NimClassOfDeviceType::computer_minor_class_t) -> std::true_type;
+
+} // namespace magic_enum::customize
+#endif

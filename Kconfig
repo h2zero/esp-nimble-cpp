@@ -133,6 +133,26 @@ menu "NIMBLE Log Override Colors"
     endchoice #NIMBLE_CPP_LOG_OVERRIDE_COLOR_DEBUG
 endmenu
 
+
+config NIMBLE_USE_MAGIC_ENUM
+    bool "use MAGIC_ENUM for text in debug log at info level."
+    default "n"
+    help
+        Enabling this option will display return code values as text
+        messages in the debug log at innfo level. But you need to have the 
+        MAGIC_ENUM included from the link https://github.com/Neargye/magic_enum
+        and have the and enable it by adding 
+        "#include <magicEnum/magic_enum.hpp>"
+        "#include <magicEnum/magic_enum_iostream.hpp>"
+
+        template <typename E> 
+        auto to_integer(magic_enum::Enum<E> value) -> int
+        {
+            // magic_enum::Enum<E> - C++17 Concept for enum type.
+            return static_cast<magic_enum::underlying_type_t<E>>(value);
+        }  in one of the source files.
+
+
 config NIMBLE_CPP_ENABLE_RETURN_CODE_TEXT
     bool "Show NimBLE return codes as text in debug log."
     default "n"
