@@ -1,6 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.3.2] 2025-09-02
+
+## Fixed
+- Build failures with esp-idf versions 4.x.
+- Workaround for upstream issue causing onConnectFail to not be called.
+- Build failures with idf v5.5+ and specific roles are not enabled.
+
+## Changed
+- Allow peripheral and central roles to be used without broadcaster/observer roles.
+- Where applicable, `MYNEWT_VAL_` macros are used to control feature availability instead of `CONFIG_`
+
 ## [2.3.1] 2025-06-11
 
 ## Fixed
