@@ -1290,7 +1290,7 @@ bool NimBLEDevice::injectConfirmPasskey(const NimBLEConnInfo& peerInfo, bool acc
  * @param [in] deviceName The name to set.
  */
 bool NimBLEDevice::setDeviceName(const std::string& deviceName) {
-#if !defined(ESP_IDF_VERSION) || ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 5, 0) || CONFIG_BT_NIMBLE_GAP_SERVICE
+#if !defined(MYNEWT_VAL_BLE_GATTS) || MYNEWT_VAL(BLE_GATTS) > 0
     int rc = ble_svc_gap_device_name_set(deviceName.c_str());
     if (rc != 0) {
         NIMBLE_LOGE(LOG_TAG, "Device name not set - too long");
