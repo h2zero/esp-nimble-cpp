@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">esp-nimble-cpp<span id="projectnumber">&#160;2.3.1</span>
+   <div id="projectname">esp-nimble-cpp<span id="projectnumber">&#160;2.3.2</span>
    </div>
   </td>
  </tr>
@@ -117,8 +117,8 @@ $(document).ready(function(){initNavTree('_nim_b_l_e_advertising_8h_source.html'
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#ifndef NIMBLE_CPP_ADVERTISING_H_</span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#define NIMBLE_CPP_ADVERTISING_H_</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;<a class="code" href="nimconfig_8h.html">nimconfig.h</a>&quot;</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#if (CONFIG_BT_ENABLED &amp;&amp; CONFIG_BT_NIMBLE_ROLE_BROADCASTER &amp;&amp; !CONFIG_BT_NIMBLE_EXT_ADV) || defined(_DOXYGEN_)</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;syscfg/syscfg.h&quot;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#if (CONFIG_BT_NIMBLE_ENABLED &amp;&amp; MYNEWT_VAL(BLE_ROLE_BROADCASTER) &amp;&amp; !MYNEWT_VAL(BLE_EXT_ADV)) || defined(_DOXYGEN_)</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor"># if defined(CONFIG_NIMBLE_CPP_IDF)</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#  include &quot;host/ble_gap.h&quot;</span></div>
@@ -185,7 +185,7 @@ $(document).ready(function(){initNavTree('_nim_b_l_e_advertising_8h_source.html'
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="class_nim_b_l_e_device.html">NimBLEDevice</a>;</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="class_nim_b_l_e_server.html">NimBLEServer</a>;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keyword">friend</span> <span class="keyword">class </span>NimBLEServer;</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keywordtype">void</span>       onHostSync();</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keyword">static</span> <span class="keywordtype">int</span> handleGapEvent(ble_gap_event* event, <span class="keywordtype">void</span>* arg);</div>
@@ -201,7 +201,7 @@ $(document).ready(function(){initNavTree('_nim_b_l_e_advertising_8h_source.html'
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>};</div>
 </div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="preprocessor">#endif </span><span class="comment">// (CONFIG_BT_ENABLED &amp;&amp; CONFIG_BT_NIMBLE_ROLE_BROADCASTER &amp;&amp; !CONFIG_BT_NIMBLE_EXT_ADV) || defined(_DOXYGEN_)</span></div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="preprocessor">#endif </span><span class="comment">// (CONFIG_BT_NIMBLE_ENABLED &amp;&amp; MYNEWT_VAL(BLE_ROLE_BROADCASTER) &amp;&amp; !MYNEWT_VAL(BLE_EXT_ADV)) || defined(_DOXYGEN_)</span></div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="preprocessor">#endif </span><span class="comment">// NIMBLE_CPP_ADVERTISING_H_</span></div>
 <div class="ttc" id="aclass_nim_b_l_e_address_html"><div class="ttname"><a href="class_nim_b_l_e_address.html">NimBLEAddress</a></div><div class="ttdoc">A BLE device address.</div><div class="ttdef"><b>Definition</b> NimBLEAddress.h:42</div></div>
 <div class="ttc" id="aclass_nim_b_l_e_advertisement_data_html"><div class="ttname"><a href="class_nim_b_l_e_advertisement_data.html">NimBLEAdvertisementData</a></div><div class="ttdoc">Advertisement data set by the programmer to be published by the BLE server.</div><div class="ttdef"><b>Definition</b> NimBLEAdvertisementData.h:32</div></div>
@@ -235,10 +235,8 @@ $(document).ready(function(){initNavTree('_nim_b_l_e_advertising_8h_source.html'
 <div class="ttc" id="aclass_nim_b_l_e_advertising_html_ae0e7d64d51882830750bcb87e2d9678c"><div class="ttname"><a href="class_nim_b_l_e_advertising.html#ae0e7d64d51882830750bcb87e2d9678c">NimBLEAdvertising::getScanData</a></div><div class="ttdeci">const NimBLEAdvertisementData &amp; getScanData()</div><div class="ttdoc">Get the current scan response data.</div><div class="ttdef"><b>Definition</b> NimBLEAdvertising.cpp:373</div></div>
 <div class="ttc" id="aclass_nim_b_l_e_advertising_html_ae49d2bd91cabca46ec7c4bbd7fc49407"><div class="ttname"><a href="class_nim_b_l_e_advertising.html#ae49d2bd91cabca46ec7c4bbd7fc49407">NimBLEAdvertising::setConnectableMode</a></div><div class="ttdeci">bool setConnectableMode(uint8_t mode)</div><div class="ttdoc">Set the type of connectable mode to advertise.</div><div class="ttdef"><b>Definition</b> NimBLEAdvertising.cpp:75</div></div>
 <div class="ttc" id="aclass_nim_b_l_e_advertising_html_af7cee42f24ad38872936a0bbc9e2ac1e"><div class="ttname"><a href="class_nim_b_l_e_advertising.html#af7cee42f24ad38872936a0bbc9e2ac1e">NimBLEAdvertising::clearData</a></div><div class="ttdeci">void clearData()</div><div class="ttdoc">Clear the advertisement and scan response data and set the flags to BLE_HS_ADV_F_DISC_GEN.</div><div class="ttdef"><b>Definition</b> NimBLEAdvertising.cpp:380</div></div>
-<div class="ttc" id="aclass_nim_b_l_e_device_html"><div class="ttname"><a href="class_nim_b_l_e_device.html">NimBLEDevice</a></div><div class="ttdoc">A model of a BLE Device from which all the BLE roles are created.</div><div class="ttdef"><b>Definition</b> NimBLEDevice.h:122</div></div>
-<div class="ttc" id="aclass_nim_b_l_e_server_html"><div class="ttname"><a href="class_nim_b_l_e_server.html">NimBLEServer</a></div><div class="ttdoc">The model of a BLE server.</div><div class="ttdef"><b>Definition</b> NimBLEServer.h:62</div></div>
+<div class="ttc" id="aclass_nim_b_l_e_device_html"><div class="ttname"><a href="class_nim_b_l_e_device.html">NimBLEDevice</a></div><div class="ttdoc">A model of a BLE Device from which all the BLE roles are created.</div><div class="ttdef"><b>Definition</b> NimBLEDevice.h:116</div></div>
 <div class="ttc" id="aclass_nim_b_l_e_u_u_i_d_html"><div class="ttname"><a href="class_nim_b_l_e_u_u_i_d.html">NimBLEUUID</a></div><div class="ttdoc">A model of a BLE UUID.</div><div class="ttdef"><b>Definition</b> NimBLEUUID.h:41</div></div>
-<div class="ttc" id="animconfig_8h_html"><div class="ttname"><a href="nimconfig_8h.html">nimconfig.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

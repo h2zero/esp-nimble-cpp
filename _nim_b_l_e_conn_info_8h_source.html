@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">esp-nimble-cpp<span id="projectnumber">&#160;2.3.1</span>
+   <div id="projectname">esp-nimble-cpp<span id="projectnumber">&#160;2.3.2</span>
    </div>
   </td>
  </tr>
@@ -155,10 +155,10 @@ $(document).ready(function(){initNavTree('_nim_b_l_e_conn_info_8h_source.html','
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="class_nim_b_l_e_conn_info.html#a3a555ccfc6fe678a2603942022a8cd5c">   71</a></span>    uint8_t <a class="code hl_function" href="class_nim_b_l_e_conn_info.html#a3a555ccfc6fe678a2603942022a8cd5c">getSecKeySize</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_desc.sec_state.key_size; }</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="class_nim_b_l_e_server.html">NimBLEServer</a>;</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="class_nim_b_l_e_client.html">NimBLEClient</a>;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="class_nim_b_l_e_characteristic.html">NimBLECharacteristic</a>;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="class_nim_b_l_e_descriptor.html">NimBLEDescriptor</a>;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keyword">friend</span> <span class="keyword">class </span>NimBLEServer;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keyword">friend</span> <span class="keyword">class </span>NimBLEClient;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keyword">friend</span> <span class="keyword">class </span>NimBLECharacteristic;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keyword">friend</span> <span class="keyword">class </span>NimBLEDescriptor;</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    ble_gap_conn_desc m_desc{};</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <a class="code hl_class" href="class_nim_b_l_e_conn_info.html">NimBLEConnInfo</a>() {};</div>
@@ -168,8 +168,6 @@ $(document).ready(function(){initNavTree('_nim_b_l_e_conn_info_8h_source.html','
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="preprocessor">#endif </span><span class="comment">// NIMBLE_CPP_CONNINFO_H_</span></div>
 <div class="ttc" id="aclass_nim_b_l_e_address_html"><div class="ttname"><a href="class_nim_b_l_e_address.html">NimBLEAddress</a></div><div class="ttdoc">A BLE device address.</div><div class="ttdef"><b>Definition</b> NimBLEAddress.h:42</div></div>
-<div class="ttc" id="aclass_nim_b_l_e_characteristic_html"><div class="ttname"><a href="class_nim_b_l_e_characteristic.html">NimBLECharacteristic</a></div><div class="ttdoc">The model of a BLE Characteristic.</div><div class="ttdef"><b>Definition</b> NimBLECharacteristic.h:41</div></div>
-<div class="ttc" id="aclass_nim_b_l_e_client_html"><div class="ttname"><a href="class_nim_b_l_e_client.html">NimBLEClient</a></div><div class="ttdoc">A model of a BLE client.</div><div class="ttdef"><b>Definition</b> NimBLEClient.h:49</div></div>
 <div class="ttc" id="aclass_nim_b_l_e_conn_info_html"><div class="ttname"><a href="class_nim_b_l_e_conn_info.html">NimBLEConnInfo</a></div><div class="ttdoc">Connection information.</div><div class="ttdef"><b>Definition</b> NimBLEConnInfo.h:32</div></div>
 <div class="ttc" id="aclass_nim_b_l_e_conn_info_html_a012bd655ebd9726762be76d30ebdb17e"><div class="ttname"><a href="class_nim_b_l_e_conn_info.html#a012bd655ebd9726762be76d30ebdb17e">NimBLEConnInfo::getConnLatency</a></div><div class="ttdeci">uint16_t getConnLatency() const</div><div class="ttdoc">Gets the allowable latency for this connection (unit = number of intervals)</div><div class="ttdef"><b>Definition</b> NimBLEConnInfo.h:50</div></div>
 <div class="ttc" id="aclass_nim_b_l_e_conn_info_html_a11564eb72e1a4d28a0430a5f13582c1f"><div class="ttname"><a href="class_nim_b_l_e_conn_info.html#a11564eb72e1a4d28a0430a5f13582c1f">NimBLEConnInfo::getAddress</a></div><div class="ttdeci">NimBLEAddress getAddress() const</div><div class="ttdoc">Gets the over-the-air address of the connected peer.</div><div class="ttdef"><b>Definition</b> NimBLEConnInfo.h:35</div></div>
@@ -184,8 +182,6 @@ $(document).ready(function(){initNavTree('_nim_b_l_e_conn_info_8h_source.html','
 <div class="ttc" id="aclass_nim_b_l_e_conn_info_html_aca6b24e741bcf03d4b9bdc28b008b8c6"><div class="ttname"><a href="class_nim_b_l_e_conn_info.html#aca6b24e741bcf03d4b9bdc28b008b8c6">NimBLEConnInfo::getConnInterval</a></div><div class="ttdeci">uint16_t getConnInterval() const</div><div class="ttdoc">Gets the connection interval for this connection (in 1.25ms units)</div><div class="ttdef"><b>Definition</b> NimBLEConnInfo.h:44</div></div>
 <div class="ttc" id="aclass_nim_b_l_e_conn_info_html_ad91de04bdad64019950a1d095baf0e43"><div class="ttname"><a href="class_nim_b_l_e_conn_info.html#ad91de04bdad64019950a1d095baf0e43">NimBLEConnInfo::isSlave</a></div><div class="ttdeci">bool isSlave() const</div><div class="ttdoc">Check if we are in the slave role in this connection.</div><div class="ttdef"><b>Definition</b> NimBLEConnInfo.h:59</div></div>
 <div class="ttc" id="aclass_nim_b_l_e_conn_info_html_afefcdd1c560a307632c15394497c436f"><div class="ttname"><a href="class_nim_b_l_e_conn_info.html#afefcdd1c560a307632c15394497c436f">NimBLEConnInfo::isBonded</a></div><div class="ttdeci">bool isBonded() const</div><div class="ttdoc">Check if we are connected to a bonded peer.</div><div class="ttdef"><b>Definition</b> NimBLEConnInfo.h:62</div></div>
-<div class="ttc" id="aclass_nim_b_l_e_descriptor_html"><div class="ttname"><a href="class_nim_b_l_e_descriptor.html">NimBLEDescriptor</a></div><div class="ttdoc">A model of a BLE descriptor.</div><div class="ttdef"><b>Definition</b> NimBLEDescriptor.h:33</div></div>
-<div class="ttc" id="aclass_nim_b_l_e_server_html"><div class="ttname"><a href="class_nim_b_l_e_server.html">NimBLEServer</a></div><div class="ttdoc">The model of a BLE server.</div><div class="ttdef"><b>Definition</b> NimBLEServer.h:62</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

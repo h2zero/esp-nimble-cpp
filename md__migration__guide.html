@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">esp-nimble-cpp<span id="projectnumber">&#160;2.3.1</span>
+   <div id="projectname">esp-nimble-cpp<span id="projectnumber">&#160;2.3.2</span>
    </div>
   </td>
  </tr>
@@ -129,7 +129,7 @@ Header Files</h2>
 </p>
 <h2><a class="anchor" id="class-names"></a>
 Class Names</h2>
-<p>Class names remain the same as the original with the addition of a "Nim" prefix. For example <code>BLEDevice</code> is now <code><a class="el" href="class_nim_b_l_e_device.html" title="A model of a BLE Device from which all the BLE roles are created.">NimBLEDevice</a></code> and <code>BLEServer</code> is now <code><a class="el" href="class_nim_b_l_e_server.html" title="The model of a BLE server.">NimBLEServer</a></code> etc.</p>
+<p>Class names remain the same as the original with the addition of a "Nim" prefix. For example <code>BLEDevice</code> is now <code><a class="el" href="class_nim_b_l_e_device.html" title="A model of a BLE Device from which all the BLE roles are created.">NimBLEDevice</a></code> and <code>BLEServer</code> is now <code>NimBLEServer</code> etc.</p>
 <p>For convenience definitions have been added to allow applications to use either name for all classes this means <b>no class names need to be changed in existing code</b> and makes migrating easier. <br  />
  <br  />
 </p>
@@ -144,13 +144,13 @@ BLE Addresses</h2>
 <h1><a class="anchor" id="server-api"></a>
 Server API</h1>
 <p>Creating a <code>BLEServer</code> instance is the same as original, no changes required. For example <code>BLEDevice::createServer()</code> will work just as it did before.</p>
-<p><code>BLEServerCallbacks</code> (<code><a class="el" href="class_nim_b_l_e_server_callbacks.html" title="Callbacks associated with the operation of a BLE server.">NimBLEServerCallbacks</a></code>) has new methods for handling security operations. <br  />
+<p><code>BLEServerCallbacks</code> (<code>NimBLEServerCallbacks</code>) has new methods for handling security operations. <br  />
  <br  />
 </p>
-<p><code>BLEServerCallbacks::onConnect</code> (<code><a class="el" href="class_nim_b_l_e_server_callbacks.html#a11d48696c2121eb301a76301555df2c5" title="Handle a client connection. This is called when a client connects.">NimBLEServerCallbacks::onConnect</a></code>) only has a single callback declaration which takes an additional (required) parameter <code><a class="el" href="class_nim_b_l_e_conn_info.html" title="Connection information.">NimBLEConnInfo</a> &amp; connInfo</code>, which has methods to get information about the connected peer. </p><div class="fragment"><div class="line">void onConnect(NimBLEServer* pServer, NimBLEConnInfo&amp; connInfo)`</div>
+<p><code>BLEServerCallbacks::onConnect</code> (<code>NimBLEServerCallbacks::onConnect</code>) only has a single callback declaration which takes an additional (required) parameter <code><a class="el" href="class_nim_b_l_e_conn_info.html" title="Connection information.">NimBLEConnInfo</a> &amp; connInfo</code>, which has methods to get information about the connected peer. </p><div class="fragment"><div class="line">void onConnect(NimBLEServer* pServer, NimBLEConnInfo&amp; connInfo)`</div>
 </div><!-- fragment --><p> <br  />
 </p>
-<p><code>BLEServerCallbacks::onDisconnect</code> (<code><a class="el" href="class_nim_b_l_e_server_callbacks.html#a4622b24e5553cc7961c04ab25b63d943" title="Handle a client disconnection. This is called when a client disconnects.">NimBLEServerCallbacks::onDisconnect</a></code>) only has a single callback declaration which takes 2 additional (required) parameters <code><a class="el" href="class_nim_b_l_e_conn_info.html" title="Connection information.">NimBLEConnInfo</a> &amp; connInfo</code>, which provides information about the peer and <code>int reason</code>, which gives the reason code for disconnection.</p>
+<p><code>BLEServerCallbacks::onDisconnect</code> (<code>NimBLEServerCallbacks::onDisconnect</code>) only has a single callback declaration which takes 2 additional (required) parameters <code><a class="el" href="class_nim_b_l_e_conn_info.html" title="Connection information.">NimBLEConnInfo</a> &amp; connInfo</code>, which provides information about the peer and <code>int reason</code>, which gives the reason code for disconnection.</p>
 <div class="fragment"><div class="line">void onDisconnect(NimBLEServer* pServer, NimBLEConnInfo&amp; connInfo, int reason)`</div>
 </div><!-- fragment --><p> <br  />
 </p>
@@ -161,12 +161,12 @@ Server API</h1>
 </p>
 <h2><a class="anchor" id="services-1"></a>
 Services</h2>
-<p>Creating a <code>BLEService</code> (<code><a class="el" href="class_nim_b_l_e_service.html" title="The model of a BLE service.">NimBLEService</a></code>) instance is the same as original, no changes required. For example <code>BLEServer::createService(SERVICE_UUID)</code> will work just as it did before. <br  />
+<p>Creating a <code>BLEService</code> (<code>NimBLEService</code>) instance is the same as original, no changes required. For example <code>BLEServer::createService(SERVICE_UUID)</code> will work just as it did before. <br  />
  <br  />
 </p>
 <h2><a class="anchor" id="characteristics-1"></a>
 Characteristics</h2>
-<p><code>BLEService::createCharacteristic</code> (<code><a class="el" href="class_nim_b_l_e_service.html#a415e1b836946831c6f9edd74adba8763" title="Create a new BLE Characteristic associated with this service.">NimBLEService::createCharacteristic</a></code>) is used the same way as originally except the properties parameter has changed.</p>
+<p><code>BLEService::createCharacteristic</code> (<code>NimBLEService::createCharacteristic</code>) is used the same way as originally except the properties parameter has changed.</p>
 <p>When creating a characteristic the properties are now set with <code>NIMBLE_PROPERTY::XXXX</code> instead of <code>BLECharacteristic::XXXX</code>.</p>
 <h3><a class="anchor" id="originally"></a>
 Originally</h3>
@@ -217,11 +217,11 @@ The full list of properties</h3>
 </p>
 <h3><a class="anchor" id="characteristic-callbacks-1"></a>
 Characteristic callbacks</h3>
-<p><code>BLECharacteristicCallbacks</code> (<code><a class="el" href="class_nim_b_l_e_characteristic_callbacks.html" title="Callbacks that can be associated with a BLE characteristic to inform of events.">NimBLECharacteristicCallbacks</a></code>) has a new method <code><a class="el" href="class_nim_b_l_e_characteristic_callbacks.html#a024951384bb777d7ee71bfd1d5eff185" title="Callback function called when a client changes subscription status.">NimBLECharacteristicCallbacks::onSubscribe</a></code> which is called when a client subscribes to notifications/indications.</p>
-<p><code>BLECharacteristicCallbacks::onRead</code> (<code><a class="el" href="class_nim_b_l_e_characteristic_callbacks.html#a120d3dade06fbc941a93edbdc0e4d830" title="Callback function to support a read request.">NimBLECharacteristicCallbacks::onRead</a></code>) only has a single callback declaration, which takes an additional (required) parameter of <code><a class="el" href="class_nim_b_l_e_conn_info.html" title="Connection information.">NimBLEConnInfo</a>&amp; connInfo</code>, which provides connection information about the peer.</p>
-<p><code>BLECharacteristicCallbacks::onWrite</code> (<code><a class="el" href="class_nim_b_l_e_characteristic_callbacks.html#ab4edbb758f0212fd190dedad6c9b8ec9" title="Callback function to support a write request.">NimBLECharacteristicCallbacks::onWrite</a></code>) only has a single callback declaration, which takes an additional (required) parameter of <code><a class="el" href="class_nim_b_l_e_conn_info.html" title="Connection information.">NimBLEConnInfo</a>&amp; connInfo</code>, which provides connection information about the peer. <br  />
+<p><code>BLECharacteristicCallbacks</code> (<code>NimBLECharacteristicCallbacks</code>) has a new method <code>NimBLECharacteristicCallbacks::onSubscribe</code> which is called when a client subscribes to notifications/indications.</p>
+<p><code>BLECharacteristicCallbacks::onRead</code> (<code>NimBLECharacteristicCallbacks::onRead</code>) only has a single callback declaration, which takes an additional (required) parameter of <code><a class="el" href="class_nim_b_l_e_conn_info.html" title="Connection information.">NimBLEConnInfo</a>&amp; connInfo</code>, which provides connection information about the peer.</p>
+<p><code>BLECharacteristicCallbacks::onWrite</code> (<code>NimBLECharacteristicCallbacks::onWrite</code>) only has a single callback declaration, which takes an additional (required) parameter of <code><a class="el" href="class_nim_b_l_e_conn_info.html" title="Connection information.">NimBLEConnInfo</a>&amp; connInfo</code>, which provides connection information about the peer. <br  />
 </p>
-<p><code>BLECharacteristicCallbacks::onStatus</code> (<code><a class="el" href="class_nim_b_l_e_characteristic_callbacks.html#a6f9b1f0f15492e3d47662e5e2ff0baee" title="Callback function to support a Notify/Indicate Status report.">NimBLECharacteristicCallbacks::onStatus</a></code>) has had the status parameter removed as it was unnecessary since the status code from the BLE stack was also provided. The status code for success is 0 for notifications and BLE_HS_EDONE for indications, any other value is an error.</p>
+<p><code>BLECharacteristicCallbacks::onStatus</code> (<code>NimBLECharacteristicCallbacks::onStatus</code>) has had the status parameter removed as it was unnecessary since the status code from the BLE stack was also provided. The status code for success is 0 for notifications and BLE_HS_EDONE for indications, any other value is an error.</p>
 <p><b>Note:</b> All callback methods have default implementations which allows the application to implement only the methods applicable. <br  />
  <br  />
 </p>
@@ -236,11 +236,11 @@ Characteristic callbacks</h3>
 </p>
 <h2><a class="anchor" id="descriptors"></a>
 Descriptors</h2>
-<p>Descriptors are now created using the <code><a class="el" href="class_nim_b_l_e_characteristic.html#aa9817ffdcc2d57e65e4ec3d88836af3f" title="Create a new BLE Descriptor associated with this characteristic.">NimBLECharacteristic::createDescriptor</a></code> method.</p>
+<p>Descriptors are now created using the <code>NimBLECharacteristic::createDescriptor</code> method.</p>
 <p>BLE2902 or NimBLE2902 class has been removed. NimBLE automatically creates the 0x2902 descriptor if a characteristic has a notification or indication property assigned to it.</p>
-<p>It was no longer useful to have a class for the 0x2902 descriptor as a new callback <code><a class="el" href="class_nim_b_l_e_characteristic_callbacks.html#a024951384bb777d7ee71bfd1d5eff185" title="Callback function called when a client changes subscription status.">NimBLECharacteristicCallbacks::onSubscribe</a></code> was added to handle callback functionality and the client subscription status is handled internally.</p>
+<p>It was no longer useful to have a class for the 0x2902 descriptor as a new callback <code>NimBLECharacteristicCallbacks::onSubscribe</code> was added to handle callback functionality and the client subscription status is handled internally.</p>
 <p><b>Note:</b> Attempting to create a 0x2902 descriptor will trigger a warning message and flag it internally as removed and will not be functional.</p>
-<p>All other descriptors are now created just as characteristics are by using the <code><a class="el" href="class_nim_b_l_e_characteristic.html#aa9817ffdcc2d57e65e4ec3d88836af3f" title="Create a new BLE Descriptor associated with this characteristic.">NimBLECharacteristic::createDescriptor</a></code> method (except 0x2904, see below). Which are defined as: </p><div class="fragment"><div class="line">NimBLEDescriptor* createDescriptor(const char* uuid,</div>
+<p>All other descriptors are now created just as characteristics are by using the <code>NimBLECharacteristic::createDescriptor</code> method (except 0x2904, see below). Which are defined as: </p><div class="fragment"><div class="line">NimBLEDescriptor* createDescriptor(const char* uuid,</div>
 <div class="line">                                   uint32_t properties =</div>
 <div class="line">                                   NIMBLE_PROPERTY::READ |</div>
 <div class="line">                                   NIMBLE_PROPERTY::WRITE,</div>
@@ -260,13 +260,13 @@ Example</h3>
 <div class="line">                                                25);</div>
 </div><!-- fragment --><p> Would create a descriptor with the UUID 0xABCD, publicly readable but only writable if paired/bonded (encrypted) and has a max value length of 25 bytes. <br  />
 </p>
-<p>For the 0x2904, there is a specialized class that is created through <code><a class="el" href="class_nim_b_l_e_characteristic.html#acc3402da680a988f6fa38100d9c98275" title="Create a Characteristic Presentation Format Descriptor for this characteristic.">NimBLECharacteristic::create2904</a></code> which returns a pointer to a <code><a class="el" href="class_nim_b_l_e2904.html" title="Descriptor for Characteristic Presentation Format.">NimBLE2904</a></code> instance which has specific functions for handling the data expect in the Characteristic Presentation Format Descriptor specification. <br  />
+<p>For the 0x2904, there is a specialized class that is created through <code>NimBLECharacteristic::create2904</code> which returns a pointer to a <code>NimBLE2904</code> instance which has specific functions for handling the data expect in the Characteristic Presentation Format Descriptor specification. <br  />
  <br  />
 </p>
 <h3><a class="anchor" id="descriptor-callbacks"></a>
 Descriptor callbacks</h3>
 <blockquote class="doxtable">
-<p>&zwj;<code>BLEDescriptorCallbacks::onRead</code> (<code><a class="el" href="class_nim_b_l_e_descriptor_callbacks.html#a061576b56702a6aca62a38f2ba27ba98" title="Callback function to support a read request.">NimBLEDescriptorCallbacks::onRead</a></code>) <code>BLEDescriptorCallbacks::onWrite</code> (<code><a class="el" href="class_nim_b_l_e_descriptor_callbacks.html#a2872d9e602d4e23cc63f55f5b2f76dd7" title="Callback function to support a write request.">NimBLEDescriptorCallbacks::onWrite</a></code>) </p>
+<p>&zwj;<code>BLEDescriptorCallbacks::onRead</code> (<code>NimBLEDescriptorCallbacks::onRead</code>) <code>BLEDescriptorCallbacks::onWrite</code> (<code>NimBLEDescriptorCallbacks::onWrite</code>) </p>
 </blockquote>
 <p>The above descriptor callbacks take an additional (required) parameter <code><a class="el" href="class_nim_b_l_e_conn_info.html" title="Connection information.">NimBLEConnInfo</a>&amp; connInfo</code>, which contains the connection information of the peer. <br  />
 </p>
@@ -302,34 +302,34 @@ Advertising API</h1>
 </p>
 <h1><a class="anchor" id="client-api"></a>
 Client API</h1>
-<p>Client instances are created just as before with <code>BLEDevice::createClient</code> (<code><a class="el" href="class_nim_b_l_e_device.html#a010b12177917f33e7d3633736c0cc553" title="Creates a new client object, each client can connect to 1 peripheral device.">NimBLEDevice::createClient</a></code>).</p>
-<p>Multiple client instances can be created, up to the maximum number of connections set in the config file (default: 3). To delete a client instance you must use <code><a class="el" href="class_nim_b_l_e_device.html#a83aa0a3d9d57358d35082a442edf8549" title="Delete the client object and remove it from the list. Checks if it is connected or trying to connect ...">NimBLEDevice::deleteClient</a></code>.</p>
-<p><code>BLEClient::connect</code>(<code><a class="el" href="class_nim_b_l_e_client.html#a2b49bc73802bf716cf3df3b5a93f0543" title="Connect to an advertising device.">NimBLEClient::connect</a></code>) Has had it's parameters altered. Defined as: </p><blockquote class="doxtable">
-<p>&zwj;<a class="el" href="class_nim_b_l_e_client.html#a2b49bc73802bf716cf3df3b5a93f0543" title="Connect to an advertising device.">NimBLEClient::connect</a>(bool deleteServices = true, , bool asyncConnect = false, bool exchangeMTU = true); <br  />
- <a class="el" href="class_nim_b_l_e_client.html#a2b49bc73802bf716cf3df3b5a93f0543" title="Connect to an advertising device.">NimBLEClient::connect</a>(const <a class="el" href="class_nim_b_l_e_address.html" title="A BLE device address.">NimBLEAddress</a>&amp; address, bool deleteAttributes = true, bool asyncConnect = false, bool exchangeMTU = true); <br  />
- <a class="el" href="class_nim_b_l_e_client.html#a2b49bc73802bf716cf3df3b5a93f0543" title="Connect to an advertising device.">NimBLEClient::connect</a>(const NimBLEAdvertisedDevice* device, bool deleteServices = true, bool asyncConnect = false, bool exchangeMTU = true); </p>
+<p>Client instances are created just as before with <code>BLEDevice::createClient</code> (<code>NimBLEDevice::createClient</code>).</p>
+<p>Multiple client instances can be created, up to the maximum number of connections set in the config file (default: 3). To delete a client instance you must use <code>NimBLEDevice::deleteClient</code>.</p>
+<p><code>BLEClient::connect</code>(<code>NimBLEClient::connect</code>) Has had it's parameters altered. Defined as: </p><blockquote class="doxtable">
+<p>&zwj;NimBLEClient::connect(bool deleteServices = true, , bool asyncConnect = false, bool exchangeMTU = true); <br  />
+ NimBLEClient::connect(const <a class="el" href="class_nim_b_l_e_address.html" title="A BLE device address.">NimBLEAddress</a>&amp; address, bool deleteAttributes = true, bool asyncConnect = false, bool exchangeMTU = true); <br  />
+ NimBLEClient::connect(const NimBLEAdvertisedDevice* device, bool deleteServices = true, bool asyncConnect = false, bool exchangeMTU = true); </p>
 </blockquote>
 <p>The type parameter has been removed and a new bool parameter has been added to indicate if the client should delete the attribute database previously retrieved (if applicable) for the peripheral, default value is true.</p>
 <p>If set to false the client will use the attribute database it retrieved from the peripheral when previously connected. This allows for faster connections and power saving if the devices dropped connection and are reconnecting. <br  />
 </p>
-<p>The parameter <code>bool asyncConnect</code> if true, will cause the client to send the connect command to the stack and return immediately without blocking. The return value will represent wether the command was sent successfully or not and the <code><a class="el" href="class_nim_b_l_e_client_callbacks.html#a96de53d9745f243d544cd89498f979ae" title="Called after client connects.">NimBLEClientCallbacks::onConnect</a></code> or <code><a class="el" href="class_nim_b_l_e_client_callbacks.html#ad0eb6bee07ef8c41dd8924aaca3bc71e" title="Called when a connection attempt fails.">NimBLEClientCallbacks::onConnectFail</a></code> will be called when the operation is complete. <br  />
+<p>The parameter <code>bool asyncConnect</code> if true, will cause the client to send the connect command to the stack and return immediately without blocking. The return value will represent wether the command was sent successfully or not and the <code>NimBLEClientCallbacks::onConnect</code> or <code>NimBLEClientCallbacks::onConnectFail</code> will be called when the operation is complete. <br  />
 </p>
-<p>The parameter <code>bool exchangeMTU</code> if true, will cause the client to perform the exchange MTU process upon connecting. If false the MTU exchange will need to be performed by the application by calling <code><a class="el" href="class_nim_b_l_e_client.html#a19d97b47f01f0862e04f3011752b2f2f" title="Begin the MTU exchange process with the server.">NimBLEClient::exchangeMTU</a></code>. If the connection is only sending small payloads it may be advantageous to not exchange the MTU to gain performance in the connection process. <br  />
+<p>The parameter <code>bool exchangeMTU</code> if true, will cause the client to perform the exchange MTU process upon connecting. If false the MTU exchange will need to be performed by the application by calling <code>NimBLEClient::exchangeMTU</code>. If the connection is only sending small payloads it may be advantageous to not exchange the MTU to gain performance in the connection process. <br  />
  <br  />
 </p>
 <blockquote class="doxtable">
-<p>&zwj;<code>BLEClient::getServices</code> (<code><a class="el" href="class_nim_b_l_e_client.html#adefe48b87e8a814e1643cdb8c3759298" title="Get a pointer to the vector of found services.">NimBLEClient::getServices</a></code>) </p>
+<p>&zwj;<code>BLEClient::getServices</code> (<code>NimBLEClient::getServices</code>) </p>
 </blockquote>
 <p>This method now takes an optional (bool) parameter to indicate if the services should be retrieved from the server (true) or the currently known database returned (false : default). Also now returns a pointer to <code>std::vector</code> instead of <code>std::map</code>. <br  />
  <br  />
 </p>
 <p><b>Removed:</b> the automatic discovery of all peripheral attributes as they consumed time and resources for data the user may not be interested in.</p>
-<p><b>Added:</b> <code><a class="el" href="class_nim_b_l_e_client.html#a1019178a12799ca2c3a84f523b3a7db9" title="Retrieves the full database of attributes that the peripheral has available.">NimBLEClient::discoverAttributes</a></code> for the user to discover all the peripheral attributes to replace the the removed automatic functionality. <br  />
+<p><b>Added:</b> <code>NimBLEClient::discoverAttributes</code> for the user to discover all the peripheral attributes to replace the the removed automatic functionality. <br  />
  <br  />
 </p>
 <h2><a class="anchor" id="remote-services-1"></a>
 Remote Services</h2>
-<p><code>BLERemoteService</code> (<code><a class="el" href="class_nim_b_l_e_remote_service.html" title="A model of a remote BLE service.">NimBLERemoteService</a></code>) Methods remain mostly unchanged with the exceptions of:</p>
+<p><code>BLERemoteService</code> (<code>NimBLERemoteService</code>) Methods remain mostly unchanged with the exceptions of:</p>
 <blockquote class="doxtable">
 <p>&zwj;BLERemoteService::getCharacteristicsByHandle </p>
 </blockquote>
@@ -337,7 +337,7 @@ Remote Services</h2>
  <br  />
 </p>
 <blockquote class="doxtable">
-<p>&zwj;<code>BLERemoteService::getCharacteristics</code> (<code><a class="el" href="class_nim_b_l_e_remote_service.html#a5b07f0756c401d40396886e80d64b03b" title="Get a pointer to the vector of found characteristics.">NimBLERemoteService::getCharacteristics</a></code>) </p>
+<p>&zwj;<code>BLERemoteService::getCharacteristics</code> (<code>NimBLERemoteService::getCharacteristics</code>) </p>
 </blockquote>
 <p>This method now takes an optional (bool) parameter to indicate if the characteristics should be retrieved from the server (true) or the currently known database returned, default = false. <br  />
  Also now returns a pointer to <code>std::vector</code> instead of <code>std::map</code>. <br  />
@@ -345,7 +345,7 @@ Remote Services</h2>
 </p>
 <h2><a class="anchor" id="remote-characteristics-1"></a>
 Remote Characteristics</h2>
-<p><code>BLERemoteCharacteristic</code> (<code><a class="el" href="class_nim_b_l_e_remote_characteristic.html" title="A model of a remote BLE characteristic.">NimBLERemoteCharacteristic</a></code>) There have been a few changes to the methods in this class:</p>
+<p><code>BLERemoteCharacteristic</code> (<code>NimBLERemoteCharacteristic</code>) There have been a few changes to the methods in this class:</p>
 <blockquote class="doxtable">
 <p>&zwj;<code>BLERemoteCharacteristic::writeValue</code> (<code>NimBLERemoteCharacteristic::writeValue</code>) </p>
 </blockquote>
@@ -357,8 +357,8 @@ Remote Characteristics</h2>
 </blockquote>
 <p>Has been removed.</p>
 <blockquote class="doxtable">
-<p>&zwj;<code><a class="el" href="class_nim_b_l_e_remote_characteristic.html#adf445e6bd9dee047a61c708ae943304a" title="Subscribe for notifications or indications.">NimBLERemoteCharacteristic::subscribe</a></code> <br  />
- <code><a class="el" href="class_nim_b_l_e_remote_characteristic.html#a64a74ffc6612cf4a42f33836e34887f0" title="Unsubscribe for notifications or indications.">NimBLERemoteCharacteristic::unsubscribe</a></code> <br  />
+<p>&zwj;<code>NimBLERemoteCharacteristic::subscribe</code> <br  />
+ <code>NimBLERemoteCharacteristic::unsubscribe</code> <br  />
  </p>
 </blockquote>
 <p>Are the new methods added to replace it. <br  />
@@ -382,7 +382,7 @@ Remote Characteristics</h2>
 </div><!-- fragment --><p> <br  />
 </p>
 <blockquote class="doxtable">
-<p>&zwj;<code>BLERemoteCharacteristic::getDescriptors</code> (<code><a class="el" href="class_nim_b_l_e_remote_characteristic.html#a27746c8b2405beb1d44567e2c1f85f87" title="Get a pointer to the vector of found descriptors.">NimBLERemoteCharacteristic::getDescriptors</a></code>) </p>
+<p>&zwj;<code>BLERemoteCharacteristic::getDescriptors</code> (<code>NimBLERemoteCharacteristic::getDescriptors</code>) </p>
 </blockquote>
 <p>This method now takes an optional (bool) parameter to indicate if the descriptors should be retrieved from the server (true) or the currently known database returned, default = false. Also now returns a pointer to <code>std::vector</code> instead of <code>std::map</code>. <br  />
  <br  />
@@ -390,7 +390,7 @@ Remote Characteristics</h2>
 <h2><a class="anchor" id="client-callbacks-1"></a>
 Client callbacks</h2>
 <blockquote class="doxtable">
-<p>&zwj;<code>BLEClientCallbacks::onDisconnect</code> (<code><a class="el" href="class_nim_b_l_e_client_callbacks.html#ad618179ade926482a7f2d94b0deabd69" title="Called when disconnected from the server.">NimBLEClientCallbacks::onDisconnect</a></code>) </p>
+<p>&zwj;<code>BLEClientCallbacks::onDisconnect</code> (<code>NimBLEClientCallbacks::onDisconnect</code>) </p>
 </blockquote>
 <p>This now takes a second parameter <code>int reason</code> which provides the reason code for disconnection. <br  />
  <br  />
@@ -402,19 +402,19 @@ Client Security</h2>
 </p>
 <h1><a class="anchor" id="ble-scan"></a>
 BLE Scan</h1>
-<p>The scan API is mostly unchanged from the original except for <code><a class="el" href="class_nim_b_l_e_scan.html#ac1307f30a881688d3a4d57bac7abe02c" title="Start scanning.">NimBLEScan::start</a></code>, which has the following changes: <br  />
+<p>The scan API is mostly unchanged from the original except for <code>NimBLEScan::start</code>, which has the following changes: <br  />
 </p><ul>
 <li>The duration parameter is now in milliseconds instead of seconds.</li>
 <li>The callback parameter has been removed.</li>
 <li><p class="startli">A new parameter <code>bool restart</code> has been added, when set to true to restart the scan if already in progress and clear the duplicate cache.</p>
-<p class="startli">The blocking overload of <code><a class="el" href="class_nim_b_l_e_scan.html#ac1307f30a881688d3a4d57bac7abe02c" title="Start scanning.">NimBLEScan::start</a></code> has been replaced by an overload of <code><a class="el" href="class_nim_b_l_e_scan.html#a2ae53719546e2d410c816e12c56aad61" title="Get the results of the scan.">NimBLEScan::getResults</a></code> with the same parameters. <br  />
+<p class="startli">The blocking overload of <code>NimBLEScan::start</code> has been replaced by an overload of <code>NimBLEScan::getResults</code> with the same parameters. <br  />
 </p>
 </li>
 </ul>
 <h1><a class="anchor" id="security-api"></a>
 Security API</h1>
 <p>Security operations have been moved to <code>BLEDevice</code> (<code><a class="el" href="class_nim_b_l_e_device.html" title="A model of a BLE Device from which all the BLE roles are created.">NimBLEDevice</a></code>). <br  />
- The security callback methods are now incorporated in the <code><a class="el" href="class_nim_b_l_e_server_callbacks.html" title="Callbacks associated with the operation of a BLE server.">NimBLEServerCallbacks</a></code> / <code><a class="el" href="class_nim_b_l_e_client_callbacks.html" title="Callbacks associated with a BLE client.">NimBLEClientCallbacks</a></code> classes.</p>
+ The security callback methods are now incorporated in the <code>NimBLEServerCallbacks</code> / <code>NimBLEClientCallbacks</code> classes.</p>
 <p>The callback methods are:</p>
 <blockquote class="doxtable">
 <p>&zwj;<code>bool onConfirmPasskey(<a class="el" href="class_nim_b_l_e_conn_info.html" title="Connection information.">NimBLEConnInfo</a>&amp; connInfo, uint32_t pin)</code> </p>
@@ -463,9 +463,9 @@ Security API</h1>
 </p>
 <h1><a class="anchor" id="arduino-configuration"></a>
 Arduino Configuration</h1>
-<p>Unlike the original library pre-packaged in the esp32-arduino, this library has all the configuration options that are normally set in menuconfig available in the <em><a class="el" href="nimconfig_8h.html">src/nimconfig.h</a></em> file.</p>
+<p>Unlike the original library pre-packaged in the esp32-arduino, this library has all the configuration options that are normally set in menuconfig available in the <em>src/nimconfig.h</em> file.</p>
 <p>This allows Arduino users to fully customize the build, such as increasing max connections or loading the BLE stack into external PSRAM.</p>
-<p>For details on the options, they are fully commented in <em><a class="el" href="nimconfig_8h.html">nimconfig.h</a></em> <br  />
+<p>For details on the options, they are fully commented in <em>nimconfig.h</em> <br  />
  <br  />
  </p>
 </div></div><!-- contents -->

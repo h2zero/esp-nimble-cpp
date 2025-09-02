@@ -32,6 +32,5 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "NimBLEService.h", "_nim_b_l_e_service_8h_source.html", null ],
     [ "NimBLEUtils.h", "_nim_b_l_e_utils_8h_source.html", null ],
     [ "NimBLEUUID.h", "_nim_b_l_e_u_u_i_d_8h_source.html", null ],
-    [ "NimBLEValueAttribute.h", "_nim_b_l_e_value_attribute_8h_source.html", null ],
-    [ "nimconfig.h", "nimconfig_8h.html", "nimconfig_8h" ]
+    [ "NimBLEValueAttribute.h", "_nim_b_l_e_value_attribute_8h_source.html", null ]
 ];

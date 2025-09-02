@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">esp-nimble-cpp<span id="projectnumber">&#160;2.3.1</span>
+   <div id="projectname">esp-nimble-cpp<span id="projectnumber">&#160;2.3.2</span>
    </div>
   </td>
  </tr>
@@ -127,10 +127,10 @@ $(document).ready(function(){initNavTree('md_1_8x__to2_8x__migration__guide.html
 General changes</h1>
 <ul>
 <li>All functions that take a time parameter now require the time in milliseconds instead of seconds, i.e. <code>NimBLEScan::start(10000); // 10 seconds</code></li>
-<li><code>NimBLESecurity</code> class has been removed it's functionality has been merged into the <code><a class="el" href="class_nim_b_l_e_server.html" title="The model of a BLE server.">NimBLEServer</a></code> and <code><a class="el" href="class_nim_b_l_e_client.html" title="A model of a BLE client.">NimBLEClient</a></code> classes.</li>
+<li><code>NimBLESecurity</code> class has been removed it's functionality has been merged into the <code>NimBLEServer</code> and <code>NimBLEClient</code> classes.</li>
 <li>All connection oriented callbacks now receive a reference to <code><a class="el" href="class_nim_b_l_e_conn_info.html" title="Connection information.">NimBLEConnInfo</a></code> and the <code>ble_gap_conn_desc</code> parameter has been replaced with <code><a class="el" href="class_nim_b_l_e_conn_info.html" title="Connection information.">NimBLEConnInfo</a></code> in the functions that received it. <br  />
  For instance <code>onAuthenticationComplete(ble_gap_conn_desc* desc)</code> signature is now <code>onAuthenticationComplete(<a class="el" href="class_nim_b_l_e_conn_info.html" title="Connection information.">NimBLEConnInfo</a>&amp; connInfo)</code> and <br  />
- <code>NimBLEServerCallbacks::onConnect(NimBLEServer* pServer)</code> signature is now <code><a class="el" href="class_nim_b_l_e_server_callbacks.html#a11d48696c2121eb301a76301555df2c5" title="Handle a client connection. This is called when a client connects.">NimBLEServerCallbacks::onConnect</a>(NimBLEServer* pServer, <a class="el" href="class_nim_b_l_e_conn_info.html" title="Connection information.">NimBLEConnInfo</a>&amp; connInfo)</code>. <br  />
+ <code>NimBLEServerCallbacks::onConnect(NimBLEServer* pServer)</code> signature is now <code>NimBLEServerCallbacks::onConnect(NimBLEServer* pServer, <a class="el" href="class_nim_b_l_e_conn_info.html" title="Connection information.">NimBLEConnInfo</a>&amp; connInfo)</code>. <br  />
  <br  />
 </li>
 </ul>
@@ -140,11 +140,11 @@ BLE Device</h1>
 <li>Ignore list functions and vector have been removed, the application should implement this if desired. It was no longer used by the library.</li>
 <li><code><a class="el" href="class_nim_b_l_e_device.html#a8b6b4bedfe37725ed9c20e91a3470005" title="Start the connection securing and authorization for this connection.">NimBLEDevice::startSecurity</a></code> now returns a <code>bool</code>, true on success, instead of an int to be consistent with the rest of the library.</li>
 <li><code>NimBLEDevice::getInitialized</code> renamed to <code><a class="el" href="class_nim_b_l_e_device.html#a425561f1e23856756ab9c1c330da5737" title="Check if the initialization is complete.">NimBLEDevice::isInitialized</a></code>.</li>
-<li><code><a class="el" href="class_nim_b_l_e_device.html#ac4c78fbf7344fbc0d6189e92a756db91" title="Set the transmission power.">NimBLEDevice::setPower</a></code> no longer takes the <code>esp_power_level_t</code> and <code>esp_ble_power_type_t</code>, instead only an integer value in dbm units is accepted, so instead of <code>ESP_PWR_LVL_P9</code> an <code>int8_t</code> value of <code>9</code> would be used for the same result.</li>
+<li><code><a class="el" href="class_nim_b_l_e_device.html#ac4c78fbf7344fbc0d6189e92a756db91" title="Retrieve the Scan object that we use for scanning.">NimBLEDevice::setPower</a></code> no longer takes the <code>esp_power_level_t</code> and <code>esp_ble_power_type_t</code>, instead only an integer value in dbm units is accepted, so instead of <code>ESP_PWR_LVL_P9</code> an <code>int8_t</code> value of <code>9</code> would be used for the same result.</li>
 <li><code><a class="el" href="class_nim_b_l_e_device.html#a31acb43c150014f06bad74b57c2335ff" title="Sets the address type to use.">NimBLEDevice::setOwnAddrType</a></code> no longer takes a <code>bool nrpa</code> parameter, the random address type will be determined by the bits the in the address instead. <br  />
  Note: If setting a custom address, it should be set with <code><a class="el" href="class_nim_b_l_e_device.html#a0f6521729222f9e55e40325824786070" title="Set the device address to use.">NimBLEDevice::setOwnAddr</a></code> first before calling <code><a class="el" href="class_nim_b_l_e_device.html#a31acb43c150014f06bad74b57c2335ff" title="Sets the address type to use.">NimBLEDevice::setOwnAddrType</a></code>.</li>
-<li><code>NimBLEDevice::getClientListSize</code> replaced with <code><a class="el" href="class_nim_b_l_e_device.html#a0944f3f6eca16ed4b7fd96d88b2906d9" title="Get the number of created client objects.">NimBLEDevice::getCreatedClientCount</a></code>.</li>
-<li><code>NimBLEDevice::getClientList</code> was removed and <code><a class="el" href="class_nim_b_l_e_device.html#acb098c56b7d08636e1745052eb184fb2" title="Get a list of connected clients.">NimBLEDevice::getConnectedClients</a></code> can be used instead which returns a <code>std::vector</code> of pointers to the connected client instances. This was done because internally the clients are managed in a <code>std::array</code> which replaced the 'std::list<code>. &lt;br&gt; -</code>NimBLEDevice::getClientByID(uint16_t conn_id);<code>has been changed to</code><a class="el" href="class_nim_b_l_e_device.html#a9c15d6b767091fae4412428436827c4e" title="Get a reference to a client by connection handle.">NimBLEDevice::getClientByHandle(uint16_t connHandle)</a>` <br  />
+<li><code>NimBLEDevice::getClientListSize</code> replaced with <code>NimBLEDevice::getCreatedClientCount</code>.</li>
+<li><code>NimBLEDevice::getClientList</code> was removed and <code>NimBLEDevice::getConnectedClients</code> can be used instead which returns a <code>std::vector</code> of pointers to the connected client instances. This was done because internally the clients are managed in a <code>std::array</code> which replaced the 'std::list<code>. &lt;br&gt; -</code>NimBLEDevice::getClientByID(uint16_t conn_id);<code>has been changed to</code>NimBLEDevice::getClientByHandle(uint16_t connHandle)` <br  />
 </li>
 </ul>
 <h1><a class="anchor" id="ble-addresses"></a>
@@ -167,9 +167,9 @@ BLE UUID's</h1>
 <h1><a class="anchor" id="server"></a>
 Server</h1>
 <ul>
-<li><code><a class="el" href="class_nim_b_l_e_server.html#ac79e828bcc3c45ae817bf51be914bfc0" title="Disconnect the specified client with optional reason.">NimBLEServer::disconnect</a></code> now returns <code>bool</code>, true = success, instead of <code>int</code> to be consistent with the rest of the library.</li>
-<li><code>NimBLEServerCallbacks::onMTUChanged</code> renamed to <code><a class="el" href="class_nim_b_l_e_server_callbacks.html#ab702f73e739b4df72e191f47056c01ff" title="Called when the connection MTU changes.">NimBLEServerCallbacks::onMTUChange</a></code> to be consistent with the client callback.</li>
-<li><code>NimBLEServer::getPeerIDInfo</code> renamed to <code><a class="el" href="class_nim_b_l_e_server.html#a08916d16ea00b4718bd6241bd407829f" title="Get the connection information of a connected peer by connection handle.">NimBLEServer::getPeerInfoByHandle</a></code> to better describe it's use.</li>
+<li><code>NimBLEServer::disconnect</code> now returns <code>bool</code>, true = success, instead of <code>int</code> to be consistent with the rest of the library.</li>
+<li><code>NimBLEServerCallbacks::onMTUChanged</code> renamed to <code>NimBLEServerCallbacks::onMTUChange</code> to be consistent with the client callback.</li>
+<li><code>NimBLEServer::getPeerIDInfo</code> renamed to <code>NimBLEServer::getPeerInfoByHandle</code> to better describe it's use.</li>
 <li>Advertising is no longer automatically restarted when a peer disconnects, to re-enable this feature either call <code>NimBLEServer::advertiseOnDisconnect(true);</code> after creating the server or manually restart advertising in the <code>onDisconnect</code> callback. <br  />
  <br  />
 </li>
@@ -177,14 +177,14 @@ Server</h1>
 <h2><a class="anchor" id="services"></a>
 Services</h2>
 <ul>
-<li><code><a class="el" href="class_nim_b_l_e_service.html#a8219ccefd97180bee485b62572c62e58">NimBLEService::getCharacteristics</a></code> now returns a <code>const std::vector&lt;NimBLECharacteristic*&gt;&amp;</code> instead of a copy of the vector. <br  />
+<li><code>NimBLEService::getCharacteristics</code> now returns a <code>const std::vector&lt;NimBLECharacteristic*&gt;&amp;</code> instead of a copy of the vector. <br  />
  <br  />
 </li>
 </ul>
 <h2><a class="anchor" id="characteristics"></a>
 Characteristics</h2>
 <ul>
-<li><code><a class="el" href="class_nim_b_l_e_characteristic.html#ac4482e038124724d8bb6d147bcdb5481" title="Send a notification.">NimBLECharacteristic::notify</a></code> no longer takes a <code>bool is_notification</code> parameter, instead <code><a class="el" href="class_nim_b_l_e_characteristic.html#aabdc2745d2523239a9ab3f02e39aa3cf" title="Send an indication.">NimBLECharacteristic::indicate</a></code> should be called to send indications. <br  />
+<li><code>NimBLECharacteristic::notify</code> no longer takes a <code>bool is_notification</code> parameter, instead <code>NimBLECharacteristic::indicate</code> should be called to send indications. <br  />
  <br  />
 </li>
 </ul>
@@ -192,47 +192,47 @@ Characteristics</h2>
 Characteristic callbacks</h3>
 <ul>
 <li><code>NimBLECharacteristicCallbacks::onNotify</code> removed as unnecessary, the library does not call notify without app input.</li>
-<li><code><a class="el" href="class_nim_b_l_e_characteristic_callbacks.html#a6f9b1f0f15492e3d47662e5e2ff0baee" title="Callback function to support a Notify/Indicate Status report.">NimBLECharacteristicCallbacks::onStatus</a></code> No longer takes a <code>status</code> parameter, refer to the return code parameter for success/failure. <br  />
+<li><code>NimBLECharacteristicCallbacks::onStatus</code> No longer takes a <code>status</code> parameter, refer to the return code parameter for success/failure. <br  />
  <br  />
 </li>
 </ul>
 <h2><a class="anchor" id="server-security"></a>
 Server Security</h2>
 <ul>
-<li><code>NimBLEServerCallbacks::onPassKeyRequest</code> has been renamed to <code><a class="el" href="class_nim_b_l_e_server_callbacks.html#a45b5fc1c98b287a2ddeab8f2f5b63c4f" title="Called when a client requests a passkey for pairing (display).">NimBLEServerCallbacks::onPassKeyDisplay</a></code> as it is intended that the device should display the passkey for the client to enter.</li>
-<li><code><a class="el" href="class_nim_b_l_e_server_callbacks.html#a7cbed42919678d9e8d40b351dec82523" title="Called when the pairing procedure is complete.">NimBLEServerCallbacks::onAuthenticationComplete</a></code> now takes a <code><a class="el" href="class_nim_b_l_e_conn_info.html" title="Connection information.">NimBLEConnInfo</a>&amp;</code> parameter. <br  />
+<li><code>NimBLEServerCallbacks::onPassKeyRequest</code> has been renamed to <code>NimBLEServerCallbacks::onPassKeyDisplay</code> as it is intended that the device should display the passkey for the client to enter.</li>
+<li><code>NimBLEServerCallbacks::onAuthenticationComplete</code> now takes a <code><a class="el" href="class_nim_b_l_e_conn_info.html" title="Connection information.">NimBLEConnInfo</a>&amp;</code> parameter. <br  />
  <br  />
 </li>
 </ul>
 <h1><a class="anchor" id="client"></a>
 Client</h1>
 <ul>
-<li><code><a class="el" href="class_nim_b_l_e_client.html#adefe48b87e8a814e1643cdb8c3759298" title="Get a pointer to the vector of found services.">NimBLEClient::getServices</a></code> now returns a const reference to std::vector&lt;NimBLERemoteService*&gt; instead of a pointer to the internal vector.</li>
-<li><code><a class="el" href="class_nim_b_l_e_client.html#a3903fb7589e2b8b781f8f81f9e0f2a83" title="Get the value of a specific characteristic associated with a specific service.">NimBLEClient::getConnId</a></code> has been renamed to <code>getConnHandle</code> to be consistent with bluetooth terminology.</li>
-<li><code><a class="el" href="class_nim_b_l_e_client.html#a36b298b70a42d32b8d578869b0763140" title="Disconnect from the peer.">NimBLEClient::disconnect</a></code> now returns a <code>bool</code>, true on success, instead of an <code>int</code> to be consistent with the rest of the library. <br  />
+<li><code>NimBLEClient::getServices</code> now returns a const reference to std::vector&lt;NimBLERemoteService*&gt; instead of a pointer to the internal vector.</li>
+<li><code>NimBLEClient::getConnId</code> has been renamed to <code>getConnHandle</code> to be consistent with bluetooth terminology.</li>
+<li><code>NimBLEClient::disconnect</code> now returns a <code>bool</code>, true on success, instead of an <code>int</code> to be consistent with the rest of the library. <br  />
  <br  />
 </li>
 </ul>
 <h2><a class="anchor" id="client-callbacks"></a>
 Client callbacks</h2>
 <ul>
-<li><code>NimBLEClientCallbacks::onConfirmPIN</code> renamed to <code><a class="el" href="class_nim_b_l_e_client_callbacks.html#a6e7cfa81cd43420f78d6da727c67928b" title="Called when using numeric comparision for pairing.">NimBLEClientCallbacks::onConfirmPasskey</a></code>, takes a <code><a class="el" href="class_nim_b_l_e_conn_info.html" title="Connection information.">NimBLEConnInfo</a>&amp;</code> parameter and no longer returns a value. This should be used to prompt a user to confirm the pin on the display (YES/NO) after which the response should be sent with <code><a class="el" href="class_nim_b_l_e_device.html#aff35384524ab80a19ce1ef23fdcd970b" title="Inject the provided numeric comparison response into the Security Manager.">NimBLEDevice::injectConfirmPasskey</a></code>.</li>
-<li><code>NimBLEClientCallbacks::onPassKeyRequest</code> has been changed to <code><a class="el" href="class_nim_b_l_e_client_callbacks.html#aacb0b757e6e7c7984d8389c83fe1937d" title="Called when server requests a passkey for pairing.">NimBLEClientCallbacks::onPassKeyEntry</a></code> which takes a <code><a class="el" href="class_nim_b_l_e_conn_info.html" title="Connection information.">NimBLEConnInfo</a>&amp;</code> parameter and no longer returns a value. Instead of returning a value this callback should prompt a user to enter a passkey number which is sent later via <code><a class="el" href="class_nim_b_l_e_device.html#a5071168b3bda69aa4457a43473ad7a96" title="Inject the provided passkey into the Security Manager.">NimBLEDevice::injectPassKey</a></code>. <br  />
+<li><code>NimBLEClientCallbacks::onConfirmPIN</code> renamed to <code>NimBLEClientCallbacks::onConfirmPasskey</code>, takes a <code><a class="el" href="class_nim_b_l_e_conn_info.html" title="Connection information.">NimBLEConnInfo</a>&amp;</code> parameter and no longer returns a value. This should be used to prompt a user to confirm the pin on the display (YES/NO) after which the response should be sent with <code>NimBLEDevice::injectConfirmPasskey</code>.</li>
+<li><code>NimBLEClientCallbacks::onPassKeyRequest</code> has been changed to <code>NimBLEClientCallbacks::onPassKeyEntry</code> which takes a <code><a class="el" href="class_nim_b_l_e_conn_info.html" title="Connection information.">NimBLEConnInfo</a>&amp;</code> parameter and no longer returns a value. Instead of returning a value this callback should prompt a user to enter a passkey number which is sent later via <code>NimBLEDevice::injectPassKey</code>. <br  />
  <br  />
 </li>
 </ul>
 <h2><a class="anchor" id="remote-services"></a>
 Remote Services</h2>
 <ul>
-<li><code><a class="el" href="class_nim_b_l_e_remote_service.html#a5b07f0756c401d40396886e80d64b03b" title="Get a pointer to the vector of found characteristics.">NimBLERemoteService::getCharacteristics</a></code> now returns a <code>const std::vector&lt;NimBLERemoteCharacteristic*&gt;&amp;</code> instead of non-const <code>std::vector&lt;NimBLERemoteCharacteristic*&gt;*</code>. <br  />
+<li><code>NimBLERemoteService::getCharacteristics</code> now returns a <code>const std::vector&lt;NimBLERemoteCharacteristic*&gt;&amp;</code> instead of non-const <code>std::vector&lt;NimBLERemoteCharacteristic*&gt;*</code>. <br  />
  <br  />
 </li>
 </ul>
 <h2><a class="anchor" id="remote-characteristics"></a>
 Remote Characteristics</h2>
 <ul>
-<li><code><a class="el" href="class_nim_b_l_e_remote_characteristic.html#a1b3bbd1bcdde6dd952ee69ebad0ffc58" title="Get the remote service associated with this characteristic.">NimBLERemoteCharacteristic::getRemoteService</a></code> now returns a <code>const NimBLERemoteService*</code> instead of non-const.</li>
-<li><code>NimBLERemoteCharacteristic::registerForNotify</code>, has been removed, the application should use <code><a class="el" href="class_nim_b_l_e_remote_characteristic.html#adf445e6bd9dee047a61c708ae943304a" title="Subscribe for notifications or indications.">NimBLERemoteCharacteristic::subscribe</a></code> and <code>NimBLERemoteCharacteristic::unSubscribe</code>. <pre class="fragment">  `NimBLERemoteCharacteristic::readUInt32`
+<li><code>NimBLERemoteCharacteristic::getRemoteService</code> now returns a <code>const NimBLERemoteService*</code> instead of non-const.</li>
+<li><code>NimBLERemoteCharacteristic::registerForNotify</code>, has been removed, the application should use <code>NimBLERemoteCharacteristic::subscribe</code> and <code>NimBLERemoteCharacteristic::unSubscribe</code>. <pre class="fragment">  `NimBLERemoteCharacteristic::readUInt32`
   `NimBLERemoteCharacteristic::readUInt16`
   `NimBLERemoteCharacteristic::readUInt8`
   `NimBLERemoteCharacteristic::readFloat`
@@ -243,28 +243,28 @@ Remote Characteristics</h2>
 <h1><a class="anchor" id="scan"></a>
 Scan</h1>
 <ul>
-<li><code><a class="el" href="class_nim_b_l_e_scan.html#a68fa5cc715f62a9a97ac0dccfb8557c1" title="Stop an in progress scan.">NimBLEScan::stop</a></code> will no longer call the <code>onScanEnd</code> callback as the caller should know it has been stopped either by initiating a connection or calling this function itself.</li>
-<li><code>NimBLEScan::clearDuplicateCache</code> has been removed as it was problematic and only for the original esp32. The application should stop and start the scanner for the same effect or call <code><a class="el" href="class_nim_b_l_e_scan.html#ac1307f30a881688d3a4d57bac7abe02c" title="Start scanning.">NimBLEScan::start</a></code> with the new <code>bool restart</code> parameter set to true.</li>
-<li><code><a class="el" href="class_nim_b_l_e_scan_results.html#a98b106a3929919bf2c80cc0dfff59ba1" title="Return the specified device at the given index. The index should be between 0 and getCount()-1.">NimBLEScanResults::getDevice</a></code> methods now return <code>const NimBLEAdvertisedDevice*</code> instead of a non-const pointer.</li>
-<li><code><a class="el" href="class_nim_b_l_e_scan_results.html" title="A class that contains and operates on the results of a BLE scan.">NimBLEScanResults</a></code> iterators are now <code>const_iterator</code>.</li>
-<li><p class="startli">The callback parameter for <code><a class="el" href="class_nim_b_l_e_scan.html#ac1307f30a881688d3a4d57bac7abe02c" title="Start scanning.">NimBLEScan::start</a></code> has been removed and the blocking overload of <code><a class="el" href="class_nim_b_l_e_scan.html#ac1307f30a881688d3a4d57bac7abe02c" title="Start scanning.">NimBLEScan::start</a></code> has been replaced by an overload of <code><a class="el" href="class_nim_b_l_e_scan.html#a2ae53719546e2d410c816e12c56aad61" title="Get the results of the scan.">NimBLEScan::getResults</a></code> with the same parameters.</p>
+<li><code>NimBLEScan::stop</code> will no longer call the <code>onScanEnd</code> callback as the caller should know it has been stopped either by initiating a connection or calling this function itself.</li>
+<li><code>NimBLEScan::clearDuplicateCache</code> has been removed as it was problematic and only for the original esp32. The application should stop and start the scanner for the same effect or call <code>NimBLEScan::start</code> with the new <code>bool restart</code> parameter set to true.</li>
+<li><code>NimBLEScanResults::getDevice</code> methods now return <code>const NimBLEAdvertisedDevice*</code> instead of a non-const pointer.</li>
+<li><code>NimBLEScanResults</code> iterators are now <code>const_iterator</code>.</li>
+<li><p class="startli">The callback parameter for <code>NimBLEScan::start</code> has been removed and the blocking overload of <code>NimBLEScan::start</code> has been replaced by an overload of <code>NimBLEScan::getResults</code> with the same parameters.</p>
 <p class="startli">So if your code prior was this: </p><pre class="fragment">NimBLEScanResults results = pScan-&gt;start(10, false);
 </pre><p> It should now be: </p><pre class="fragment">NimBLEScanResults results = pScan-&gt;getResults(10000, false); // note the time is now in milliseconds
 </pre></li>
-<li><code>NimBLEAdvertisedDeviceCallbacks</code> Has been replaced by <code><a class="el" href="class_nim_b_l_e_scan_callbacks.html" title="A callback handler for callbacks associated device scanning.">NimBLEScanCallbacks</a></code> which contains the following methods:</li>
-<li>- <code><a class="el" href="class_nim_b_l_e_scan_callbacks.html#a962d8b08cf14ac3091e6fd6962d7e283" title="Called when a new scan result is complete, including scan response data (if applicable).">NimBLEScanCallbacks::onResult</a></code>, functions the same as the old <code>NimBLEAdvertisedDeviceCallbacks::onResult</code> but now takes aa <code>const NimBLEAdvertisedDevice*</code> instead of non-const.</li>
-<li>- <code><a class="el" href="class_nim_b_l_e_scan_callbacks.html#a61c11db405e87ec847066ca3b6ad8375" title="Called when a scan operation ends.">NimBLEScanCallbacks::onScanEnd</a></code>, replaces the scanEnded callback passed to <code><a class="el" href="class_nim_b_l_e_scan.html#ac1307f30a881688d3a4d57bac7abe02c" title="Start scanning.">NimBLEScan::start</a></code> and now takes a <code>const <a class="el" href="class_nim_b_l_e_scan_results.html" title="A class that contains and operates on the results of a BLE scan.">NimBLEScanResults</a>&amp;</code> and <code>int reason</code> parameter.</li>
-<li>- <code><a class="el" href="class_nim_b_l_e_scan_callbacks.html#a1f9b5eac5982340afbb84954a4c06277" title="Called when a new device is discovered, before the scan result is received (if applicable).">NimBLEScanCallbacks::onDiscovered</a></code>, This is called immediately when a device is first scanned, before any scan response data is available and takes a <code>const NimBLEAdvertisedDevice*</code> parameter. <br  />
+<li><code>NimBLEAdvertisedDeviceCallbacks</code> Has been replaced by <code>NimBLEScanCallbacks</code> which contains the following methods:</li>
+<li>- <code>NimBLEScanCallbacks::onResult</code>, functions the same as the old <code>NimBLEAdvertisedDeviceCallbacks::onResult</code> but now takes aa <code>const NimBLEAdvertisedDevice*</code> instead of non-const.</li>
+<li>- <code>NimBLEScanCallbacks::onScanEnd</code>, replaces the scanEnded callback passed to <code>NimBLEScan::start</code> and now takes a <code>const NimBLEScanResults&amp;</code> and <code>int reason</code> parameter.</li>
+<li>- <code>NimBLEScanCallbacks::onDiscovered</code>, This is called immediately when a device is first scanned, before any scan response data is available and takes a <code>const NimBLEAdvertisedDevice*</code> parameter. <br  />
 </li>
-<li><code>NimBLEScan::setAdvertisedDeviceCallbacks(NimBLEAdvertisedDeviceCallbacks* callbacks, bool wantDuplicates)</code> has been changed to <code><a class="el" href="class_nim_b_l_e_scan.html#a3b0d41fc5d9113a02357c1b2a43c5d1d" title="Set the call backs to be invoked.">NimBLEScan::setScanCallbacks(NimBLEScanCallbacks* callbacks, bool wantDuplicates)</a>;</code> <br  />
+<li><code>NimBLEScan::setAdvertisedDeviceCallbacks(NimBLEAdvertisedDeviceCallbacks* callbacks, bool wantDuplicates)</code> has been changed to <code>NimBLEScan::setScanCallbacks(NimBLEScanCallbacks* callbacks, bool wantDuplicates);</code> <br  />
 </li>
 </ul>
 <h2><a class="anchor" id="advertised-device"></a>
 Advertised Device</h2>
 <ul>
 <li><code>NimBLEAdvertisedDevice::hasRSSI</code> removed as redundant, RSSI is always available.</li>
-<li><code><a class="el" href="class_nim_b_l_e_advertised_device.html#a12971984cf749647c659b659bdfeda5d" title="Get the payload advertised by the device.">NimBLEAdvertisedDevice::getPayload</a></code> now returns <code>const std::vector&lt;uint8_t&gt;&amp;</code> instead of a pointer to internal memory.</li>
-<li><code><a class="el" href="class_nim_b_l_e_advertised_device.html" title="A representation of a BLE advertised device found by a scan.">NimBLEAdvertisedDevice</a></code> Timestamp removed, if needed then the app should track the time from the callback. <br  />
+<li><code>NimBLEAdvertisedDevice::getPayload</code> now returns <code>const std::vector&lt;uint8_t&gt;&amp;</code> instead of a pointer to internal memory.</li>
+<li><code>NimBLEAdvertisedDevice</code> Timestamp removed, if needed then the app should track the time from the callback. <br  />
  <br  />
 </li>
 </ul>
@@ -284,12 +284,12 @@ Advertising</h1>
 Beacons</h1>
 <ul>
 <li>Removed Eddystone URL as it has been shutdown by google since 2021.</li>
-<li><code><a class="el" href="class_nim_b_l_e_eddystone_t_l_m.html#af5ff73359f3c7f7e76395d32f4efe575" title="Set the temperature to advertise.">NimBLEEddystoneTLM::setTemp</a></code> now takes an <code>int16_t</code> parameter instead of float to be friendly to devices without floating point support.</li>
-<li><code><a class="el" href="class_nim_b_l_e_eddystone_t_l_m.html#a72589029e329c3939b05f9df5e8113ce" title="Get the temperature being advertised.">NimBLEEddystoneTLM::getTemp</a></code> now returns <code>int16_t</code> to work with devices that don't have floating point support.</li>
-<li><code><a class="el" href="class_nim_b_l_e_eddystone_t_l_m.html#a05989cc6df5d5dc423c878d2317ddb89" title="Set the raw data for the beacon advertisement.">NimBLEEddystoneTLM::setData</a></code> now takes a reference to * <code>NimBLEEddystoneTLM::BeaconData</code> instead of <code>std::string</code>.</li>
-<li><code><a class="el" href="class_nim_b_l_e_eddystone_t_l_m.html#a32c448f92ce2e61a9589d1cb0d149d07" title="Retrieve the data that is being advertised.">NimBLEEddystoneTLM::getData</a></code> now returns a reference to * <code>NimBLEEddystoneTLM::BeaconData</code> instead of <code>std::string</code>.</li>
-<li><code><a class="el" href="class_nim_b_l_e_beacon.html#ab6475aaa5d8a93e24401da3b4b272496" title="Set the beacon data.">NimBLEBeacon::setData</a></code> now takes <code>const NimBLEBeacon::BeaconData&amp;</code> instead of <code>std::string</code>.</li>
-<li><code><a class="el" href="class_nim_b_l_e_beacon.html#a8ac2cd99dd5a8a996f3556f9e5d20bbb" title="Retrieve the data that is being advertised.">NimBLEBeacon::getData</a></code> now returns <code>const NimBLEBeacon::BeaconData&amp;</code> instead of <code>std::string</code>. <br  />
+<li><code>NimBLEEddystoneTLM::setTemp</code> now takes an <code>int16_t</code> parameter instead of float to be friendly to devices without floating point support.</li>
+<li><code>NimBLEEddystoneTLM::getTemp</code> now returns <code>int16_t</code> to work with devices that don't have floating point support.</li>
+<li><code>NimBLEEddystoneTLM::setData</code> now takes a reference to * <code>NimBLEEddystoneTLM::BeaconData</code> instead of <code>std::string</code>.</li>
+<li><code>NimBLEEddystoneTLM::getData</code> now returns a reference to * <code>NimBLEEddystoneTLM::BeaconData</code> instead of <code>std::string</code>.</li>
+<li><code>NimBLEBeacon::setData</code> now takes <code>const NimBLEBeacon::BeaconData&amp;</code> instead of <code>std::string</code>.</li>
+<li><code>NimBLEBeacon::getData</code> now returns <code>const NimBLEBeacon::BeaconData&amp;</code> instead of <code>std::string</code>. <br  />
  <br  />
 </li>
 </ul>
