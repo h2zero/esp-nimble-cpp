@@ -18,8 +18,8 @@
 # include "NimBLECharacteristic.h"
 #if CONFIG_BT_NIMBLE_ENABLED && MYNEWT_VAL(BLE_ROLE_PERIPHERAL)
 
-#if defined(ESP_IDF_VERSION_MAJOR)
-# if defined(CONFIG_NIMBLE_CPP_IDF) && ESP_IDF_VERSION_MAJOR < 5
+#if defined(CONFIG_NIMBLE_CPP_IDF)
+# if !defined(ESP_IDF_VERSION_MAJOR) || ESP_IDF_VERSION_MAJOR < 5
 #  define ble_gatts_notify_custom ble_gattc_notify_custom
 #  define ble_gatts_indicate_custom ble_gattc_indicate_custom
 # endif
