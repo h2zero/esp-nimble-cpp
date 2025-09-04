@@ -16,7 +16,7 @@
  */
 
 #ifndef NIMBLE_CPP_ADVERTISEMENT_DATA_H_
-#define NIMBLE_CPP_ADVERTISEMENT_DATA_H_
+#define NIMBLE_CPP_ADVERTISEMENT_DATA_H_ 
 
 #include "nimconfig.h"
 #include "NimClassOfDeviceType.h"

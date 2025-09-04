@@ -36,7 +36,7 @@ static const char* LOG_TAG = "NimBLEAdvertisementData";
  * @param [in] flag The flags to be set in the advertisement.
  * * BLE_HS_ADV_F_DISC_LTD
  * * BLE_HS_ADV_F_DISC_GEN
- * * BLE_HS_ADV_F_BREDR_UNSUP - must always use with NimBLE
+ * * BLE_HS_ADV_F_BREDR_UNSUP - must always use with NimBLE 
  * A flag value of 0 will remove the flags from the advertisement.
  */
 bool NimBLEAdvertisementData::setCODData(const NimClassOfDeviceType::bluetooth_cod_t cod) {

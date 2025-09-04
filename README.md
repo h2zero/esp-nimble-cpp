@@ -45,7 +45,7 @@ You symlink (or copy) the included Kconfig into your platform.io projects src di
 
  Once  Kconfig.projbuild is working then you will be able to choose the configurations according to your setup or the NewNimBLE-esp32 libraries will be compiled. Although you might also need to delete your .pio/build directory before the options appear .. again, the pio run -t menuconfig doens't always notice the new Kconfig files!
 
-menuconfig will shoe on the main first screen as "NewNimBLE-esp32 configuration  --->     " line
+menuconfig will show on the main first screen as "NimBLE-esp32 configuration  --->     " line
 
 
 # Using 
