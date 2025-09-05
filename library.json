@@ -1,6 +1,6 @@
 {
-  "name": "NewNimBLE-esp32",
-  "version": "2.3.3",
+  "name": "esp-nimble-cpp",
+  "version": "2.3.2",
   "description": "C++ wrapper for the NimBLE BLE stack",
   "keywords": [
     "BLE",

@@ -18,10 +18,10 @@
 #ifndef NIMBLE_CPP_ADVERTISEMENT_DATA_H_
 #define NIMBLE_CPP_ADVERTISEMENT_DATA_H_ 
 
-#include "nimconfig.h"
+#include "syscfg/syscfg.h"
 #include "NimClassOfDeviceType.h"
 
-#if (CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_BROADCASTER && !CONFIG_BT_NIMBLE_EXT_ADV) || defined(_DOXYGEN_)
+#if (CONFIG_BT_NIMBLE_ENABLED && MYNEWT_VAL(BLE_ROLE_BROADCASTER) && !MYNEWT_VAL(BLE_EXT_ADV)) || defined(_DOXYGEN_)
 
 # include <cstdint>
 # include <string>
@@ -80,5 +80,5 @@ class NimBLEAdvertisementData {
     std::vector<uint8_t> m_payload{};
 }; // NimBLEAdvertisementData
 
-#endif // (CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_BROADCASTER && !CONFIG_BT_NIMBLE_EXT_ADV) || defined(_DOXYGEN_)
+#endif // (CONFIG_BT_NIMBLE_ENABLED && MYNEWT_VAL(BLE_ROLE_BROADCASTER) && !MYNEWT_VAL(BLE_EXT_ADV)) || defined(_DOXYGEN_)
 #endif // NIMBLE_CPP_ADVERTISEMENT_DATA_H_
