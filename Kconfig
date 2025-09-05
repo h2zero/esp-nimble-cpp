@@ -138,7 +138,7 @@ config NIMBLE_USE_MAGIC_ENUM
     bool "use MAGIC_ENUM for text in debug log at info level."
     default "n"
     help
-        Enabling this option will display return code values as text
+        Enabling this option will display return code values as text 
         messages in the debug log at innfo level. But you need to have the 
         MAGIC_ENUM included from the link https://github.com/Neargye/magic_enum
         and have the and enable it by adding 
