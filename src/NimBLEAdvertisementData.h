@@ -39,7 +39,7 @@ class NimBLEAdvertisementData {
     //
   public:
 
-    bool setCODData(const NimClassOfDeviceType::bluetooth_cod_t cod);
+    bool setCODData(const NimClassOfDeviceType::bluetooth_cod_t cod);  
     bool addData(const uint8_t* data, size_t length);
     bool addData(const std::vector<uint8_t>& data);
     bool setAppearance(uint16_t appearance);

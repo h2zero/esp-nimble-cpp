@@ -40,7 +40,7 @@ static const char* LOG_TAG = "NimBLEAdvertisementData";
  * A flag value of 0 will remove the flags from the advertisement.
  */
 bool NimBLEAdvertisementData::setCODData(const NimClassOfDeviceType::bluetooth_cod_t cod) {
-    int dataLoc = getDataLocation(BLE_HS_ADV_TYPE_CLASS_OF_DEVICE);
+    int dataLoc = getDataLocation(BLE_HS_ADV_TYPE_CLASS_OF_DEVICE);  
     if (dataLoc != -1) {
         removeData(BLE_HS_ADV_TYPE_CLASS_OF_DEVICE);
     }

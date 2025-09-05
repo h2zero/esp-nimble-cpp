@@ -5,7 +5,7 @@
 #include <WString.h>
 #include <string>
 #include <vector>
-
+  
 #if defined(CONFIG_NIMBLE_USE_MAGIC_ENUM)
 # include "magicEnum/magic_enum.hpp"
 # include "magicEnum/magic_enum_iostream.hpp"

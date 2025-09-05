@@ -32,6 +32,8 @@
 # undef max
 /**************************/
 
+
+// updated as READ and WRITE conflict with ArduinoIOT libs
 typedef enum {
     BLE_READ         = BLE_GATT_CHR_F_READ,
     READ_ENC     = BLE_GATT_CHR_F_READ_ENC,
