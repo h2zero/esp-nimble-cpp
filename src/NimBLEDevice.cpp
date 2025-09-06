@@ -1325,7 +1325,7 @@ std::string NimBLEDevice::toString() {
     return getAddress().toString();
 } // toString
 
-# if CONFIG_NIMBLE_CPP_DEBUG_ASSERT_ENABLED || __DOXYGEN__
+# if MYNEWT_VAL(NIMBLE_CPP_DEBUG_ASSERT_ENABLED) || __DOXYGEN__
 /**
  * @brief Debug assert - weak function.
  * @param [in] file The file where the assert occurred.
@@ -1336,7 +1336,7 @@ void nimble_cpp_assert(const char* file, unsigned line) {
     ble_npl_time_delay(10);
     abort();
 }
-# endif // CONFIG_NIMBLE_CPP_DEBUG_ASSERT_ENABLED
+# endif // MYNEWT_VAL(NIMBLE_CPP_DEBUG_ASSERT_ENABLED)
 
 void NimBLEDevice::setDeviceCallbacks(NimBLEDeviceCallbacks* cb) {
     m_pDeviceCallbacks = cb ? cb : &defaultDeviceCallbacks;
