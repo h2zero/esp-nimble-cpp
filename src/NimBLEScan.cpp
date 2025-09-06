@@ -126,7 +126,7 @@ int NimBLEScan::handleGapEvent(ble_gap_event* event, void* arg) {
                 }
             }
 
-#if MYNEWT_VAL(BLE_EXT_ADV)
+# if MYNEWT_VAL(BLE_EXT_ADV)
             if (advertisedDevice->getDataStatus() == BLE_GAP_EXT_ADV_DATA_STATUS_INCOMPLETE) {
                 NIMBLE_LOGD(LOG_TAG, "EXT ADV data incomplete, waiting for more");
                 return 0;
@@ -498,7 +498,7 @@ void NimBLEScan::clearResults() {
  * @brief Dump the scan results to the log.
  */
 void NimBLEScanResults::dump() const {
-# if CONFIG_NIMBLE_CPP_LOG_LEVEL >= 3
+# if MYNEWT_VAL(NIMBLE_CPP_LOG_LEVEL) >= 3
     for (const auto& dev : m_deviceVec) {
         NIMBLE_LOGI(LOG_TAG, "- %s", dev->toString().c_str());
     }
