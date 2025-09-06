@@ -937,7 +937,7 @@ bool NimBLEExtAdvertisement::setServiceData(const NimBLEUUID& uuid, const uint8_
         return false;
     }
 
-    uint8_t sDataLen = 2 + uuidBytes + length;
+    uint8_t sDataLen  = 2 + uuidBytes + length;
     if (m_payload.size() + sDataLen > MYNEWT_VAL(BLE_EXT_ADV_MAX_SIZE)) {
         return false;
     }

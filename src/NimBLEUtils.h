@@ -21,7 +21,15 @@
 #include "syscfg/syscfg.h"
 #if CONFIG_BT_NIMBLE_ENABLED
 
-#if CONFIG_NIMBLE_CPP_DEBUG_ASSERT_ENABLED && !defined NDEBUG
+# ifndef MYNEWT_VAL_NIMBLE_CPP_DEBUG_ASSERT_ENABLED
+#  if defined(CONFIG_NIMBLE_CPP_DEBUG_ASSERT_ENABLED)
+#   define MYNEWT_VAL_NIMBLE_CPP_DEBUG_ASSERT_ENABLED CONFIG_NIMBLE_CPP_DEBUG_ASSERT_ENABLED
+#  else
+#   define MYNEWT_VAL_NIMBLE_CPP_DEBUG_ASSERT_ENABLED (0)
+#  endif
+# endif
+
+#if MYNEWT_VAL(NIMBLE_CPP_DEBUG_ASSERT_ENABLED) && !defined NDEBUG
 void nimble_cpp_assert(const char *file, unsigned line) __attribute((weak, noreturn));
 # define NIMBLE_ATT_VAL_FILE  (__builtin_strrchr(__FILE__, '/') ? \
                             __builtin_strrchr (__FILE__, '/') + 1 : __FILE__)
