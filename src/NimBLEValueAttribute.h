@@ -26,7 +26,7 @@
 
 class NimBLEValueAttribute {
   public:
-    NimBLEValueAttribute(uint16_t maxLen = BLE_ATT_ATTR_MAX_LEN, uint16_t initLen = CONFIG_NIMBLE_CPP_ATT_VALUE_INIT_LENGTH)
+    NimBLEValueAttribute(uint16_t maxLen = BLE_ATT_ATTR_MAX_LEN, uint16_t initLen = MYNEWT_VAL(NIMBLE_CPP_ATT_VALUE_INIT_LENGTH))
         : m_value(initLen, maxLen) {}
 
     /**
