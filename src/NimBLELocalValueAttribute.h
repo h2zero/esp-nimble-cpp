@@ -101,7 +101,7 @@ class NimBLELocalValueAttribute : public NimBLELocalAttribute, public NimBLEValu
     NimBLELocalValueAttribute(const NimBLEUUID& uuid,
                               uint16_t          handle,
                               uint16_t          maxLen,
-                              uint16_t          initLen = CONFIG_NIMBLE_CPP_ATT_VALUE_INIT_LENGTH)
+                              uint16_t          initLen = MYNEWT_VAL(NIMBLE_CPP_ATT_VALUE_INIT_LENGTH))
         : NimBLELocalAttribute(uuid, handle), NimBLEValueAttribute(maxLen, initLen) {}
     /**
      * @brief Destroy the NimBLELocalValueAttribute object.

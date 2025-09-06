@@ -189,7 +189,7 @@ void NimBLEServer::start() {
         return;
     }
 
-# if CONFIG_NIMBLE_CPP_LOG_LEVEL >= 4
+# if MYNEWT_VAL(NIMBLE_CPP_LOG_LEVEL) >= 4
     ble_gatts_show_local();
 # endif
 
