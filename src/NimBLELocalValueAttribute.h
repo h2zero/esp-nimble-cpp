@@ -32,12 +32,14 @@
 # undef max
 /**************************/
 
+
+// updated as READ and WRITE conflict with ArduinoIOT libs
 typedef enum {
-    READ         = BLE_GATT_CHR_F_READ,
+    BLE_READ         = BLE_GATT_CHR_F_READ,
     READ_ENC     = BLE_GATT_CHR_F_READ_ENC,
     READ_AUTHEN  = BLE_GATT_CHR_F_READ_AUTHEN,
     READ_AUTHOR  = BLE_GATT_CHR_F_READ_AUTHOR,
-    WRITE        = BLE_GATT_CHR_F_WRITE,
+    BLE_WRITE        = BLE_GATT_CHR_F_WRITE,
     WRITE_NR     = BLE_GATT_CHR_F_WRITE_NO_RSP,
     WRITE_ENC    = BLE_GATT_CHR_F_WRITE_ENC,
     WRITE_AUTHEN = BLE_GATT_CHR_F_WRITE_AUTHEN,

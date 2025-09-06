@@ -50,18 +50,18 @@ NimBLEHIDDevice::NimBLEHIDDevice(NimBLEServer* server) {
     m_batterySvc    = server->createService(batterySvcUuid);
 
     // Mandatory characteristic for device info service
-    m_pnpChr = m_deviceInfoSvc->createCharacteristic(pnpCharUuid, NIMBLE_PROPERTY::READ);
+    m_pnpChr = m_deviceInfoSvc->createCharacteristic(pnpCharUuid, NIMBLE_PROPERTY::BLE_READ);
 
     // Mandatory characteristics for HID service
-    m_hidInfoChr    = m_hidSvc->createCharacteristic(hidInfoCharUuid, NIMBLE_PROPERTY::READ);
-    m_reportMapChr  = m_hidSvc->createCharacteristic(reportMapCharUuid, NIMBLE_PROPERTY::READ);
+    m_hidInfoChr    = m_hidSvc->createCharacteristic(hidInfoCharUuid, NIMBLE_PROPERTY::BLE_READ);
+    m_reportMapChr  = m_hidSvc->createCharacteristic(reportMapCharUuid, NIMBLE_PROPERTY::BLE_READ);
     m_hidControlChr = m_hidSvc->createCharacteristic(hidControlCharUuid, NIMBLE_PROPERTY::WRITE_NR);
     m_protocolModeChr =
-        m_hidSvc->createCharacteristic(protocolModeCharUuid, NIMBLE_PROPERTY::WRITE_NR | NIMBLE_PROPERTY::READ);
+        m_hidSvc->createCharacteristic(protocolModeCharUuid, NIMBLE_PROPERTY::WRITE_NR | NIMBLE_PROPERTY::BLE_READ);
 
     // Mandatory battery level characteristic with notification and presence descriptor
     m_batteryLevelChr =
-        m_batterySvc->createCharacteristic(batteryLevelCharUuid, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY);
+        m_batterySvc->createCharacteristic(batteryLevelCharUuid, NIMBLE_PROPERTY::BLE_READ | NIMBLE_PROPERTY::NOTIFY);
     NimBLE2904* batteryLevelDescriptor = m_batteryLevelChr->create2904();
     batteryLevelDescriptor->setFormat(NimBLE2904::FORMAT_UINT8);
     batteryLevelDescriptor->setUnit(0x27ad); // percentage
@@ -96,7 +96,7 @@ void NimBLEHIDDevice::startServices() {
  */
 bool NimBLEHIDDevice::setManufacturer(const std::string& name) {
     if (m_manufacturerChr == nullptr) {
-        m_manufacturerChr = m_deviceInfoSvc->createCharacteristic(m_manufacturerChrUuid, NIMBLE_PROPERTY::READ);
+        m_manufacturerChr = m_deviceInfoSvc->createCharacteristic(m_manufacturerChrUuid, NIMBLE_PROPERTY::BLE_READ);
     }
 
     if (m_manufacturerChr) {
@@ -178,11 +178,13 @@ NimBLECharacteristic* NimBLEHIDDevice::locateReportCharacteristicByIdAndType(uin
 NimBLECharacteristic* NimBLEHIDDevice::getInputReport(uint8_t reportId) {
     NimBLECharacteristic* inputReportChr = locateReportCharacteristicByIdAndType(reportId, 0x01);
     if (inputReportChr == nullptr) {
+
+        // update the input report to be writable also, the RC HID wants this to be true update to orignal nimble fork 
         inputReportChr =
             m_hidSvc->createCharacteristic(inputReportChrUuid,
-                                           NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC);
+                                           NIMBLE_PROPERTY::BLE_READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::BLE_WRITE | NIMBLE_PROPERTY::WRITE_ENC);
         NimBLEDescriptor* inputReportDsc =
-            inputReportChr->createDescriptor(featureReportDscUuid, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::READ_ENC);
+            inputReportChr->createDescriptor(featureReportDscUuid, NIMBLE_PROPERTY::BLE_READ | NIMBLE_PROPERTY::READ_ENC| NIMBLE_PROPERTY::BLE_WRITE | NIMBLE_PROPERTY::WRITE_ENC);
 
         uint8_t desc1_val[] = {reportId, 0x01};
         inputReportDsc->setValue(desc1_val, 2);
@@ -203,11 +205,11 @@ NimBLECharacteristic* NimBLEHIDDevice::getOutputReport(uint8_t reportId) {
     if (outputReportChr == nullptr) {
         outputReportChr =
             m_hidSvc->createCharacteristic(inputReportChrUuid,
-                                           NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::WRITE_NR |
+                                           NIMBLE_PROPERTY::BLE_READ | NIMBLE_PROPERTY::BLE_WRITE | NIMBLE_PROPERTY::WRITE_NR |
                                                NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC);
         NimBLEDescriptor* outputReportDsc = outputReportChr->createDescriptor(
             featureReportDscUuid,
-            NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC);
+            NIMBLE_PROPERTY::BLE_READ | NIMBLE_PROPERTY::BLE_WRITE | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC);
         uint8_t desc1_val[] = {reportId, 0x02};
         outputReportDsc->setValue(desc1_val, 2);
     }
@@ -227,10 +229,10 @@ NimBLECharacteristic* NimBLEHIDDevice::getFeatureReport(uint8_t reportId) {
     if (featureReportChr == nullptr) {
         featureReportChr = m_hidSvc->createCharacteristic(
             inputReportChrUuid,
-            NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC);
+            NIMBLE_PROPERTY::BLE_READ | NIMBLE_PROPERTY::BLE_WRITE | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC);
         NimBLEDescriptor* featureReportDsc = featureReportChr->createDescriptor(
             featureReportDscUuid,
-            NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC);
+            NIMBLE_PROPERTY::BLE_READ | NIMBLE_PROPERTY::BLE_WRITE | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC);
 
         uint8_t desc1_val[] = {reportId, 0x03};
         featureReportDsc->setValue(desc1_val, 2);
@@ -265,7 +267,7 @@ NimBLECharacteristic* NimBLEHIDDevice::getBootOutput() {
     }
 
     return m_hidSvc->createCharacteristic(bootOutputChrUuid,
-                                          NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::WRITE_NR);
+                                          NIMBLE_PROPERTY::BLE_READ | NIMBLE_PROPERTY::BLE_WRITE | NIMBLE_PROPERTY::WRITE_NR);
 } // getBootOutput
 
 /**

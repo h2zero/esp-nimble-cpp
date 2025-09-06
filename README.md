@@ -1,29 +1,18 @@
-[![Release Version](https://img.shields.io/github/release/h2zero/esp-nimble-cpp.svg?style=plastic)
-![Release Date](https://img.shields.io/github/release-date/h2zero/esp-nimble-cpp.svg?style=plastic)](https://github.com/h2zero/esp-nimble-cpp/releases/latest/)  
-
-> [!IMPORTANT]
-> Version 2 is now released!
-> Check out the [1.x to 2.x Migration Guide](docs/1.x_to2.x_migration_guide.md) and [Release Notes](https://github.com/h2zero/esp-nimble-cpp/releases/latest/)
 
 # esp-nimble-cpp
 
-NimBLE CPP library for use with ESP32 that attempts to maintain compatibility with the [nkolban cpp_utils BLE API](https://github.com/nkolban/esp32-snippets/tree/master/cpp_utils).
 
-**An Arduino version of this library, including NimBLE, can be [found here.](https://github.com/h2zero/NimBLE-Arduino)**
-
-This library **significantly** reduces resource usage and improves performance for ESP32 BLE applications as compared    
-with the bluedroid based library. The goal is to maintain, as much as reasonable, compatibility with the original   
-library but using the NimBLE stack. In addition, this library will be more actively developed and maintained   
-to provide improved capabilities and stability over the original.
-
-**Testing shows a nearly 50% reduction in flash use and approx. 100kB less ram consumed vs the original!**  
-*Your results may vary*  
-<br/>
+Bluetooth low energy (BLE) library for Arduino based on NimBLE. this is based on https://github.com/h2zero/esp-nimble-cpp but it is updated to work with #ArduinoIoT and also with esp32 #Arduino 3.3.0 core
 
 # What is NimBLE?
 NimBLE is a completely open source Bluetooth Low Energy stack produced by [Apache](https://github.com/apache/mynewt-nimble).  
 It is more suited to resource constrained devices than bluedroid and has now been ported to the ESP32 by Espressif.  
 <br/>
+
+## Using with Arduino as an IDF component and CMake
+When using this library along with Arduino and compiling with *CMake* you must add `add_compile_definitions(ARDUINO_ARCH_ESP32=1)`  
+in your project/CMakeLists.txt after the line `include($ENV{IDF_PATH}/tools/cmake/project.cmake)` to prevent Arduino from releasing BLE memory.
+<br>
 
 # Installation
 
@@ -35,6 +24,29 @@ Configure settings in `NimBLE Options`.
 `#include "NimBLEDevice.h"` in main.cpp.  
 Call `NimBLEDevice::init("");` in `app_main`.  
 <br/>
+### vscode platformio.ini example
+
+<code>
+platform = https://github.com/pioarduino/platform-espressif32/releases/download/stable/platform-espressif32.zip
+board = esp32s3-n16r8-USBOTG
+framework = 
+	arduino
+	espidf
+ lib_deps = 
+	NewNimBLE-esp32
+</code>
+
+# platform.io Kconfig
+Kconfig is used by the platform.io menuconfig (accessed by running: pio run -t menuconfig) to interactively manage the various #ifdef statements throughout the espidf and supporting libraries. The menuconfig process generates the sdkconfig file which is ultimately used behind the scenes by espidf compile+build process.
+
+Make sure to append or symlink this Kconfig content in lib/NewNimBLE-esp32 into the Kconfig.project file locted in the /src folder of your project.
+
+You symlink (or copy) the included Kconfig into your platform.io projects src directory. The file should be named Kconfig.projbuild in your projects src\ directory
+
+ Once  Kconfig.projbuild is working then you will be able to choose the configurations according to your setup or the NewNimBLE-esp32 libraries will be compiled. Although you might also need to delete your .pio/build directory before the options appear .. again, the pio run -t menuconfig doens't always notice the new Kconfig files!
+
+menuconfig will show on the main first screen as "NimBLE-esp32 configuration  --->     " line
+
 
 # Using 
 This library is intended to be compatible with the original ESP32 BLE functions and types with minor changes.  
@@ -48,22 +60,6 @@ Also see [Improvements_and_updates](docs/Improvements_and_updates.md) for inform
 [Full API documentation and class list can be found here.](https://h2zero.github.io/esp-nimble-cpp/)  
 <br/>  
 
-## Using with Arduino as an IDF component and CMake
-When using this library along with Arduino and compiling with *CMake* you must add `add_compile_definitions(ARDUINO_ARCH_ESP32=1)`  
-in your project/CMakeLists.txt after the line `include($ENV{IDF_PATH}/tools/cmake/project.cmake)` to prevent Arduino from releasing BLE memory.
-<br>
 
-# Sponsors
-Thank you to all the sponsors who support this project!
 
-<!-- sponsors --><!-- sponsors -->
-
-If you use this library for a commercial product please consider [sponsoring the development](https://github.com/sponsors/h2zero) to ensure the continued updates and maintenance.  
-<br/>
-
-# Acknowledgments
-* [nkolban](https://github.com/nkolban) and [chegewara](https://github.com/chegewara) for the [original esp32 BLE library](https://github.com/nkolban/esp32-snippets/tree/master/cpp_utils) this project was derived from.
-* [beegee-tokyo](https://github.com/beegee-tokyo) for contributing your time to test/debug and contributing the beacon examples.
-* [Jeroen88](https://github.com/Jeroen88) for the amazing help debugging and improving the client code.  
-<br/>  
 
