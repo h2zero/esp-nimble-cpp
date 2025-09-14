@@ -3,7 +3,7 @@
 ## Put BLE functions in a task running on the NimBLE stack core
 
 When commands are sent to the stack from a different core they can experience delays in execution.  
-This library detects this and invokes the esp32 IPC to reroute these commands through the correct core but this also increases overhead.  
+This library is threadsafe. It detects calls from other cores and invokes the esp32 IPC to reroute these commands through the correct core but this also increases overhead.  
 Therefore it is highly recommended to create tasks for BLE to run on the same core, the macro `CONFIG_BT_NIMBLE_PINNED_TO_CORE` can be used to set the core.
 <br/>  
 
