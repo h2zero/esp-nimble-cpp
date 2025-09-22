@@ -322,11 +322,21 @@ done:
     return true;
 } // sendValue
 
+void NimBLECharacteristic::readEvent(NimBLEConnInfo& connInfo) {
+    m_pCallbacks->onRead(this, connInfo);
+} // readEvent
+
 void NimBLECharacteristic::readEvent(NimBLEConnInfo& connInfo, NimBLEReadEventArgs& args) {
+    m_pCallbacks->onRead(this, connInfo);
     m_pCallbacks->onRead(this, connInfo, args);
 } // readEvent
 
+void NimBLECharacteristic::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) {
+    m_pCallbacks->onWrite(this, connInfo);
+} // writeEvent
+
 void NimBLECharacteristic::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo, NimBLEWriteEventArgs& args) {
+    m_pCallbacks->onWrite(this, connInfo);
     m_pCallbacks->onWrite(this, connInfo, args);
     if(!args.isCanceled()) {
         setValue(val, len);
@@ -381,6 +391,9 @@ void NimBLECharacteristicCallbacks::onRead(NimBLECharacteristic* pCharacteristic
     NIMBLE_LOGD("NimBLECharacteristicCallbacks", "onRead: default");
 } // onRead
 
+void NimBLECharacteristicCallbacks::onRead(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo) {
+    NIMBLE_LOGD("NimBLECharacteristicCallbacks", "onRead: default");
+} // onRead
 /**
  * @brief Callback function to support a write request.
  * @param [in] pCharacteristic The characteristic that is the source of the event.
@@ -390,6 +403,14 @@ void NimBLECharacteristicCallbacks::onWrite(NimBLECharacteristic* pCharacteristi
     NIMBLE_LOGD("NimBLECharacteristicCallbacks", "onWrite: default");
 } // onWrite
 
+/**
+ * @brief Callback function to support a write request.
+ * @param [in] pCharacteristic The characteristic that is the source of the event.
+ * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
+ */
+void NimBLECharacteristicCallbacks::onWrite(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo) {
+    NIMBLE_LOGD("NimBLECharacteristicCallbacks", "onWrite: default");
+} // onWrite
 /**
  * @brief Callback function to support a Notify/Indicate Status report.
  * @param [in] pCharacteristic The characteristic that is the source of the event.

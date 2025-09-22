@@ -115,6 +115,7 @@ class NimBLELocalValueAttribute : public NimBLELocalAttribute, public NimBLEValu
      * @details This function is called by NimBLEServer when a read request is received.
      */
     virtual void readEvent(NimBLEConnInfo& connInfo, NimBLEReadEventArgs& args) = 0;
+    virtual void readEvent(NimBLEConnInfo& connInfo) = 0;
 
     /**
      * @brief Callback function to support a write request.
@@ -124,6 +125,7 @@ class NimBLELocalValueAttribute : public NimBLELocalAttribute, public NimBLEValu
      * @details This function is called by NimBLEServer when a write request is received.
      */
     virtual void writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo, NimBLEWriteEventArgs& args) = 0;
+    virtual void writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) = 0;
 
     /**
      * @brief Get a pointer to value of the attribute.

@@ -634,6 +634,7 @@ int NimBLEServer::handleGattEvent(uint16_t connHandle, uint16_t attrHandle, ble_
             // or if this is an internal read (handle is NONE)
             NimBLEReadEventArgs eventArgs = NimBLEReadEventArgs();
             if (ctxt->om->om_len > 0 && connHandle != BLE_HS_CONN_HANDLE_NONE) {
+                pAtt->readEvent(peerInfo);
                 pAtt->readEvent(peerInfo, eventArgs);
             }
 
@@ -676,6 +677,7 @@ int NimBLEServer::handleGattEvent(uint16_t connHandle, uint16_t attrHandle, ble_
             auto newData = std::string((char*)buf, len);
 
             NimBLEWriteEventArgs eventArgs = NimBLEWriteEventArgs(oldData, newData);
+            pAtt->writeEvent(buf, len, peerInfo);
             pAtt->writeEvent(buf, len, peerInfo, eventArgs);
             return 0;
         }
