@@ -16,13 +16,13 @@
  */
 
 #include "NimBLEServer.h"
-#if CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_PERIPHERAL
+#if CONFIG_BT_NIMBLE_ENABLED && MYNEWT_VAL(BLE_ROLE_PERIPHERAL)
 
 # include "NimBLEDevice.h"
 # include "NimBLELog.h"
 #include "NimBLEEventArgs.h"
 
-# if CONFIG_BT_NIMBLE_ROLE_CENTRAL
+# if MYNEWT_VAL(BLE_ROLE_CENTRAL)
 #  include "NimBLEClient.h"
 # endif
 
@@ -50,7 +50,7 @@ NimBLEServer::NimBLEServer()
     : m_gattsStarted{false},
       m_svcChanged{false},
       m_deleteCallbacks{false},
-# if !CONFIG_BT_NIMBLE_EXT_ADV
+# if !MYNEWT_VAL(BLE_EXT_ADV)
       m_advertiseOnDisconnect{false},
 # endif
       m_pServerCallbacks{&defaultCallbacks},
@@ -70,7 +70,7 @@ NimBLEServer::~NimBLEServer() {
         delete m_pServerCallbacks;
     }
 
-# if CONFIG_BT_NIMBLE_ROLE_CENTRAL
+# if MYNEWT_VAL(BLE_ROLE_CENTRAL)
     if (m_pClient != nullptr) {
         delete m_pClient;
     }
@@ -144,7 +144,7 @@ NimBLEService* NimBLEServer::getServiceByHandle(uint16_t handle) const {
     return nullptr;
 }
 
-# if CONFIG_BT_NIMBLE_EXT_ADV
+# if MYNEWT_VAL(BLE_EXT_ADV)
 /**
  * @brief Retrieve the advertising object that can be used to advertise the existence of the server.
  * @return A pinter to an advertising object.
@@ -154,7 +154,7 @@ NimBLEExtAdvertising* NimBLEServer::getAdvertising() const {
 } // getAdvertising
 # endif
 
-# if (!CONFIG_BT_NIMBLE_EXT_ADV && CONFIG_BT_NIMBLE_ROLE_BROADCASTER) || defined(_DOXYGEN_)
+# if (!MYNEWT_VAL(BLE_EXT_ADV) && MYNEWT_VAL(BLE_ROLE_BROADCASTER)) || defined(_DOXYGEN_)
 /**
  * @brief Retrieve the advertising object that can be used to advertise the existence of the server.
  * @return A pointer to an advertising object.
@@ -190,7 +190,7 @@ void NimBLEServer::start() {
         return;
     }
 
-# if CONFIG_NIMBLE_CPP_LOG_LEVEL >= 4
+# if MYNEWT_VAL(NIMBLE_CPP_LOG_LEVEL) >= 4
     ble_gatts_show_local();
 # endif
 
@@ -251,7 +251,7 @@ bool NimBLEServer::disconnect(const NimBLEConnInfo& connInfo, uint8_t reason) co
     return disconnect(connInfo.getConnHandle(), reason);
 } // disconnect
 
-# if !CONFIG_BT_NIMBLE_EXT_ADV || defined(_DOXYGEN_)
+# if !MYNEWT_VAL(BLE_EXT_ADV) || defined(_DOXYGEN_)
 /**
  * @brief Set the server to automatically start advertising when a client disconnects.
  * @param [in] enable true == advertise, false == don't advertise.
@@ -364,7 +364,7 @@ int NimBLEServer::handleGapEvent(ble_gap_event* event, void* arg) {
                 NIMBLE_LOGE(LOG_TAG, "Connection failed rc = %d %s",
                             rc,
                             NimBLEUtils::returnCodeToString(rc));
-# if !CONFIG_BT_NIMBLE_EXT_ADV && CONFIG_BT_NIMBLE_ROLE_BROADCASTER
+# if !MYNEWT_VAL(BLE_EXT_ADV) && MYNEWT_VAL(BLE_ROLE_BROADCASTER)
                 NimBLEDevice::startAdvertising();
 # endif
             } else {
@@ -408,7 +408,7 @@ int NimBLEServer::handleGapEvent(ble_gap_event* event, void* arg) {
                 }
             }
 
-# if CONFIG_BT_NIMBLE_ROLE_CENTRAL
+# if MYNEWT_VAL(BLE_ROLE_CENTRAL)
             if (pServer->m_pClient && pServer->m_pClient->m_connHandle == event->disconnect.conn.conn_handle) {
                 // If this was also the client make sure it's flagged as disconnected.
                 pServer->m_pClient->m_connHandle = BLE_HS_CONN_HANDLE_NONE;
@@ -421,7 +421,7 @@ int NimBLEServer::handleGapEvent(ble_gap_event* event, void* arg) {
 
             peerInfo.m_desc = event->disconnect.conn;
             pServer->m_pServerCallbacks->onDisconnect(pServer, peerInfo, event->disconnect.reason);
-# if !CONFIG_BT_NIMBLE_EXT_ADV
+# if !MYNEWT_VAL(BLE_EXT_ADV)
             if (pServer->m_advertiseOnDisconnect) {
                 pServer->startAdvertising();
             }
@@ -495,10 +495,10 @@ int NimBLEServer::handleGapEvent(ble_gap_event* event, void* arg) {
         } // BLE_GAP_EVENT_NOTIFY_TX
 
         case BLE_GAP_EVENT_ADV_COMPLETE: {
-# if CONFIG_BT_NIMBLE_EXT_ADV && CONFIG_BT_NIMBLE_ROLE_BROADCASTER
+# if MYNEWT_VAL(BLE_EXT_ADV) && MYNEWT_VAL(BLE_ROLE_BROADCASTER)
             case BLE_GAP_EVENT_SCAN_REQ_RCVD:
                 return NimBLEExtAdvertising::handleGapEvent(event, arg);
-# elif CONFIG_BT_NIMBLE_ROLE_BROADCASTER
+# elif MYNEWT_VAL(BLE_ROLE_BROADCASTER)
             return NimBLEAdvertising::handleGapEvent(event, arg);
 # endif
         } // BLE_GAP_EVENT_ADV_COMPLETE | BLE_GAP_EVENT_SCAN_REQ_RCVD
@@ -538,7 +538,7 @@ int NimBLEServer::handleGapEvent(ble_gap_event* event, void* arg) {
             }
 
             pServer->m_pServerCallbacks->onAuthenticationComplete(peerInfo);
-# if CONFIG_BT_NIMBLE_ROLE_CENTRAL
+# if MYNEWT_VAL(BLE_ROLE_CENTRAL)
             if (pServer->m_pClient && pServer->m_pClient->m_connHandle == event->enc_change.conn_handle) {
                 NimBLEClient::handleGapEvent(event, pServer->m_pClient);
             }
@@ -750,7 +750,7 @@ void NimBLEServer::removeService(NimBLEService* service, bool deleteSvc) {
 
     service->setRemoved(deleteSvc ? NIMBLE_ATT_REMOVE_DELETE : NIMBLE_ATT_REMOVE_HIDE);
     serviceChanged();
-# if !CONFIG_BT_NIMBLE_EXT_ADV && CONFIG_BT_NIMBLE_ROLE_BROADCASTER
+# if !MYNEWT_VAL(BLE_EXT_ADV) && MYNEWT_VAL(BLE_ROLE_BROADCASTER)
     NimBLEDevice::getAdvertising()->removeServiceUUID(service->getUUID());
 # endif
 } // removeService
@@ -787,7 +787,7 @@ void NimBLEServer::resetGATT() {
         return;
     }
 
-# if CONFIG_BT_NIMBLE_ROLE_BROADCASTER
+# if MYNEWT_VAL(BLE_ROLE_BROADCASTER)
     NimBLEDevice::stopAdvertising();
 # endif
     ble_gatts_reset();
@@ -856,7 +856,7 @@ bool NimBLEServer::getPhy(uint16_t connHandle, uint8_t* txPhy, uint8_t* rxPhy) {
     return rc == 0;
 } // getPhy
 
-# if CONFIG_BT_NIMBLE_EXT_ADV
+# if MYNEWT_VAL(BLE_EXT_ADV)
 /**
  * @brief Start advertising.
  * @param [in] instId The extended advertisement instance ID to start.
@@ -881,7 +881,7 @@ bool NimBLEServer::stopAdvertising(uint8_t instId) const {
 
 # endif
 
-# if (!CONFIG_BT_NIMBLE_EXT_ADV && CONFIG_BT_NIMBLE_ROLE_BROADCASTER) || defined(_DOXYGEN_)
+# if (!MYNEWT_VAL(BLE_EXT_ADV) && MYNEWT_VAL(BLE_ROLE_BROADCASTER)) || defined(_DOXYGEN_)
 /**
  * @brief Start advertising.
  * @param [in] duration The duration in milliseconds to advertise for, default = forever.
@@ -958,7 +958,7 @@ void NimBLEServer::setDataLen(uint16_t connHandle, uint16_t octets) const {
 # endif
 } // setDataLen
 
-# if CONFIG_BT_NIMBLE_ROLE_CENTRAL
+# if MYNEWT_VAL(BLE_ROLE_CENTRAL)
 /**
  * @brief Create a client instance from the connection handle.
  * @param [in] connHandle The connection handle to create a client instance from.
@@ -1045,4 +1045,4 @@ void NimBLEServerCallbacks::onPhyUpdate(NimBLEConnInfo& connInfo, uint8_t txPhy,
     NIMBLE_LOGD("NimBLEServerCallbacks", "onPhyUpdate: default, txPhy: %d, rxPhy: %d", txPhy, rxPhy);
 } // onPhyUpdate
 
-#endif // CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_PERIPHERAL
+#endif // CONFIG_BT_NIMBLE_ENABLED && MYNEWT_VAL(BLE_ROLE_PERIPHERAL)

@@ -18,8 +18,8 @@
 #ifndef NIMBLE_LOCAL_VALUE_ATTRIBUTE_H_
 #define NIMBLE_LOCAL_VALUE_ATTRIBUTE_H_
 
-#include "nimconfig.h"
-#if CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_PERIPHERAL
+#include "syscfg/syscfg.h"
+#if CONFIG_BT_NIMBLE_ENABLED && MYNEWT_VAL(BLE_ROLE_PERIPHERAL)
 
 # if defined(CONFIG_NIMBLE_CPP_IDF)
 #  include "host/ble_hs.h"
@@ -102,7 +102,7 @@ class NimBLELocalValueAttribute : public NimBLELocalAttribute, public NimBLEValu
     NimBLELocalValueAttribute(const NimBLEUUID& uuid,
                               uint16_t          handle,
                               uint16_t          maxLen,
-                              uint16_t          initLen = CONFIG_NIMBLE_CPP_ATT_VALUE_INIT_LENGTH)
+                              uint16_t          initLen = MYNEWT_VAL(NIMBLE_CPP_ATT_VALUE_INIT_LENGTH))
         : NimBLELocalAttribute(uuid, handle), NimBLEValueAttribute(maxLen, initLen) {}
     /**
      * @brief Destroy the NimBLELocalValueAttribute object.
@@ -141,5 +141,5 @@ class NimBLELocalValueAttribute : public NimBLELocalAttribute, public NimBLEValu
     uint16_t m_properties{0};
 };
 
-#endif // CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_PERIPHERAL
+#endif // CONFIG_BT_NIMBLE_ENABLED && MYNEWT_VAL(BLE_ROLE_PERIPHERAL)
 #endif // NIMBLE_LOCAL_VALUE_ATTRIBUTE_H_
