@@ -123,11 +123,8 @@ std::string NimBLEDescriptor::toString() const {
     return res;
 } // toString
 
-void NimBLEDescriptor::readEvent(NimBLEConnInfo& connInfo) {
-    m_pCallbacks->onRead(this, connInfo);
-} // readEvent
-
 void NimBLEDescriptor::readEvent(NimBLEConnInfo& connInfo, NimBLEReadEventArgs& args) {
+    m_pCallbacks->onRead(this, connInfo);
     m_pCallbacks->onRead(this, connInfo, args);
 } // readEvent
 
@@ -139,9 +136,6 @@ void NimBLEDescriptor::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnIn
     }
 } // writeEvent
 
-void NimBLEDescriptor::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) {
-    m_pCallbacks->onWrite(this, connInfo);
-} // writeEvent
 /**
  * @brief Callback function to support a read request.
  * @param [in] pDescriptor The descriptor that is the source of the event.

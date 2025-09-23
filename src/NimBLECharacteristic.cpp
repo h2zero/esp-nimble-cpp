@@ -322,18 +322,10 @@ done:
     return true;
 } // sendValue
 
-void NimBLECharacteristic::readEvent(NimBLEConnInfo& connInfo) {
-    m_pCallbacks->onRead(this, connInfo);
-} // readEvent
-
 void NimBLECharacteristic::readEvent(NimBLEConnInfo& connInfo, NimBLEReadEventArgs& args) {
     m_pCallbacks->onRead(this, connInfo);
     m_pCallbacks->onRead(this, connInfo, args);
 } // readEvent
-
-void NimBLECharacteristic::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) {
-    m_pCallbacks->onWrite(this, connInfo);
-} // writeEvent
 
 void NimBLECharacteristic::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo, NimBLEWriteEventArgs& args) {
     m_pCallbacks->onWrite(this, connInfo);
