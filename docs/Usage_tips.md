@@ -32,6 +32,29 @@ or nullptr such as when  calling `NimBLEClient::getService`. The latter being a 
 Most of the functions in this library return something that should be checked before proceeding.  
 <br/>  
 
+## Device 'Local Name'
+
+'Local name' refers to how the device is seen and displayed.
+
+A devices 'Local name' can be thought of as coming from two places, the <i>Advertising "Local name"</i> and the <i>the GATT Device Name</i>.
+
+### Advertising "Local name"
+
+Field found in the advertising data payload. Value is set via NimBLEAdvertising::setName().
+
+### GATT Device Name
+
+Characteristic UUID 0x2A00 in the Generic Access service. Set via NimBLEDevice::init() or NimBLEDevice::setDeviceName().
+
+This characteristic is read <b>after</b> connecting to the device.
+
+### Important considerations
+
+* OSes cache the <i>'GATT Device Name'</i>.
+* OSes update the device name based on the <i>'GATT Device Name'</i> after connecting to a device. This means that if you set the <i>Advertising 'Local name'</i> to "ABCD" but the <i>'GATT Device Name'</i> to "12345", the device will be seen as "ABCD" until connecting to the device, at which time the devices name will change to "12345".
+* If no <i>'Advertising "Local name"'</i> is set, OSes, such as iOS, may display the devices name as 'Unnamed' until the device is connected to, at which time the <i>'GATT Device Name'</i> is read and used instead.
+
+It is recommended that both <i>'Advertising "Local name"'</i> <b>and</> <i>'GATT Device Name'</i> be set appropriately, after considering the above described behavior.
 ## Persisted bonds can be lost due to low MAX_CCCDS
 
 The symptom: CONFIG_BT_NIMBLE_MAX_BONDS is set to N, but a smaller number of bonds is preserved, perhaps even a single bond. The limitation of persisted bonds can be observed via NimBLEDevice::getNumBonds(). The number may not reach CONFIG_BT_NIMBLE_MAX_BONDS.
