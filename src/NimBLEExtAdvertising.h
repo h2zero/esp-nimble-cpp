@@ -19,6 +19,7 @@
 #define NIMBLE_CPP_EXTADVERTISING_H_
 
 #include "syscfg/syscfg.h"
+#include "NimClassOfDeviceType.h"
 #if CONFIG_BT_NIMBLE_ENABLED && MYNEWT_VAL(BLE_ROLE_BROADCASTER) && MYNEWT_VAL(BLE_EXT_ADV)
 
 # if defined(CONFIG_NIMBLE_CPP_IDF)
@@ -46,6 +47,8 @@ class NimBLEUUID;
 class NimBLEExtAdvertisement {
   public:
     NimBLEExtAdvertisement(uint8_t priPhy = BLE_HCI_LE_PHY_1M, uint8_t secPhy = BLE_HCI_LE_PHY_1M);
+
+    bool setCODData(const NimClassOfDeviceType::bluetooth_cod_t cod);  
     bool        setAppearance(uint16_t appearance);
     bool        addServiceUUID(const NimBLEUUID& serviceUUID);
     bool        addServiceUUID(const char* serviceUUID);

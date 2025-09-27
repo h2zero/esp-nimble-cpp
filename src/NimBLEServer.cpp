@@ -95,6 +95,8 @@ NimBLEService* NimBLEServer::createService(const NimBLEUUID& uuid) {
     m_svcVec.push_back(pService);
     serviceChanged();
 
+    // added for debugging by synapse2
+    NIMBLE_LOGI(LOG_TAG, "Added serice to GATT table service %s", pService->toString().c_str());
     return pService;
 } // createService
 
@@ -189,7 +191,7 @@ void NimBLEServer::start() {
         return;
     }
 
-# if MYNEWT_VAL(NIMBLE_CPP_LOG_LEVEL) >= 4
+# if CONFIG_NIMBLE_CPP_LOG_LEVEL >= 4
     ble_gatts_show_local();
 # endif
 
@@ -743,6 +745,17 @@ void NimBLEServer::removeService(NimBLEService* service, bool deleteSvc) {
 } // removeService
 
 /**
+ * @brief debug to get a string of teeh services database
+ * 
+ */
+std::string NimBLEServer::toString(){
+
+    std::string rStr ="Nimble Server service count " + m_svcVec.size(); + "\n";
+
+    return rStr;
+}
+
+/**
  * @brief Adds a service which was either already created but removed from availability,\n
  * or created and later added to services list.
  * @param [in] service The service object to add.
@@ -1031,5 +1044,7 @@ void NimBLEServerCallbacks::onConnParamsUpdate(NimBLEConnInfo& connInfo) {
 void NimBLEServerCallbacks::onPhyUpdate(NimBLEConnInfo& connInfo, uint8_t txPhy, uint8_t rxPhy) {
     NIMBLE_LOGD("NimBLEServerCallbacks", "onPhyUpdate: default, txPhy: %d, rxPhy: %d", txPhy, rxPhy);
 } // onPhyUpdate
+
+
 
 #endif // CONFIG_BT_NIMBLE_ENABLED && MYNEWT_VAL(BLE_ROLE_PERIPHERAL)

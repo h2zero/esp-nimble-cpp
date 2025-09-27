@@ -23,6 +23,12 @@
 
 # include <string>
 
+// updated as READ and WRITE conflict with ArduinoIOT libs
+# if defined(CONFIG_NIMBLE_USING_ARDUINO_IOT)
+#  define WRITE BLE_WRITE
+#  define READ BLE_READ
+# endif
+
 static const char*               LOG_TAG = "NimBLEDescriptor";
 static NimBLEDescriptorCallbacks defaultCallbacks;
 
@@ -146,5 +152,12 @@ void NimBLEDescriptorCallbacks::onRead(NimBLEDescriptor* pDescriptor, NimBLEConn
 void NimBLEDescriptorCallbacks::onWrite(NimBLEDescriptor* pDescriptor, NimBLEConnInfo& connInfo) {
     NIMBLE_LOGD("NimBLEDescriptorCallbacks", "onWrite: default");
 } // onWrite
+
+
+// updated as READ and WRITE conflict with ArduinoIOT libs
+# if defined(CONFIG_NIMBLE_USING_ARDUINO_IOT)
+#  undef WRITE
+#  undef READ
+# endif
 
 #endif // CONFIG_BT_NIMBLE_ENABLED && MYNEWT_VAL(BLE_ROLE_PERIPHERAL)

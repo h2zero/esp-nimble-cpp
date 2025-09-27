@@ -33,11 +33,17 @@
 /**************************/
 
 typedef enum {
-    READ         = BLE_GATT_CHR_F_READ,
-    READ_ENC     = BLE_GATT_CHR_F_READ_ENC,
-    READ_AUTHEN  = BLE_GATT_CHR_F_READ_AUTHEN,
-    READ_AUTHOR  = BLE_GATT_CHR_F_READ_AUTHOR,
-    WRITE        = BLE_GATT_CHR_F_WRITE,
+# if defined(CONFIG_NIMBLE_USING_ARDUINO_IOT)
+    BLE_READ  = BLE_GATT_CHR_F_READ,
+    BLE_WRITE = BLE_GATT_CHR_F_WRITE,
+# else
+    READ  = BLE_GATT_CHR_F_READ,
+    WRITE = BLE_GATT_CHR_F_WRITE,
+# endif
+    READ_ENC    = BLE_GATT_CHR_F_READ_ENC,
+    READ_AUTHEN = BLE_GATT_CHR_F_READ_AUTHEN,
+    READ_AUTHOR = BLE_GATT_CHR_F_READ_AUTHOR,
+
     WRITE_NR     = BLE_GATT_CHR_F_WRITE_NO_RSP,
     WRITE_ENC    = BLE_GATT_CHR_F_WRITE_ENC,
     WRITE_AUTHEN = BLE_GATT_CHR_F_WRITE_AUTHEN,
@@ -101,7 +107,7 @@ class NimBLELocalValueAttribute : public NimBLELocalAttribute, public NimBLEValu
     NimBLELocalValueAttribute(const NimBLEUUID& uuid,
                               uint16_t          handle,
                               uint16_t          maxLen,
-                              uint16_t          initLen = MYNEWT_VAL(NIMBLE_CPP_ATT_VALUE_INIT_LENGTH))
+                              uint16_t          initLen = CONFIG_NIMBLE_CPP_ATT_VALUE_INIT_LENGTH)
         : NimBLELocalAttribute(uuid, handle), NimBLEValueAttribute(maxLen, initLen) {}
     /**
      * @brief Destroy the NimBLELocalValueAttribute object.

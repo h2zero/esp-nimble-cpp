@@ -1,5 +1,17 @@
 menu "ESP-NimBLE-CPP configuration"
 
+config NIMBLE_USING_ARDUINO_IOT
+    bool "Renames the enums READ and WRITE that conflit with the Arduino IoT lib"
+    default "n"
+    help
+        Enabling this option will change the enum NIMBLE_PROPERTY:READ to NIMBLE_PROPERTY:BLE_READ and NIMBLE_PROPERTY:WRITE to NIMBLE_PROPERTY:BLE_WRITE
+
+config NIMBLE_USE_MAGIC_ENUM
+    bool "Enable if magic enum lib is set to get detailed text for Class of device property"
+    default "n"
+    help
+        Enable if magic enum lib is set to get detailed text for Class of device property
+
 choice NIMBLE_CPP_LOG_LEVEL
     prompt "NimBLE CPP log verbosity"
     default NIMBLE_CPP_LOG_LEVEL_NONE
