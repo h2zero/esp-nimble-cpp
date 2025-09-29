@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 
+
 #ifndef NIMBLE_CPP_DEVICE_H_
 #define NIMBLE_CPP_DEVICE_H_
 
+#include "nimconfig.h"
 #include "syscfg/syscfg.h"
 #if CONFIG_BT_NIMBLE_ENABLED
 # ifdef ESP_PLATFORM
@@ -66,10 +68,17 @@ class NimBLEL2CAPServer;
 
 # if MYNEWT_VAL(BLE_ROLE_PERIPHERAL) || MYNEWT_VAL(BLE_ROLE_CENTRAL)
 class NimBLEConnInfo;
+
+class buffer;
+class NimBLEReadEventArgs;
+class NimBLEWriteEventArgs;
+
 # endif
+
 
 class NimBLEAddress;
 class NimBLEDeviceCallbacks;
+
 
 # define BLEDevice                    NimBLEDevice
 # define BLEClient                    NimBLEClient
