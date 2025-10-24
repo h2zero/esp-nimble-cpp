@@ -8,7 +8,7 @@ jobs:
   build_docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Doxygen Action
         uses: mattnotmitt/doxygen-action@v1.9.8
         with:
@@ -18,3 +18,26 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/doxydocs/html
+
+  upload_to_component_registry:
+    permissions:
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: "recursive"
+      - name: Upload component to the component registry
+        uses: espressif/upload-components-ci-action@v2
+        with:
+          components: "esp-nimble-cpp: ."
+          namespace: "h2zero"
+
+  upload_to_platformio_registry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Upload component to PlatformIO Registry
+        uses: bojit/platformio-publish@main
+        with:
+          token: ${{ secrets.PLATFORMIO_AUTH_TOKEN }}
