@@ -18,6 +18,7 @@
 #include "NimBLEHIDDevice.h"
 #if CONFIG_BT_NIMBLE_ENABLED && MYNEWT_VAL(BLE_ROLE_BROADCASTER) && MYNEWT_VAL(BLE_ROLE_PERIPHERAL)
 
+# include "NimBLEDevice.h"
 # include "NimBLEServer.h"
 # include "NimBLEService.h"
 # include "NimBLE2904.h"

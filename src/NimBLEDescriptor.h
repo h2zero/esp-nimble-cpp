@@ -21,7 +21,8 @@
 #include "syscfg/syscfg.h"
 #if CONFIG_BT_NIMBLE_ENABLED && MYNEWT_VAL(BLE_ROLE_PERIPHERAL)
 
-# include "NimBLELocalValueAttribute.h"
+#include "NimBLELocalValueAttribute.h"
+# include "NimBLEDevice.h"
 # include <string>
 
 class NimBLECharacteristic;
@@ -49,8 +50,8 @@ class NimBLEDescriptor : public NimBLELocalValueAttribute {
     friend class NimBLEService;
 
     void setCharacteristic(NimBLECharacteristic* pChar);
-    void readEvent(NimBLEConnInfo& connInfo) override;
-    void writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) override;
+    void readEvent(NimBLEConnInfo& connInfo, NimBLEReadEventArgs& args) override;
+    void writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo, NimBLEWriteEventArgs& args) override;
 
     NimBLEDescriptorCallbacks* m_pCallbacks{nullptr};
     NimBLECharacteristic*      m_pCharacteristic{nullptr};
@@ -67,7 +68,9 @@ class NimBLEDescriptorCallbacks {
   public:
     virtual ~NimBLEDescriptorCallbacks() = default;
     virtual void onRead(NimBLEDescriptor* pDescriptor, NimBLEConnInfo& connInfo);
+    virtual void onRead(NimBLEDescriptor* pDescriptor, NimBLEConnInfo& connInfo, NimBLEReadEventArgs& args);
     virtual void onWrite(NimBLEDescriptor* pDescriptor, NimBLEConnInfo& connInfo);
+    virtual void onWrite(NimBLEDescriptor* pDescriptor, NimBLEConnInfo& connInfo, NimBLEWriteEventArgs& args);
 };
 
 # include "NimBLE2904.h"

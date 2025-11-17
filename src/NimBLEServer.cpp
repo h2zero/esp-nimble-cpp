@@ -20,6 +20,7 @@
 
 # include "NimBLEDevice.h"
 # include "NimBLELog.h"
+#include "NimBLEEventArgs.h"
 
 # if MYNEWT_VAL(BLE_ROLE_CENTRAL)
 #  include "NimBLEClient.h"
@@ -640,12 +641,19 @@ int NimBLEServer::handleGattEvent(uint16_t connHandle, uint16_t attrHandle, ble_
         case BLE_GATT_ACCESS_OP_READ_CHR: {
             // Don't call readEvent if the buffer len is 0 (this is a follow up to a previous read),
             // or if this is an internal read (handle is NONE)
+            NimBLEReadEventArgs eventArgs = NimBLEReadEventArgs();
             if (ctxt->om->om_len > 0 && connHandle != BLE_HS_CONN_HANDLE_NONE) {
-                pAtt->readEvent(peerInfo);
+                pAtt->readEvent(peerInfo, eventArgs);
             }
 
             ble_npl_hw_enter_critical();
-            int rc = os_mbuf_append(ctxt->om, val.data(), val.size());
+            int rc;
+            if(eventArgs.isDataOverwritten()) {
+                auto buffer = eventArgs.getData();
+                rc = os_mbuf_append(ctxt->om, buffer->getPointer(), buffer->getSize());
+            } else {
+                rc = os_mbuf_append(ctxt->om, val.data(), val.size());
+            }
             ble_npl_hw_exit_critical(0);
             return rc == 0 ? 0 : BLE_ATT_ERR_INSUFFICIENT_RES;
         }
@@ -661,18 +669,23 @@ int NimBLEServer::handleGattEvent(uint16_t connHandle, uint16_t attrHandle, ble_
             uint8_t buf[maxLen];
             memcpy(buf, ctxt->om->om_data, len);
 
+
             os_mbuf* next;
             next = SLIST_NEXT(ctxt->om, om_next);
             while (next != NULL) {
                 if ((len + next->om_len) > maxLen) {
                     return BLE_ATT_ERR_INVALID_ATTR_VALUE_LEN;
                 }
-                memcpy(&buf[len], next->om_data, next->om_len);
+                    memcpy(&buf[len], next->om_data, next->om_len);
                 len  += next->om_len;
                 next  = SLIST_NEXT(next, om_next);
             }
 
-            pAtt->writeEvent(buf, len, peerInfo);
+            auto oldData = std::string((char*)pAtt->getValue().data(), pAtt->getValue().length());
+            auto newData = std::string((char*)buf, len);
+
+            NimBLEWriteEventArgs eventArgs = NimBLEWriteEventArgs(oldData, newData);
+            pAtt->writeEvent(buf, len, peerInfo, eventArgs);
             return 0;
         }
 

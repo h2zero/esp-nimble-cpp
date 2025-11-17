@@ -18,6 +18,9 @@
 #include "NimBLEDescriptor.h"
 #if CONFIG_BT_NIMBLE_ENABLED && MYNEWT_VAL(BLE_ROLE_PERIPHERAL)
 
+# include "NimBLELocalAttribute.h"
+# include "NimBLEValueAttribute.h"
+# include "NimBLELocalValueAttribute.h"
 # include "NimBLEService.h"
 # include "NimBLELog.h"
 
@@ -120,14 +123,28 @@ std::string NimBLEDescriptor::toString() const {
     return res;
 } // toString
 
-void NimBLEDescriptor::readEvent(NimBLEConnInfo& connInfo) {
+void NimBLEDescriptor::readEvent(NimBLEConnInfo& connInfo, NimBLEReadEventArgs& args) {
     m_pCallbacks->onRead(this, connInfo);
+    m_pCallbacks->onRead(this, connInfo, args);
 } // readEvent
 
-void NimBLEDescriptor::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) {
-    setValue(val, len);
+void NimBLEDescriptor::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo, NimBLEWriteEventArgs& args) {
     m_pCallbacks->onWrite(this, connInfo);
+    m_pCallbacks->onWrite(this, connInfo, args);
+    if(!args.isCanceled()) {
+        setValue(val, len);
+    }
 } // writeEvent
+
+/**
+ * @brief Callback function to support a read request.
+ * @param [in] pDescriptor The descriptor that is the source of the event.
+ * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
+ */
+void NimBLEDescriptorCallbacks::onRead(NimBLEDescriptor* pDescriptor, NimBLEConnInfo& connInfo, NimBLEReadEventArgs& args) {
+    NIMBLE_LOGD("NimBLEDescriptorCallbacks", "onRead: default");
+} // onRead
+
 
 /**
  * @brief Callback function to support a read request.
@@ -137,7 +154,14 @@ void NimBLEDescriptor::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnIn
 void NimBLEDescriptorCallbacks::onRead(NimBLEDescriptor* pDescriptor, NimBLEConnInfo& connInfo) {
     NIMBLE_LOGD("NimBLEDescriptorCallbacks", "onRead: default");
 } // onRead
-
+/**
+ * @brief Callback function to support a write request.
+ * @param [in] pDescriptor The descriptor that is the source of the event.
+ * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
+ */
+void NimBLEDescriptorCallbacks::onWrite(NimBLEDescriptor* pDescriptor, NimBLEConnInfo& connInfo, NimBLEWriteEventArgs& args) {
+    NIMBLE_LOGD("NimBLEDescriptorCallbacks", "onWrite: default");
+} // onWrite
 /**
  * @brief Callback function to support a write request.
  * @param [in] pDescriptor The descriptor that is the source of the event.

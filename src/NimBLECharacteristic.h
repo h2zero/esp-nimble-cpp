@@ -28,6 +28,7 @@ class NimBLEDescriptor;
 class NimBLE2904;
 
 # include "NimBLELocalValueAttribute.h"
+# include "NimBLEDevice.h"
 
 # include <string>
 # include <vector>
@@ -274,8 +275,8 @@ class NimBLECharacteristic : public NimBLELocalValueAttribute {
     friend class NimBLEService;
 
     void setService(NimBLEService* pService);
-    void readEvent(NimBLEConnInfo& connInfo) override;
-    void writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) override;
+    void readEvent(NimBLEConnInfo& connInfo, NimBLEReadEventArgs& args) override;
+    void writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo, NimBLEWriteEventArgs& args) override;
     bool sendValue(const uint8_t* value,
                    size_t         length,
                    bool           is_notification = true,
@@ -297,7 +298,9 @@ class NimBLECharacteristicCallbacks {
   public:
     virtual ~NimBLECharacteristicCallbacks() {}
     virtual void onRead(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo);
+    virtual void onRead(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo, NimBLEReadEventArgs& args);
     virtual void onWrite(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo);
+    virtual void onWrite(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo, NimBLEWriteEventArgs& args);
     virtual void onStatus(NimBLECharacteristic* pCharacteristic, int code);
     virtual void onSubscribe(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo, uint16_t subValue);
 };
