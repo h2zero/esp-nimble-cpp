@@ -100,8 +100,8 @@ NimBLEClient::~NimBLEClient() {
  */
 void NimBLEClient::deleteServices() {
     // Delete all the services.
-    for (auto& it : m_svcVec) {
-        delete it;
+    for (auto& svc : m_svcVec) {
+        delete svc;
     }
 
     std::vector<NimBLERemoteService*>().swap(m_svcVec);
@@ -249,8 +249,7 @@ bool NimBLEClient::connect(const NimBLEAddress& address, bool deleteAttributes, 
                 break;
 
             default:
-                NIMBLE_LOGE(LOG_TAG,
-                            "Failed to connect to %s, rc=%d; %s",
+                NIMBLE_LOGE(LOG_TAG, "Failed to connect to %s, rc=%d; %s",
                             std::string(m_peerAddress).c_str(),
                             rc,
                             NimBLEUtils::returnCodeToString(rc));
@@ -637,48 +636,36 @@ NimBLERemoteService* NimBLEClient::getService(const char* uuid) {
  */
 NimBLERemoteService* NimBLEClient::getService(const NimBLEUUID& uuid) {
     NIMBLE_LOGD(LOG_TAG, ">> getService: uuid: %s", uuid.toString().c_str());
+    NimBLERemoteService *pSvc = nullptr;
+    NimBLEUUID           uuidTmp;
 
-    for (auto& it : m_svcVec) {
-        if (it->getUUID() == uuid) {
+    for (auto& svc : m_svcVec) {
+        if (svc->getUUID() == uuid) {
             NIMBLE_LOGD(LOG_TAG, "<< getService: found the service with uuid: %s", uuid.toString().c_str());
-            return it;
+            return svc;
         }
     }
 
-    size_t prevSize = m_svcVec.size();
-    if (retrieveServices(&uuid)) {
-        if (m_svcVec.size() > prevSize) {
-            return m_svcVec.back();
-        }
-
-        // If the request was successful but 16/32 bit uuid not found
-        // try again with the 128 bit uuid.
-        if (uuid.bitSize() == BLE_UUID_TYPE_16 || uuid.bitSize() == BLE_UUID_TYPE_32) {
-            NimBLEUUID uuid128(uuid);
-            uuid128.to128();
-            if (retrieveServices(&uuid128)) {
-                if (m_svcVec.size() > prevSize) {
-                    return m_svcVec.back();
-                }
-            }
-        } else {
-            // If the request was successful but the 128 bit uuid not found
-            // try again with the 16 bit uuid.
-            NimBLEUUID uuid16(uuid);
-            uuid16.to16();
-            // if the uuid was 128 bit but not of the BLE base type this check will fail
-            if (uuid16.bitSize() == BLE_UUID_TYPE_16) {
-                if (retrieveServices(&uuid16)) {
-                    if (m_svcVec.size() > prevSize) {
-                        return m_svcVec.back();
-                    }
-                }
-            }
-        }
+    if (!retrieveServices(&uuid, pSvc) || pSvc) {
+        goto Done;
     }
 
+    // Try again with 128 bit uuid if request succeeded with no uuid found.
+    if (uuid.bitSize() == BLE_UUID_TYPE_16 || uuid.bitSize() == BLE_UUID_TYPE_32) {
+        uuidTmp = NimBLEUUID(uuid).to128();
+        retrieveServices(&uuidTmp, pSvc);
+        goto Done;
+    }
+    // Try again with 16 bit uuid if request succeeded with no uuid found.
+    // If the uuid was 128 bit but not of the BLE base type this check will fail.
+    uuidTmp = NimBLEUUID(uuid).to16();
+    if (uuidTmp.bitSize() == BLE_UUID_TYPE_16) {
+        retrieveServices(&uuidTmp, pSvc);
+    }
+
+Done:
     NIMBLE_LOGD(LOG_TAG, "<< getService: not found");
-    return nullptr;
+    return pSvc;
 } // getService
 
 /**
@@ -731,20 +718,16 @@ bool NimBLEClient::discoverAttributes() {
  * * Here we ask the server for its set of services and wait until we have received them all.
  * @return true on success otherwise false if an error occurred
  */
-bool NimBLEClient::retrieveServices(const NimBLEUUID* uuidFilter) {
+bool NimBLEClient::retrieveServices(const NimBLEUUID* uuidFilter, NimBLERemoteService *out) {
     if (!isConnected()) {
         NIMBLE_LOGE(LOG_TAG, "Disconnected, could not retrieve services -aborting");
         return false;
     }
 
-    int            rc = 0;
     NimBLETaskData taskData(this);
-
-    if (uuidFilter == nullptr) {
-        rc = ble_gattc_disc_all_svcs(m_connHandle, NimBLEClient::serviceDiscoveredCB, &taskData);
-    } else {
-        rc = ble_gattc_disc_svc_by_uuid(m_connHandle, uuidFilter->getBase(), NimBLEClient::serviceDiscoveredCB, &taskData);
-    }
+    int rc = (uuidFilter == nullptr)
+           ? ble_gattc_disc_all_svcs(m_connHandle, svcDiscCB, &taskData)
+           : ble_gattc_disc_svc_by_uuid(m_connHandle, uuidFilter->getBase(), svcDiscCB, &taskData);
 
     if (rc != 0) {
         NIMBLE_LOGE(LOG_TAG, "ble_gattc_disc_all_svcs: rc=%d %s", rc, NimBLEUtils::returnCodeToString(rc));
@@ -754,7 +737,10 @@ bool NimBLEClient::retrieveServices(const NimBLEUUID* uuidFilter) {
 
     NimBLEUtils::taskWait(taskData, BLE_NPL_TIME_FOREVER);
     rc = taskData.m_flags;
-    if (rc == 0 || rc == BLE_HS_EDONE) {
+    if (rc == BLE_HS_EDONE) {
+        if (out) {
+            out = m_svcVec.back();
+        }
         return true;
     }
 
@@ -768,39 +754,29 @@ bool NimBLEClient::retrieveServices(const NimBLEUUID* uuidFilter) {
  * @details When a service is found or there is none left or there was an error
  * the API will call this and report findings.
  */
-int NimBLEClient::serviceDiscoveredCB(uint16_t                     connHandle,
-                                      const struct ble_gatt_error* error,
-                                      const struct ble_gatt_svc*   service,
-                                      void*                        arg) {
-    NIMBLE_LOGD(LOG_TAG,
-                "Service Discovered >> status: %d handle: %d",
-                error->status,
-                (error->status == 0) ? service->start_handle : -1);
-
-    NimBLETaskData* pTaskData = (NimBLETaskData*)arg;
-    NimBLEClient*   pClient   = (NimBLEClient*)pTaskData->m_pInstance;
-
-    if (error->status == BLE_HS_ENOTCONN) {
-        NIMBLE_LOGE(LOG_TAG, "<< Service Discovered; Disconnected");
-        NimBLEUtils::taskRelease(*pTaskData, error->status);
-        return error->status;
-    }
+int NimBLEClient::svcDiscCB(uint16_t                     connHandle,
+                            const struct ble_gatt_error* error,
+                            const struct ble_gatt_svc*   service,
+                            void*                        arg) {
+    const int   rc        = error->status;
+    auto        pTaskData = (NimBLETaskData*)arg;
+    auto        pClient   = (NimBLEClient*)pTaskData->m_pInstance;
+    NIMBLE_LOGD(LOG_TAG, "Service Discovered >> status: %d handle: %d", rc, !rc ? service->start_handle : -1);
 
     // Make sure the service discovery is for this device
     if (pClient->getConnHandle() != connHandle) {
         return 0;
     }
 
-    if (error->status == 0) {
-        // Found a service - add it to the vector
+    if (rc == 0) { // Found a service - add it to the vector
         pClient->m_svcVec.push_back(new NimBLERemoteService(pClient, service));
         return 0;
     }
 
     NimBLEUtils::taskRelease(*pTaskData, error->status);
-    NIMBLE_LOGD(LOG_TAG, "<< Service Discovered");
+    NIMBLE_LOGD(LOG_TAG, "<< Service Discovered%s", (rc == BLE_HS_ENOTCONN) ? "; Disconnected" : "");
     return error->status;
-} // serviceDiscoveredCB
+} // serviceDiscCB
 
 /**
  * @brief Get the value of a specific characteristic associated with a specific service.
@@ -809,10 +785,8 @@ int NimBLEClient::serviceDiscoveredCB(uint16_t                     connHandle,
  * @returns characteristic value or an empty value if not found.
  */
 NimBLEAttValue NimBLEClient::getValue(const NimBLEUUID& serviceUUID, const NimBLEUUID& characteristicUUID) {
-    NIMBLE_LOGD(LOG_TAG,
-                ">> getValue: serviceUUID: %s, characteristicUUID: %s",
-                serviceUUID.toString().c_str(),
-                characteristicUUID.toString().c_str());
+    NIMBLE_LOGD(LOG_TAG, ">> getValue: serviceUUID: %s, characteristicUUID: %s",
+                serviceUUID.toString().c_str(), characteristicUUID.toString().c_str());
 
     NimBLEAttValue ret{};
     auto           pService = getService(serviceUUID);
@@ -839,15 +813,13 @@ bool NimBLEClient::setValue(const NimBLEUUID&     serviceUUID,
                             const NimBLEUUID&     characteristicUUID,
                             const NimBLEAttValue& value,
                             bool                  response) {
-    NIMBLE_LOGD(LOG_TAG,
-                ">> setValue: serviceUUID: %s, characteristicUUID: %s",
-                serviceUUID.toString().c_str(),
-                characteristicUUID.toString().c_str());
+    NIMBLE_LOGD(LOG_TAG, ">> setValue: serviceUUID: %s, characteristicUUID: %s",
+                serviceUUID.toString().c_str(), characteristicUUID.toString().c_str());
 
     bool ret      = false;
     auto pService = getService(serviceUUID);
     if (pService != nullptr) {
-        NimBLERemoteCharacteristic* pChar = pService->getCharacteristic(characteristicUUID);
+        auto pChar = pService->getCharacteristic(characteristicUUID);
         if (pChar != nullptr) {
             ret = pChar->writeValue(value, response);
         }
@@ -864,11 +836,13 @@ bool NimBLEClient::setValue(const NimBLEUUID&     serviceUUID,
  */
 NimBLERemoteCharacteristic* NimBLEClient::getCharacteristic(uint16_t handle) {
     for (const auto& svc : m_svcVec) {
-        if (svc->getStartHandle() <= handle && handle <= svc->getEndHandle()) {
-            for (const auto& chr : svc->m_vChars) {
-                if (chr->getHandle() == handle) {
-                    return chr;
-                }
+        if (svc->getStartHandle() > handle && handle > svc->getEndHandle()) {
+            continue;
+        }
+
+        for (const auto& chr : svc->m_vChars) {
+            if (chr->getHandle() == handle) {
+                return chr;
             }
         }
     }
@@ -888,28 +862,28 @@ uint16_t NimBLEClient::getMTU() const {
  * @brief Callback for the MTU exchange API function.
  * @details When the MTU exchange is complete the API will call this and report the new MTU.
  */
-int NimBLEClient::exchangeMTUCb(uint16_t conn_handle, const ble_gatt_error* error, uint16_t mtu, void* arg) {
-    NIMBLE_LOGD(LOG_TAG, "exchangeMTUCb: status=%d, mtu=%d", error->status, mtu);
+int NimBLEClient::exchangeMTUCB(uint16_t connHandle, const ble_gatt_error* error, uint16_t mtu, void* arg) {
+    NIMBLE_LOGD(LOG_TAG, "exchangeMTUCB: status=%d, mtu=%d", error->status, mtu);
 
     NimBLEClient* pClient = (NimBLEClient*)arg;
-    if (pClient->getConnHandle() != conn_handle) {
+    if (pClient->getConnHandle() != connHandle) {
         return 0;
     }
 
     if (error->status != 0) {
-        NIMBLE_LOGE(LOG_TAG, "exchangeMTUCb() rc=%d %s", error->status, NimBLEUtils::returnCodeToString(error->status));
+        NIMBLE_LOGE(LOG_TAG, "exchangeMTUCB() rc=%d %s", error->status, NimBLEUtils::returnCodeToString(error->status));
         pClient->m_lastErr = error->status;
     }
 
     return 0;
-} // exchangeMTUCb
+} // exchangeMTUCB
 
 /**
  * @brief Begin the MTU exchange process with the server.
  * @returns true if the request was sent successfully.
  */
 bool NimBLEClient::exchangeMTU() {
-    int rc = ble_gattc_exchange_mtu(m_connHandle, NimBLEClient::exchangeMTUCb, this);
+    int rc = ble_gattc_exchange_mtu(m_connHandle, NimBLEClient::exchangeMTUCB, this);
     if (rc != 0) {
         NIMBLE_LOGE(LOG_TAG, "MTU exchange error; rc=%d %s", rc, NimBLEUtils::returnCodeToString(rc));
         m_lastErr = rc;
@@ -1013,25 +987,25 @@ int NimBLEClient::handleGapEvent(struct ble_gap_event* event, void* arg) {
                     pClient->m_pClientCallbacks->onConnect(pClient);
                 }
 
-                if (pClient->m_config.exchangeMTU) {
-                    if (!pClient->exchangeMTU()) {
-                        rc = pClient->m_lastErr; // sets the error in the task data
-                        break;
-                    }
-
-                    return 0; // return as we may have a task waiting for the MTU before releasing it.
+                if (!pClient->m_config.exchangeMTU) {
+                    break;
                 }
-            } else {
-                pClient->m_connHandle = BLE_HS_CONN_HANDLE_NONE;
 
-                if (pClient->m_config.asyncConnect) {
-                    pClient->m_pClientCallbacks->onConnectFail(pClient, rc);
-                    if (pClient->m_config.deleteOnConnectFail) {
-                        NimBLEDevice::deleteClient(pClient);
-                    }
+                if (!pClient->exchangeMTU()) {
+                    rc = pClient->m_lastErr; // sets the error in the task data
+                    break;
                 }
+
+                return 0; // return as we may have a task waiting for the MTU before releasing it.
             }
 
+            pClient->m_connHandle = BLE_HS_CONN_HANDLE_NONE;
+            if (pClient->m_config.asyncConnect) {
+                pClient->m_pClientCallbacks->onConnectFail(pClient, rc);
+                if (pClient->m_config.deleteOnConnectFail) {
+                    NimBLEDevice::deleteClient(pClient);
+                }
+            }
             break;
         } // BLE_GAP_EVENT_CONNECT
 
@@ -1059,23 +1033,23 @@ int NimBLEClient::handleGapEvent(struct ble_gap_event* event, void* arg) {
                     continue;
                 }
 
-                NIMBLE_LOGD(LOG_TAG,
-                            "checking service %s for handle: %d",
+                NIMBLE_LOGD(LOG_TAG, "checking service %s for handle: %d",
                             svc->getUUID().toString().c_str(),
                             event->notify_rx.attr_handle);
 
                 for (const auto& chr : svc->m_vChars) {
-                    if (chr->getHandle() == event->notify_rx.attr_handle) {
-                        NIMBLE_LOGD(LOG_TAG, "Got Notification for characteristic %s", chr->toString().c_str());
-
-                        uint32_t data_len = OS_MBUF_PKTLEN(event->notify_rx.om);
-                        chr->m_value.setValue(event->notify_rx.om->om_data, data_len);
-
-                        if (chr->m_notifyCallback != nullptr) {
-                            chr->m_notifyCallback(chr, event->notify_rx.om->om_data, data_len, !event->notify_rx.indication);
-                        }
-                        break;
+                    if (chr->getHandle() != event->notify_rx.attr_handle) {
+                        continue;
                     }
+
+                    NIMBLE_LOGD(LOG_TAG, "Got Notification for characteristic %s", chr->toString().c_str());
+                    uint32_t data_len = OS_MBUF_PKTLEN(event->notify_rx.om);
+                    chr->m_value.setValue(event->notify_rx.om->om_data, data_len);
+
+                    if (chr->m_notifyCallback != nullptr) {
+                        chr->m_notifyCallback(chr, event->notify_rx.om->om_data, data_len, !event->notify_rx.indication);
+                    }
+                    break;
                 }
             }
 
@@ -1088,8 +1062,7 @@ int NimBLEClient::handleGapEvent(struct ble_gap_event* event, void* arg) {
                 return 0;
             }
             NIMBLE_LOGD(LOG_TAG, "Peer requesting to update connection parameters");
-            NIMBLE_LOGD(LOG_TAG,
-                        "MinInterval: %d, MaxInterval: %d, Latency: %d, Timeout: %d",
+            NIMBLE_LOGD(LOG_TAG, "MinInterval: %d, MaxInterval: %d, Latency: %d, Timeout: %d",
                         event->conn_update_req.peer_params->itvl_min,
                         event->conn_update_req.peer_params->itvl_max,
                         event->conn_update_req.peer_params->latency,
