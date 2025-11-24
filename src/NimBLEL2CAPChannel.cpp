@@ -134,8 +134,14 @@ int NimBLEL2CAPChannel::writeFragment(std::vector<uint8_t>::const_iterator begin
 
             case BLE_HS_ENOMEM:
             case BLE_HS_EAGAIN:
+                /* ble_l2cap_send already consumed and freed txd on these errors */
+                NIMBLE_LOGD(LOG_TAG, "ble_l2cap_send returned %d (consumed buffer). Retrying shortly...", res);
+                ble_npl_time_delay(ble_npl_time_ms_to_ticks32(RetryTimeout));
+                continue;
+
             case BLE_HS_EBUSY:
-                NIMBLE_LOGD(LOG_TAG, "ble_l2cap_send returned %d. Retrying shortly...", res);
+                /* Channel busy; txd not consumed */
+                NIMBLE_LOGD(LOG_TAG, "ble_l2cap_send returned %d (busy). Retrying shortly...", res);
                 os_mbuf_free_chain(txd);
                 ble_npl_time_delay(ble_npl_time_ms_to_ticks32(RetryTimeout));
                 continue;
