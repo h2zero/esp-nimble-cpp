@@ -1,11 +1,12 @@
 #include <NimBLEDevice.h>
+#include <esp_hpl.hpp>
 #include <esp_timer.h>
 
 #define L2CAP_PSM            192
 #define L2CAP_MTU            5000
 #define INITIAL_PAYLOAD_SIZE 64
 #define BLOCKS_BEFORE_DOUBLE 50
-#define MAX_PAYLOAD_SIZE     1024
+#define MAX_PAYLOAD_SIZE     4900
 
 const BLEAdvertisedDevice* theDevice = NULL;
 BLEClient* theClient = NULL;
@@ -222,6 +223,9 @@ void connectTask(void *pvParameters) {
 
 extern "C"
 void app_main(void) {
+    // Install high performance logging before any output
+    esp_hpl::HighPerformanceLogger::init();
+
     printf("Starting L2CAP client example\n");
 
     xTaskCreate(connectTask, "connectTask", 5000, NULL, 1, NULL);
