@@ -1,4 +1,5 @@
 #include <NimBLEDevice.h>
+#include <esp_hpl.hpp>
 #include <esp_timer.h>
 
 #define L2CAP_PSM            192
@@ -52,6 +53,9 @@ public:
         // Append new data to buffer
         buffer.insert(buffer.end(), data.begin(), data.end());
         totalBytesReceived += data.size();
+        if (startTime == 0) {
+            startTime = esp_timer_get_time();  // start measuring once data flows
+        }
         
         // Process complete frames from buffer
         while (buffer.size() >= 3) {  // Minimum frame size: seqno(1) + len(2)
@@ -73,7 +77,7 @@ public:
             // Check sequence number
             if (seqno != expectedSequenceNumber) {
                 sequenceErrors++;
-                printf("Frame %lu: Sequence error - got %d, expected %d (payload=%d bytes)\n", 
+                printf("Frame %zu: Sequence error - got %d, expected %d (payload=%d bytes)\n", 
                        totalFramesReceived, seqno, expectedSequenceNumber, payloadLen);
             }
             
@@ -85,25 +89,49 @@ public:
             
             // Print progress every 100 frames
             if (totalFramesReceived % 100 == 0) {
-                printf("Received %lu frames (%lu payload bytes)\n", totalFramesReceived, totalPayloadBytes);
+                double elapsedSeconds = (esp_timer_get_time() - startTime) / 1000000.0;
+                double bytesPerSecond = elapsedSeconds > 0 ? totalBytesReceived / elapsedSeconds : 0.0;
+                printf("Received %zu frames (%zu payload bytes) - Bandwidth: %.2f KB/s (%.2f Mbps)\n",
+                       totalFramesReceived, totalPayloadBytes,
+                       bytesPerSecond / 1024.0, (bytesPerSecond * 8) / 1000000.0);
             }
         }
     }
     
     void onDisconnect(NimBLEL2CAPChannel* channel) {
         printf("\nL2CAP disconnected\n");
+        double elapsedSeconds = startTime > 0 ? (esp_timer_get_time() - startTime) / 1000000.0 : 0.0;
+        double bytesPerSecond = elapsedSeconds > 0 ? totalBytesReceived / elapsedSeconds : 0.0;
+
         printf("Final statistics:\n");
-        printf("  Total frames: %lu\n", totalFramesReceived);
-        printf("  Total bytes: %lu\n", totalBytesReceived);
-        printf("  Payload bytes: %lu\n", totalPayloadBytes);
-        printf("  Sequence errors: %lu\n", sequenceErrors);
-        printf("  Frame errors: %lu\n", frameErrors);
+        printf("  Total frames: %zu\n", totalFramesReceived);
+        printf("  Total bytes: %zu\n", totalBytesReceived);
+        printf("  Payload bytes: %zu\n", totalPayloadBytes);
+        printf("  Sequence errors: %zu\n", sequenceErrors);
+        printf("  Frame errors: %zu\n", frameErrors);
+        printf("  Bandwidth: %.2f KB/s (%.2f Mbps)\n", bytesPerSecond / 1024.0, (bytesPerSecond * 8) / 1000000.0);
+
+        // Reset state for the next connection
+        buffer.clear();
+        totalBytesReceived = 0;
+        totalFramesReceived = 0;
+        totalPayloadBytes = 0;
+        expectedSequenceNumber = 0;
+        sequenceErrors = 0;
+        frameErrors = 0;
+        startTime = 0;
         connected = false;
+
+        // Restart advertising so another client can connect
+        BLEDevice::startAdvertising();
     }
 };
 
 extern "C"
 void app_main(void) {
+    // Install high performance logging before any other output
+    esp_hpl::HighPerformanceLogger::init();
+
     printf("Starting L2CAP server example [%lu free] [%lu min]\n", esp_get_free_heap_size(), esp_get_minimum_free_heap_size());
 
     BLEDevice::init("l2cap");  // Match the name the client is looking for
@@ -112,12 +140,15 @@ void app_main(void) {
     auto cocServer = BLEDevice::createL2CAPServer();
     auto l2capChannelCallbacks = new L2CAPChannelCallbacks();
     auto channel = cocServer->createService(L2CAP_PSM, L2CAP_MTU, l2capChannelCallbacks);
+    (void)channel;  // prevent unused warning
     
     auto server = BLEDevice::createServer();
     server->setCallbacks(new GATTCallbacks());
     
     auto advertising = BLEDevice::getAdvertising();
-    advertising->setScanResponse(true);  // Important for name visibility
+    NimBLEAdvertisementData scanData;
+    scanData.setName("l2cap");
+    advertising->setScanResponseData(scanData);
 
     BLEDevice::startAdvertising();
     printf("Server waiting for connection requests [%lu free] [%lu min]\n", esp_get_free_heap_size(), esp_get_minimum_free_heap_size());
@@ -159,11 +190,11 @@ void app_main(void) {
                 lastHeap = currentHeap;
                 
                 printf("\n=== STATUS UPDATE ===\n");
-                printf("Frames received: %lu (%.1f fps)\n", l2capChannelCallbacks->totalFramesReceived, framesPerSecond);
-                printf("Total bytes: %lu\n", l2capChannelCallbacks->totalBytesReceived);
-                printf("Payload bytes: %lu\n", l2capChannelCallbacks->totalPayloadBytes);
+                printf("Frames received: %zu (%.1f fps)\n", l2capChannelCallbacks->totalFramesReceived, framesPerSecond);
+                printf("Total bytes: %zu\n", l2capChannelCallbacks->totalBytesReceived);
+                printf("Payload bytes: %zu\n", l2capChannelCallbacks->totalPayloadBytes);
                 printf("Bandwidth: %.2f KB/s (%.2f Mbps)\n", bytesPerSecond / 1024.0, (bytesPerSecond * 8) / 1000000.0);
-                printf("Sequence errors: %lu\n", l2capChannelCallbacks->sequenceErrors);
+                printf("Sequence errors: %zu\n", l2capChannelCallbacks->sequenceErrors);
                 printf("Heap: %zu free (min: %zu), Used since start: %zu\n", 
                        currentHeap, minHeap, initialHeap > 0 ? initialHeap - currentHeap : 0);
                 printf("==================\n");
