@@ -933,7 +933,6 @@ int NimBLEClient::handleGapEvent(struct ble_gap_event* event, void* arg) {
 
     switch (event->type) {
         case BLE_GAP_EVENT_DISCONNECT: {
-
             // workaround for bug in NimBLE stack where disconnect event argument is not passed correctly
             pClient = NimBLEDevice::getClientByPeerAddress(event->disconnect.conn.peer_ota_addr);
             if (pClient == nullptr) {
@@ -946,8 +945,7 @@ int NimBLEClient::handleGapEvent(struct ble_gap_event* event, void* arg) {
             }
 
             if (pClient == nullptr) {
-                NIMBLE_LOGE(LOG_TAG, "Disconnected client not found, conn_handle=%d",
-                            event->disconnect.conn.conn_handle);
+                NIMBLE_LOGE(LOG_TAG, "Disconnected client not found, conn_handle=%d", event->disconnect.conn.conn_handle);
                 return 0;
             }
 
@@ -1210,6 +1208,9 @@ int NimBLEClient::handleGapEvent(struct ble_gap_event* event, void* arg) {
                 // pClient->onOobPairingRequest(pkey.oob);
                 // rc = ble_sm_inject_io(event->passkey.conn_handle, &pkey);
                 // NIMBLE_LOGD(LOG_TAG, "ble_sm_inject_io result: %d", rc);
+            } else if (event->passkey.params.action == BLE_SM_IOACT_DISP) {
+                NIMBLE_LOGD(LOG_TAG, "Passkey display: %" PRIu32, event->passkey.params.passkey);
+                pClient->m_pClientCallbacks->onPassKeyDisplay(peerInfo, event->passkey.params.passkey);
             } else if (event->passkey.params.action == BLE_SM_IOACT_INPUT) {
                 NIMBLE_LOGD(LOG_TAG, "Enter the passkey");
                 pClient->m_pClientCallbacks->onPassKeyEntry(peerInfo);
@@ -1302,6 +1303,10 @@ void NimBLEClientCallbacks::onPassKeyEntry(NimBLEConnInfo& connInfo) {
     NIMBLE_LOGD(CB_TAG, "onPassKeyEntry: default: 123456");
     NimBLEDevice::injectPassKey(connInfo, 123456);
 } // onPassKeyEntry
+
+void NimBLEClientCallbacks::onPassKeyDisplay(NimBLEConnInfo& connInfo, uint32_t passkey) {
+    NIMBLE_LOGD(CB_TAG, "onPassKeyDisplay: default: %" PRIu32, passkey);
+} // onPassKeyDisplay
 
 void NimBLEClientCallbacks::onAuthenticationComplete(NimBLEConnInfo& connInfo) {
     NIMBLE_LOGD(CB_TAG, "onAuthenticationComplete: default");

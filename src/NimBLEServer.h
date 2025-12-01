@@ -180,6 +180,13 @@ class NimBLEServerCallbacks {
     virtual uint32_t onPassKeyDisplay();
 
     /**
+     * @brief Called when a passkey should be entered for pairing.
+     * @param [in] connInfo A reference to a NimBLEConnInfo instance with information
+     * about the peer connection parameters.
+     */
+    virtual void onPassKeyEntry(NimBLEConnInfo& connInfo);
+
+    /**
      * @brief Called when using numeric comparision for pairing.
      * @param [in] connInfo A reference to a NimBLEConnInfo instance with information
      * Should be passed back to NimBLEDevice::injectConfirmPasskey
