@@ -1,6 +1,6 @@
 var class_nim_b_l_e_att_value =
 [
-    [ "NimBLEAttValue", "class_nim_b_l_e_att_value.html#aa801ed93f65e8cbc507c6ea6f4f49294", null ],
+    [ "NimBLEAttValue", "class_nim_b_l_e_att_value.html#a2860f49ac373ddc76ec923de3805d030", null ],
     [ "NimBLEAttValue", "class_nim_b_l_e_att_value.html#ad0bbdf17e7861cbb4bb2cadae9cbe32c", null ],
     [ "NimBLEAttValue", "class_nim_b_l_e_att_value.html#a4322572d778438318f5750f6df5fdb35", null ],
     [ "NimBLEAttValue", "class_nim_b_l_e_att_value.html#a61813a898f1bfb1b00e670a7fbb413df", null ],
@@ -30,6 +30,7 @@ var class_nim_b_l_e_att_value =
     [ "operator[]", "class_nim_b_l_e_att_value.html#a8ca8d07c06a79e30bf6279e6817e4881", null ],
     [ "setValue", "class_nim_b_l_e_att_value.html#aade512f55c6f962941aee7078677356b", null ],
     [ "setValue", "class_nim_b_l_e_att_value.html#ac94a41f0c0d42d48b29d5b18d7ad7bd8", null ],
+    [ "setValue", "class_nim_b_l_e_att_value.html#a98da1765d9cfd2d93cdac2fb7a108a79", null ],
     [ "setValue", "class_nim_b_l_e_att_value.html#a98da1765d9cfd2d93cdac2fb7a108a79", null ],
     [ "setValue", "class_nim_b_l_e_att_value.html#a98da1765d9cfd2d93cdac2fb7a108a79", null ],
     [ "setValue", "class_nim_b_l_e_att_value.html#a5c8c5ecfa3864d45ea5b155385e3f9fa", null ],

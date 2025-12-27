@@ -1,7 +1,7 @@
 var searchData=
 [
   ['idf_20installation_0',['ESP-IDF Installation',['../index.html#esp-idf-installation',1,'']]],
-  ['in_20a_20task_20running_20on_20the_20nimble_20stack_20core_1',['Put BLE functions in a task running on the NimBLE stack core',['../md__usage__tips.html#put-ble-functions-in-a-task-running-on-the-nimble-stack-core',1,'']]],
+  ['important_20considerations_1',['Important considerations',['../md__usage__tips.html#important-considerations',1,'']]],
   ['include_20files_2',['Include Files',['../md__new__user__guide.html#include-files',1,'']]],
   ['information_3',['General Information',['../md__migration__guide.html#general-information',1,'']]],
   ['init_4',['init',['../class_nim_b_l_e_device.html#a2e8bb71daabbffd9eab8787493a45ce7',1,'NimBLEDevice']]],

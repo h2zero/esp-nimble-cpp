@@ -125,7 +125,7 @@ $(document).ready(function(){initNavTree('_nim_b_l_e_value_attribute_8h_source.h
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">class </span>NimBLEValueAttribute {</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    NimBLEValueAttribute(uint16_t maxLen = BLE_ATT_ATTR_MAX_LEN, uint16_t initLen = CONFIG_NIMBLE_CPP_ATT_VALUE_INIT_LENGTH)</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    NimBLEValueAttribute(uint16_t maxLen = BLE_ATT_ATTR_MAX_LEN, uint16_t initLen = MYNEWT_VAL(NIMBLE_CPP_ATT_VALUE_INIT_LENGTH))</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        : m_value(initLen, maxLen) {}</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <a class="code hl_class" href="class_nim_b_l_e_att_value.html">NimBLEAttValue</a> getValue(time_t* timestamp)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_value.getValue(timestamp); }</div>
@@ -152,8 +152,8 @@ $(document).ready(function(){initNavTree('_nim_b_l_e_value_attribute_8h_source.h
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="preprocessor">#endif </span><span class="comment">// CONFIG_BT_NIMBLE_ENABLED &amp;&amp; (MYNEWT_VAL(BLE_ROLE_PERIPHERAL) || MYNEWT_VAL(BLE_ROLE_CENTRAL))</span></div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="preprocessor">#endif </span><span class="comment">// NIMBLE_CPP_ATTRIBUTE_H_</span></div>
-<div class="ttc" id="aclass_nim_b_l_e_att_value_html"><div class="ttname"><a href="class_nim_b_l_e_att_value.html">NimBLEAttValue</a></div><div class="ttdoc">A specialized container class to hold BLE attribute values.</div><div class="ttdef"><b>Definition</b> NimBLEAttValue.h:72</div></div>
-<div class="ttc" id="aclass_nim_b_l_e_att_value_html_aa8c75101d9898c3ff4646d84521ed61c"><div class="ttname"><a href="class_nim_b_l_e_att_value.html#aa8c75101d9898c3ff4646d84521ed61c">NimBLEAttValue::size</a></div><div class="ttdeci">uint16_t size() const</div><div class="ttdoc">Returns the current size of the value in bytes.</div><div class="ttdef"><b>Definition</b> NimBLEAttValue.h:159</div></div>
+<div class="ttc" id="aclass_nim_b_l_e_att_value_html"><div class="ttname"><a href="class_nim_b_l_e_att_value.html">NimBLEAttValue</a></div><div class="ttdoc">A specialized container class to hold BLE attribute values.</div><div class="ttdef"><b>Definition</b> NimBLEAttValue.h:90</div></div>
+<div class="ttc" id="aclass_nim_b_l_e_att_value_html_aa8c75101d9898c3ff4646d84521ed61c"><div class="ttname"><a href="class_nim_b_l_e_att_value.html#aa8c75101d9898c3ff4646d84521ed61c">NimBLEAttValue::size</a></div><div class="ttdeci">uint16_t size() const</div><div class="ttdoc">Returns the current size of the value in bytes.</div><div class="ttdef"><b>Definition</b> NimBLEAttValue.h:177</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

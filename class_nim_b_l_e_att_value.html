@@ -103,9 +103,9 @@ $(document).ready(function(){initNavTree('class_nim_b_l_e_att_value.html',''); i
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa801ed93f65e8cbc507c6ea6f4f49294" id="r_aa801ed93f65e8cbc507c6ea6f4f49294"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nim_b_l_e_att_value.html#aa801ed93f65e8cbc507c6ea6f4f49294">NimBLEAttValue</a> (uint16_t init_len=CONFIG_NIMBLE_CPP_ATT_VALUE_INIT_LENGTH, uint16_t max_len=BLE_ATT_ATTR_MAX_LEN)</td></tr>
-<tr class="memdesc:aa801ed93f65e8cbc507c6ea6f4f49294"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor.  <br /></td></tr>
-<tr class="separator:aa801ed93f65e8cbc507c6ea6f4f49294"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2860f49ac373ddc76ec923de3805d030" id="r_a2860f49ac373ddc76ec923de3805d030"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nim_b_l_e_att_value.html#a2860f49ac373ddc76ec923de3805d030">NimBLEAttValue</a> (uint16_t init_len=MYNEWT_VAL(NIMBLE_CPP_ATT_VALUE_INIT_LENGTH), uint16_t max_len=BLE_ATT_ATTR_MAX_LEN)</td></tr>
+<tr class="memdesc:a2860f49ac373ddc76ec923de3805d030"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor.  <br /></td></tr>
+<tr class="separator:a2860f49ac373ddc76ec923de3805d030"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0bbdf17e7861cbb4bb2cadae9cbe32c" id="r_ad0bbdf17e7861cbb4bb2cadae9cbe32c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nim_b_l_e_att_value.html#ad0bbdf17e7861cbb4bb2cadae9cbe32c">NimBLEAttValue</a> (const uint8_t *value, uint16_t len, uint16_t max_len=BLE_ATT_ATTR_MAX_LEN)</td></tr>
 <tr class="memdesc:ad0bbdf17e7861cbb4bb2cadae9cbe32c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct with an initial value from a buffer.  <br /></td></tr>
 <tr class="separator:ad0bbdf17e7861cbb4bb2cadae9cbe32c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -186,6 +186,10 @@ const uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> ()
 <tr class="memitem:a98da1765d9cfd2d93cdac2fb7a108a79"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_nim_b_l_e_att_value.html#a98da1765d9cfd2d93cdac2fb7a108a79">setValue</a> (const T &amp;v)</td></tr>
 <tr class="memdesc:a98da1765d9cfd2d93cdac2fb7a108a79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Template to set value to the value of &lt;type&gt;val.  <br /></td></tr>
 <tr class="separator:a98da1765d9cfd2d93cdac2fb7a108a79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98da1765d9cfd2d93cdac2fb7a108a79" id="r_a98da1765d9cfd2d93cdac2fb7a108a79"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a98da1765d9cfd2d93cdac2fb7a108a79"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_nim_b_l_e_att_value.html#a98da1765d9cfd2d93cdac2fb7a108a79">setValue</a> (const T &amp;v)</td></tr>
+<tr class="memdesc:a98da1765d9cfd2d93cdac2fb7a108a79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Template to set value to the value of &lt;type&gt;val.  <br /></td></tr>
+<tr class="separator:a98da1765d9cfd2d93cdac2fb7a108a79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab16b9901e6ff9374c7d2e1afa5aa4671" id="r_ab16b9901e6ff9374c7d2e1afa5aa4671"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ab16b9901e6ff9374c7d2e1afa5aa4671"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_nim_b_l_e_att_value.html#ab16b9901e6ff9374c7d2e1afa5aa4671">getValue</a> (time_t *timestamp=nullptr, bool skipSizeCheck=false) const</td></tr>
 <tr class="memdesc:ab16b9901e6ff9374c7d2e1afa5aa4671"><td class="mdescLeft">&#160;</td><td class="mdescRight">Template to return the value as a &lt;type&gt;.  <br /></td></tr>
@@ -237,8 +241,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const
 standard container types for value storage, while being convertible to<br  />
 many different container classes. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aa801ed93f65e8cbc507c6ea6f4f49294" name="aa801ed93f65e8cbc507c6ea6f4f49294"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa801ed93f65e8cbc507c6ea6f4f49294">&#9670;&#160;</a></span>NimBLEAttValue() <span class="overload">[1/6]</span></h2>
+<a id="a2860f49ac373ddc76ec923de3805d030" name="a2860f49ac373ddc76ec923de3805d030"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2860f49ac373ddc76ec923de3805d030">&#9670;&#160;</a></span>NimBLEAttValue() <span class="overload">[1/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -247,7 +251,7 @@ many different container classes. </p>
           <td class="memname">NimBLEAttValue::NimBLEAttValue </td>
           <td>(</td>
           <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>init_len</em> = <code>CONFIG_NIMBLE_CPP_ATT_VALUE_INIT_LENGTH</code>, </td>
+          <td class="paramname"><em>init_len</em> = <code>MYNEWT_VAL(NIMBLE_CPP_ATT_VALUE_INIT_LENGTH)</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -595,7 +599,7 @@ less than <code>sizeof(&lt;type&gt;)</code>.</dd></dl>
 </div>
 </div>
 <a id="aade512f55c6f962941aee7078677356b" name="aade512f55c6f962941aee7078677356b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aade512f55c6f962941aee7078677356b">&#9670;&#160;</a></span>setValue() <span class="overload">[1/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aade512f55c6f962941aee7078677356b">&#9670;&#160;</a></span>setValue() <span class="overload">[1/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -640,7 +644,7 @@ less than <code>sizeof(&lt;type&gt;)</code>.</dd></dl>
 </div>
 </div>
 <a id="ac94a41f0c0d42d48b29d5b18d7ad7bd8" name="ac94a41f0c0d42d48b29d5b18d7ad7bd8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac94a41f0c0d42d48b29d5b18d7ad7bd8">&#9670;&#160;</a></span>setValue() <span class="overload">[2/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac94a41f0c0d42d48b29d5b18d7ad7bd8">&#9670;&#160;</a></span>setValue() <span class="overload">[2/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -677,7 +681,7 @@ template&lt;typename T &gt; </div>
 </div>
 </div>
 <a id="a98da1765d9cfd2d93cdac2fb7a108a79" name="a98da1765d9cfd2d93cdac2fb7a108a79"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a98da1765d9cfd2d93cdac2fb7a108a79">&#9670;&#160;</a></span>setValue() <span class="overload">[3/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a98da1765d9cfd2d93cdac2fb7a108a79">&#9670;&#160;</a></span>setValue() <span class="overload">[3/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -714,7 +718,7 @@ template&lt;typename T &gt; </div>
 </div>
 </div>
 <a id="a98da1765d9cfd2d93cdac2fb7a108a79" name="a98da1765d9cfd2d93cdac2fb7a108a79"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a98da1765d9cfd2d93cdac2fb7a108a79">&#9670;&#160;</a></span>setValue() <span class="overload">[4/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a98da1765d9cfd2d93cdac2fb7a108a79">&#9670;&#160;</a></span>setValue() <span class="overload">[4/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -746,12 +750,49 @@ template&lt;typename T &gt; </div>
   </table>
   </dd>
 </dl>
-<p>Only used if the &lt;type&gt; has a <code><a class="el" href="class_nim_b_l_e_att_value.html#a86acbb5ab3a35b3d5692c2e05fdccadd" title="Returns a pointer to the internal buffer of the value.">data()</a></code> and <code><a class="el" href="class_nim_b_l_e_att_value.html#aa8c75101d9898c3ff4646d84521ed61c" title="Returns the current size of the value in bytes.">size()</a></code> method. </p>
+<p>Only used if the &lt;type&gt; has a <code><a class="el" href="class_nim_b_l_e_att_value.html#a86acbb5ab3a35b3d5692c2e05fdccadd" title="Returns a pointer to the internal buffer of the value.">data()</a></code> and <code><a class="el" href="class_nim_b_l_e_att_value.html#aa8c75101d9898c3ff4646d84521ed61c" title="Returns the current size of the value in bytes.">size()</a></code> method with <code>value_type</code>. Correctly calculates byte size for containers with multi-byte element types. </p>
+
+</div>
+</div>
+<a id="a98da1765d9cfd2d93cdac2fb7a108a79" name="a98da1765d9cfd2d93cdac2fb7a108a79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98da1765d9cfd2d93cdac2fb7a108a79">&#9670;&#160;</a></span>setValue() <span class="overload">[5/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NimBLEAttValue::setValue </td>
+          <td>(</td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>v</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Template to set value to the value of &lt;type&gt;val. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">v</td><td>The &lt;type&gt;value to set.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Only used if the &lt;type&gt; has a <code><a class="el" href="class_nim_b_l_e_att_value.html#a86acbb5ab3a35b3d5692c2e05fdccadd" title="Returns a pointer to the internal buffer of the value.">data()</a></code> and <code><a class="el" href="class_nim_b_l_e_att_value.html#aa8c75101d9898c3ff4646d84521ed61c" title="Returns the current size of the value in bytes.">size()</a></code> method without <code>value_type</code>. </p>
 
 </div>
 </div>
 <a id="a5c8c5ecfa3864d45ea5b155385e3f9fa" name="a5c8c5ecfa3864d45ea5b155385e3f9fa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5c8c5ecfa3864d45ea5b155385e3f9fa">&#9670;&#160;</a></span>setValue() <span class="overload">[5/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c8c5ecfa3864d45ea5b155385e3f9fa">&#9670;&#160;</a></span>setValue() <span class="overload">[6/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
