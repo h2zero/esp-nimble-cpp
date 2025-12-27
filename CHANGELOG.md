@@ -1,6 +1,23 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.3.4] 2025-12-27
+
+## Fixed
+- Disconnect event not finding the client by address in some cases, use the connection handle instead.
+- Notification/Indications will now be sent to server created clients.
+- Attribute values will now consider type size when using a container.
+- Descriptor searching will now correctly stop at the end handle of the characteristic.
+
+## Changed
+- Build conditionals now use `MYNEWT_VAL_` macros instead of `CONFIG_` macros where applicable.
+- Sending of indications/notifications has been refactored for greater efficiency and tracks client subscription state locally instead uof relying on the stack.
+
+## Added
+- Support for esp32c61.
+- `NimBLECharacteristicCallbacks::onStatus` overload that takes a `NimBLEConnInfo&` parameter to indicate which client the status is for.
+- `NimBLEDevice::setCustomGapHandler` now takes a `void*` parameter to allow for passing user data to the custom handler.
+
 ## [2.3.3] 2025-09-05
 
 ## Fixed
