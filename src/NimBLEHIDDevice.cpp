@@ -22,6 +22,12 @@
 # include "NimBLEService.h"
 # include "NimBLE2904.h"
 
+// updated as READ and WRITE conflict with ArduinoIOT libs
+# if defined(CONFIG_NIMBLE_USING_ARDUINO_IOT)
+#  define WRITE BLE_WRITE
+#  define READ BLE_READ
+# endif
+
 static constexpr uint16_t deviceInfoSvcUuid = 0x180a;
 static constexpr uint16_t hidSvcUuid        = 0x1812;
 static constexpr uint16_t batterySvcUuid    = 0x180f;
@@ -339,5 +345,12 @@ NimBLEService* NimBLEHIDDevice::getHidService() {
 NimBLEService* NimBLEHIDDevice::getBatteryService() {
     return m_batterySvc;
 } // getBatteryService
+
+
+// updated as READ and WRITE conflict with ArduinoIOT libs
+# if defined(CONFIG_NIMBLE_USING_ARDUINO_IOT)
+#  undef WRITE
+#  undef READ
+# endif
 
 #endif // CONFIG_BT_NIMBLE_ENABLED && MYNEWT_VAL(BLE_ROLE_PERIPHERAL)

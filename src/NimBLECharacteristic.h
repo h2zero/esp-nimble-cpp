@@ -33,6 +33,12 @@ class NimBLE2904;
 # include <vector>
 # include <array>
 
+// updated as READ and WRITE conflict with ArduinoIOT libs
+# if defined(CONFIG_NIMBLE_USING_ARDUINO_IOT)
+#  define WRITE BLE_WRITE
+#  define READ BLE_READ
+# endif
+
 /**
  * @brief The model of a BLE Characteristic.
  *
@@ -327,6 +333,13 @@ class NimBLECharacteristicCallbacks {
     virtual void onStatus(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo, int code);
     virtual void onSubscribe(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo, uint16_t subValue);
 };
+
+
+// updated as READ and WRITE conflict with ArduinoIOT libs
+# if defined(CONFIG_NIMBLE_USING_ARDUINO_IOT)
+#  undef WRITE
+#  undef READ
+# endif
 
 #endif // CONFIG_BT_NIMBLE_ENABLED  && MYNEWT_VAL(BLE_ROLE_PERIPHERAL)
 #endif // NIMBLE_CPP_CHARACTERISTIC_H_

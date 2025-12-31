@@ -21,11 +21,20 @@
 #include "syscfg/syscfg.h"
 #if CONFIG_BT_NIMBLE_ENABLED && MYNEWT_VAL(BLE_ROLE_PERIPHERAL)
 
+
 class NimBLEService;
 
 # include "NimBLEAttribute.h"
 # include "NimBLEServer.h"
 # include "NimBLECharacteristic.h"
+
+
+/// updated as READ and WRITE conflict with ArduinoIOT libs
+#if defined(CONFIG_NIMBLE_USING_ARDUINO_IOT)
+#define WRITE BLE_WRITE
+#define READ BLE_READ
+#endif
+
 
 /**
  * @brief The model of a BLE service.
@@ -68,6 +77,12 @@ class NimBLEService : public NimBLELocalAttribute {
     // of the second service to 0 to indicate the end of the array.
     ble_gatt_svc_def                   m_pSvcDef[2]{};
 }; // NimBLEService
+
+// updated as READ and WRITE conflict with ArduinoIOT libs
+# if defined(CONFIG_NIMBLE_USING_ARDUINO_IOT)
+#  undef WRITE
+#  undef READ 
+# endif
 
 #endif // CONFIG_BT_NIMBLE_ENABLED && MYNEWT_VAL(BLE_ROLE_PERIPHERAL)
 #endif // NIMBLE_CPP_SERVICE_H_
