@@ -203,6 +203,25 @@ bool NimBLEL2CAPChannel::write(const std::vector<uint8_t>& bytes) {
     return true;
 }
 
+bool NimBLEL2CAPChannel::disconnect() {
+    if (!this->channel) {
+        NIMBLE_LOGW(LOG_TAG, "L2CAP Channel not open");
+        return false;
+    }
+
+    int rc = ble_l2cap_disconnect(this->channel);
+    if (rc != 0 && rc != BLE_HS_ENOTCONN && rc != BLE_HS_EALREADY) {
+        NIMBLE_LOGE(LOG_TAG, "ble_l2cap_disconnect failed: rc=%d %s", rc, NimBLEUtils::returnCodeToString(rc));
+        return false;
+    }
+
+    return true;
+}
+
+uint16_t NimBLEL2CAPChannel::getConnHandle() const {
+    return ble_l2cap_get_conn_handle(this->channel);
+}
+
 // private
 int NimBLEL2CAPChannel::handleConnectionEvent(struct ble_l2cap_event* event) {
     channel = event->connect.chan;
