@@ -56,37 +56,37 @@ public:
         if (startTime == 0) {
             startTime = esp_timer_get_time();  // start measuring once data flows
         }
-        
+
         // Process complete frames from buffer
         while (buffer.size() >= 3) {  // Minimum frame size: seqno(1) + len(2)
             // Parse frame header
             uint8_t seqno = buffer[0];
             uint16_t payloadLen = (buffer[1] << 8) | buffer[2];  // Big-endian
-            
+
             size_t frameSize = 3 + payloadLen;
-            
+
             // Check if we have complete frame
             if (buffer.size() < frameSize) {
                 break;  // Wait for more data
             }
-            
+
             // Validate and process frame
             totalFramesReceived++;
             totalPayloadBytes += payloadLen;
-            
+
             // Check sequence number
             if (seqno != expectedSequenceNumber) {
                 sequenceErrors++;
-                printf("Frame %zu: Sequence error - got %d, expected %d (payload=%d bytes)\n", 
+                printf("Frame %zu: Sequence error - got %d, expected %d (payload=%d bytes)\n",
                        totalFramesReceived, seqno, expectedSequenceNumber, payloadLen);
             }
-            
+
             // Update expected sequence number (wraps at 256)
             expectedSequenceNumber = (seqno + 1) & 0xFF;
-            
+
             // Remove processed frame from buffer
             buffer.erase(buffer.begin(), buffer.begin() + frameSize);
-            
+
             // Print progress every 100 frames
             if (totalFramesReceived % 100 == 0) {
                 double elapsedSeconds = (esp_timer_get_time() - startTime) / 1000000.0;
@@ -97,7 +97,7 @@ public:
             }
         }
     }
-    
+
     void onDisconnect(NimBLEL2CAPChannel* channel) {
         printf("\nL2CAP disconnected\n");
         double elapsedSeconds = startTime > 0 ? (esp_timer_get_time() - startTime) / 1000000.0 : 0.0;
@@ -141,10 +141,10 @@ void app_main(void) {
     auto l2capChannelCallbacks = new L2CAPChannelCallbacks();
     auto channel = cocServer->createService(L2CAP_PSM, L2CAP_MTU, l2capChannelCallbacks);
     (void)channel;  // prevent unused warning
-    
+
     auto server = BLEDevice::createServer();
     server->setCallbacks(new GATTCallbacks());
-    
+
     auto advertising = BLEDevice::getAdvertising();
     NimBLEAdvertisementData scanData;
     scanData.setName("l2cap");
@@ -156,46 +156,46 @@ void app_main(void) {
     // Status reporting loop
     while (true) {
         vTaskDelay(1000 / portTICK_PERIOD_MS);
-        
+
         if (l2capChannelCallbacks->connected && l2capChannelCallbacks->totalBytesReceived > 0) {
             uint64_t currentTime = esp_timer_get_time();
             double elapsedSeconds = (currentTime - l2capChannelCallbacks->startTime) / 1000000.0;
-            
+
             if (elapsedSeconds > 0) {
                 double bytesPerSecond = l2capChannelCallbacks->totalBytesReceived / elapsedSeconds;
                 double framesPerSecond = l2capChannelCallbacks->totalFramesReceived / elapsedSeconds;
-                
+
                 // Heap monitoring
                 size_t currentHeap = esp_get_free_heap_size();
                 size_t minHeap = esp_get_minimum_free_heap_size();
-                
+
                 // Track heap for leak detection
                 if (initialHeap == 0) {
                     initialHeap = currentHeap;
                     lastHeap = currentHeap;
                 }
-                
+
                 // Check for consistent heap decrease
                 if (currentHeap < lastHeap) {
                     heapDecreaseCount++;
                     if (heapDecreaseCount >= HEAP_LEAK_THRESHOLD) {
                         printf("\n⚠️  WARNING: POSSIBLE MEMORY LEAK DETECTED! ⚠️\n");
                         printf("Heap has decreased %zu times in a row\n", heapDecreaseCount);
-                        printf("Initial heap: %zu, Current heap: %zu, Lost: %zu bytes\n", 
+                        printf("Initial heap: %zu, Current heap: %zu, Lost: %zu bytes\n",
                                initialHeap, currentHeap, initialHeap - currentHeap);
                     }
                 } else if (currentHeap >= lastHeap) {
                     heapDecreaseCount = 0;  // Reset counter if heap stabilizes or increases
                 }
                 lastHeap = currentHeap;
-                
+
                 printf("\n=== STATUS UPDATE ===\n");
                 printf("Frames received: %zu (%.1f fps)\n", l2capChannelCallbacks->totalFramesReceived, framesPerSecond);
                 printf("Total bytes: %zu\n", l2capChannelCallbacks->totalBytesReceived);
                 printf("Payload bytes: %zu\n", l2capChannelCallbacks->totalPayloadBytes);
                 printf("Bandwidth: %.2f KB/s (%.2f Mbps)\n", bytesPerSecond / 1024.0, (bytesPerSecond * 8) / 1000000.0);
                 printf("Sequence errors: %zu\n", l2capChannelCallbacks->sequenceErrors);
-                printf("Heap: %zu free (min: %zu), Used since start: %zu\n", 
+                printf("Heap: %zu free (min: %zu), Used since start: %zu\n",
                        currentHeap, minHeap, initialHeap > 0 ? initialHeap - currentHeap : 0);
                 printf("==================\n");
             }

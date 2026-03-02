@@ -3,3 +3,4 @@ dependencies:
     path: ../../../../../esp-nimble-cpp/
   mickeyl/esp-hpl:
     git: https://github.com/mickeyl/esp-hpl.git
+    version: "1.1.0"
