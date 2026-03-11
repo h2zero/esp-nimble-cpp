@@ -427,11 +427,27 @@ int NimBLEServer::handleGapEvent(ble_gap_event* event, void* arg) {
             }
 # endif
 
+            // Notify characteristics that the client has unsubscribed.
+            // This ensures onSubscribe callbacks are called with subValue=0
+            // so applications can clean up their subscription state.
+            peerInfo.m_desc = event->disconnect.conn;
+            for (const auto& svc : pServer->m_svcVec) {
+                for (const auto& chr : svc->getCharacteristics()) {
+                    auto subscribers = chr->getSubscribers();
+                    for (const auto& entry : subscribers) {
+                        if (entry.getConnHandle() == event->disconnect.conn.conn_handle &&
+                            (entry.isSubNotify() || entry.isSubIndicate())) {
+                            chr->processSubRequest(peerInfo, 0);
+                            break;
+                        }
+                    }
+                }
+            }
+
             if (pServer->m_svcChanged) {
                 pServer->resetGATT();
             }
 
-            peerInfo.m_desc = event->disconnect.conn;
             pServer->m_pServerCallbacks->onDisconnect(pServer, peerInfo, event->disconnect.reason);
 # if !MYNEWT_VAL(BLE_EXT_ADV)
             if (pServer->m_advertiseOnDisconnect) {
