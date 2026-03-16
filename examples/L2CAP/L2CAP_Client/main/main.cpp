@@ -83,8 +83,12 @@ void statusTask(void *pvParameters) {
         if (startTime > 0 && blocksSent > 0) {
             uint64_t currentTime = esp_timer_get_time();
             double elapsedSeconds = (currentTime - startTime) / 1000000.0;
-            double bytesPerSecond = bytesSent / elapsedSeconds;
-            double kbPerSecond = bytesPerSecond / 1024.0;
+            double bytesPerSecond = 0.0;
+            double kbPerSecond = 0.0;
+            if (elapsedSeconds > 0.0) {
+                bytesPerSecond = bytesSent / elapsedSeconds;
+                kbPerSecond = bytesPerSecond / 1024.0;
+            }
 
             // Heap monitoring
             size_t currentHeap = esp_get_free_heap_size();
