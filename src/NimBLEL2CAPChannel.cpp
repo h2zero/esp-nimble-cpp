@@ -219,6 +219,9 @@ bool NimBLEL2CAPChannel::disconnect() {
 }
 
 uint16_t NimBLEL2CAPChannel::getConnHandle() const {
+    if (!this->channel) {
+        return BLE_HS_CONN_HANDLE_NONE;
+    }
     return ble_l2cap_get_conn_handle(this->channel);
 }
 
