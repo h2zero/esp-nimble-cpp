@@ -80,9 +80,6 @@ extern "C" void app_main(void) {
 
     pCharacteristic->setValue("Hello World");
 
-    /** Start the service */
-    pService->start();
-
     /**
      *  Create an extended advertisement with the instance ID 0 and set the PHY's.
      *  Multiple instances can be added as long as the instance ID is incremented.

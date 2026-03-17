@@ -98,9 +98,6 @@ extern "C" void app_main(void) {
 
     pCharacteristic->setValue("Hello World");
 
-    /** Start the service */
-    pService->start();
-
     /** Create our multi advertising instances */
 
     /** extended scannable instance advertising on coded and 1m PHY's. */
