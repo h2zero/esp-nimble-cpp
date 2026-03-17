@@ -629,10 +629,13 @@ int NimBLEDevice::getNumBonds() {
  * @returns True on success.
  */
 bool NimBLEDevice::deleteAllBonds() {
-    int rc = ble_store_clear();
-    if (rc != 0) {
-        NIMBLE_LOGE(LOG_TAG, "Failed to delete all bonds; rc=%d", rc);
-        return false;
+    int numBonds = NimBLEDevice::getNumBonds();
+    for (int i = numBonds - 1; i >= 0; i--) {
+        auto addr = NimBLEDevice::getBondedAddress(i);
+        if (!NimBLEDevice::deleteBond(addr)) {
+            NIMBLE_LOGE(LOG_TAG, "Failed to delete bond for address: %s", addr.toString().c_str());
+            return false;
+        }
     }
     return true;
 }
@@ -905,7 +908,8 @@ bool NimBLEDevice::init(const std::string& deviceName) {
         bt_cfg.mode         = ESP_BT_MODE_BLE;
         bt_cfg.ble_max_conn = MYNEWT_VAL(BLE_MAX_CONNECTIONS);
 #   elif defined(CONFIG_IDF_TARGET_ESP32C3) || defined(CONFIG_IDF_TARGET_ESP32S3)
-        bt_cfg.ble_max_act = MYNEWT_VAL(BLE_MAX_CONNECTIONS) + MYNEWT_VAL(BLE_ROLE_BROADCASTER) + MYNEWT_VAL(BLE_ROLE_OBSERVER);
+        bt_cfg.ble_max_act =
+            MYNEWT_VAL(BLE_MAX_CONNECTIONS) + MYNEWT_VAL(BLE_ROLE_BROADCASTER) + MYNEWT_VAL(BLE_ROLE_OBSERVER);
 #   else
         bt_cfg.nimble_max_connections = MYNEWT_VAL(BLE_MAX_CONNECTIONS);
 #   endif
@@ -1289,13 +1293,13 @@ bool NimBLEDevice::injectConfirmPasskey(const NimBLEConnInfo& peerInfo, bool acc
  * @param [in] deviceName The name to set.
  */
 bool NimBLEDevice::setDeviceName(const std::string& deviceName) {
-#if !defined(MYNEWT_VAL_BLE_GATTS) || MYNEWT_VAL(BLE_GATTS) > 0
+# if !defined(MYNEWT_VAL_BLE_GATTS) || MYNEWT_VAL(BLE_GATTS) > 0
     int rc = ble_svc_gap_device_name_set(deviceName.c_str());
     if (rc != 0) {
         NIMBLE_LOGE(LOG_TAG, "Device name not set - too long");
         return false;
     }
-#endif
+# endif
     return true;
 } // setDeviceName
 
