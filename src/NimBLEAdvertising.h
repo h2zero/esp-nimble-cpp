@@ -64,12 +64,12 @@ class NimBLEAdvertising {
     void setMaxInterval(uint16_t maxInterval);
     void setMinInterval(uint16_t minInterval);
 
-    bool                           setAdvertisementData(const NimBLEAdvertisementData& advertisementData);
-    bool                           setScanResponseData(const NimBLEAdvertisementData& advertisementData);
+    bool setAdvertisementData(const NimBLEAdvertisementData& advertisementData);
+    bool setScanResponseData(const NimBLEAdvertisementData& advertisementData);
     const NimBLEAdvertisementData& getAdvertisementData();
     const NimBLEAdvertisementData& getScanData();
-    void                           clearData();
-    bool                           refreshAdvertisingData();
+    void clearData();
+    bool refreshAdvertisingData();
 
     bool addServiceUUID(const NimBLEUUID& serviceUUID);
     bool addServiceUUID(const char* serviceUUID);
