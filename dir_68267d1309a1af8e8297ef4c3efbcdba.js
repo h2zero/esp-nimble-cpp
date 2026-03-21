@@ -13,6 +13,7 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "NimBLECharacteristic.h", "_nim_b_l_e_characteristic_8h_source.html", null ],
     [ "NimBLEClient.h", "_nim_b_l_e_client_8h_source.html", null ],
     [ "NimBLEConnInfo.h", "_nim_b_l_e_conn_info_8h_source.html", null ],
+    [ "NimBLECppVersion.h", "_nim_b_l_e_cpp_version_8h_source.html", null ],
     [ "NimBLEDescriptor.h", "_nim_b_l_e_descriptor_8h_source.html", null ],
     [ "NimBLEDevice.h", "_nim_b_l_e_device_8h_source.html", null ],
     [ "NimBLEEddystoneTLM.h", "_nim_b_l_e_eddystone_t_l_m_8h_source.html", null ],
@@ -30,6 +31,7 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "NimBLEScan.h", "_nim_b_l_e_scan_8h_source.html", null ],
     [ "NimBLEServer.h", "_nim_b_l_e_server_8h_source.html", null ],
     [ "NimBLEService.h", "_nim_b_l_e_service_8h_source.html", null ],
+    [ "NimBLEStream.h", "_nim_b_l_e_stream_8h_source.html", null ],
     [ "NimBLEUtils.h", "_nim_b_l_e_utils_8h_source.html", null ],
     [ "NimBLEUUID.h", "_nim_b_l_e_u_u_i_d_8h_source.html", null ],
     [ "NimBLEValueAttribute.h", "_nim_b_l_e_value_attribute_8h_source.html", null ]

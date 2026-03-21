@@ -23,7 +23,8 @@ var searchData=
   ['gettype_20',['getType',['../class_nim_b_l_e_address.html#a18f8361ed20146cbc374a246d87015eb',1,'NimBLEAddress']]],
   ['getval_21',['getVal',['../class_nim_b_l_e_address.html#a196801fb1ad972085e748c90159e858e',1,'NimBLEAddress']]],
   ['getvalue_22',['getvalue',['../class_nim_b_l_e_att_value.html#ab16b9901e6ff9374c7d2e1afa5aa4671',1,'NimBLEAttValue::getValue()'],['../class_nim_b_l_e_u_u_i_d.html#acf379fca7d3689a73e6750d7ab50a0af',1,'NimBLEUUID::getValue()']]],
-  ['getwhitelistaddress_23',['getWhiteListAddress',['../class_nim_b_l_e_device.html#a4a2229e9e517b84773e65c75124b0789',1,'NimBLEDevice']]],
-  ['getwhitelistcount_24',['getWhiteListCount',['../class_nim_b_l_e_device.html#ab28cc2ec59fc9e62d05826633f53d2a0',1,'NimBLEDevice']]],
-  ['guide_25',['New User Guide',['../md__new__user__guide.html',1,'']]]
+  ['getversion_23',['getVersion',['../class_nim_b_l_e_device.html#af54be1633fe006b4b421abb471129b4f',1,'NimBLEDevice']]],
+  ['getwhitelistaddress_24',['getWhiteListAddress',['../class_nim_b_l_e_device.html#a4a2229e9e517b84773e65c75124b0789',1,'NimBLEDevice']]],
+  ['getwhitelistcount_25',['getWhiteListCount',['../class_nim_b_l_e_device.html#ab28cc2ec59fc9e62d05826633f53d2a0',1,'NimBLEDevice']]],
+  ['guide_26',['New User Guide',['../md__new__user__guide.html',1,'']]]
 ];

@@ -20,6 +20,7 @@ var searchData=
   ['gettype_17',['getType',['../class_nim_b_l_e_address.html#a18f8361ed20146cbc374a246d87015eb',1,'NimBLEAddress']]],
   ['getval_18',['getVal',['../class_nim_b_l_e_address.html#a196801fb1ad972085e748c90159e858e',1,'NimBLEAddress']]],
   ['getvalue_19',['getvalue',['../class_nim_b_l_e_att_value.html#ab16b9901e6ff9374c7d2e1afa5aa4671',1,'NimBLEAttValue::getValue()'],['../class_nim_b_l_e_u_u_i_d.html#acf379fca7d3689a73e6750d7ab50a0af',1,'NimBLEUUID::getValue()']]],
-  ['getwhitelistaddress_20',['getWhiteListAddress',['../class_nim_b_l_e_device.html#a4a2229e9e517b84773e65c75124b0789',1,'NimBLEDevice']]],
-  ['getwhitelistcount_21',['getWhiteListCount',['../class_nim_b_l_e_device.html#ab28cc2ec59fc9e62d05826633f53d2a0',1,'NimBLEDevice']]]
+  ['getversion_20',['getVersion',['../class_nim_b_l_e_device.html#af54be1633fe006b4b421abb471129b4f',1,'NimBLEDevice']]],
+  ['getwhitelistaddress_21',['getWhiteListAddress',['../class_nim_b_l_e_device.html#a4a2229e9e517b84773e65c75124b0789',1,'NimBLEDevice']]],
+  ['getwhitelistcount_22',['getWhiteListCount',['../class_nim_b_l_e_device.html#ab28cc2ec59fc9e62d05826633f53d2a0',1,'NimBLEDevice']]]
 ];

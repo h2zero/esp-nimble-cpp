@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">esp-nimble-cpp<span id="projectnumber">&#160;2.3.3</span>
+   <div id="projectname">esp-nimble-cpp<span id="projectnumber">&#160;2.4.0</span>
    </div>
   </td>
  </tr>
@@ -145,44 +145,45 @@ $(document).ready(function(){initNavTree('_nim_b_l_e_h_i_d_device_8h_source.html
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    NimBLEHIDDevice(NimBLEServer* server);</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">void</span>                  setReportMap(uint8_t* map, uint16_t);</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">void</span>                  startServices();</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keywordtype">bool</span>                  setManufacturer(<span class="keyword">const</span> std::string&amp; name);</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordtype">void</span>                  setPnp(uint8_t sig, uint16_t vid, uint16_t pid, uint16_t version);</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">void</span>                  setHidInfo(uint8_t country, uint8_t flags);</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordtype">void</span>                  setBatteryLevel(uint8_t level, <span class="keywordtype">bool</span> notify = <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    NimBLECharacteristic* getBatteryLevel();</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    NimBLECharacteristic* getReportMap();</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    NimBLECharacteristic* getHidControl();</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    NimBLECharacteristic* getInputReport(uint8_t reportId);</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    NimBLECharacteristic* getOutputReport(uint8_t reportId);</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    NimBLECharacteristic* getFeatureReport(uint8_t reportId);</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    NimBLECharacteristic* getProtocolMode();</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    NimBLECharacteristic* getBootInput();</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    NimBLECharacteristic* getBootOutput();</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    NimBLECharacteristic* getPnp();</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    NimBLECharacteristic* getHidInfo();</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    NimBLEService*        getDeviceInfoService();</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    NimBLEService*        getHidService();</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    NimBLEService*        getBatteryService();</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    NimBLEService* m_deviceInfoSvc{<span class="keyword">nullptr</span>}; <span class="comment">// 0x180a</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    NimBLEService* m_hidSvc{<span class="keyword">nullptr</span>};        <span class="comment">// 0x1812</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    NimBLEService* m_batterySvc{<span class="keyword">nullptr</span>};    <span class="comment">// 0x180f</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    NimBLECharacteristic* m_manufacturerChr{<span class="keyword">nullptr</span>}; <span class="comment">// 0x2a29</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    NimBLECharacteristic* m_pnpChr{<span class="keyword">nullptr</span>};          <span class="comment">// 0x2a50</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    NimBLECharacteristic* m_hidInfoChr{<span class="keyword">nullptr</span>};      <span class="comment">// 0x2a4a</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    NimBLECharacteristic* m_reportMapChr{<span class="keyword">nullptr</span>};    <span class="comment">// 0x2a4b</span></div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    NimBLECharacteristic* m_hidControlChr{<span class="keyword">nullptr</span>};   <span class="comment">// 0x2a4c</span></div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    NimBLECharacteristic* m_protocolModeChr{<span class="keyword">nullptr</span>}; <span class="comment">// 0x2a4e</span></div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    NimBLECharacteristic* m_batteryLevelChr{<span class="keyword">nullptr</span>}; <span class="comment">// 0x2a19</span></div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    NimBLECharacteristic* locateReportCharacteristicByIdAndType(uint8_t reportId, uint8_t reportType);</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>};</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="preprocessor">#endif </span><span class="comment">// CONFIG_BT_NIMBLE_ENABLED &amp;&amp; MYNEWT_VAL(BLE_ROLE_BROADCASTER) &amp;&amp; MYNEWT_VAL(BLE_ROLE_PERIPHERAL)</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="preprocessor">#endif </span><span class="comment">// NIMBLE_CPP_HIDDEVICE_H_</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">void</span>                  startServices() __attribute__((deprecated(&quot;Services are now started by the server when start() is called, &quot; </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                                                         &quot;this function is no longer needed and will be removed in a future release.&quot;)));</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordtype">bool</span>                  setManufacturer(const std::<span class="keywordtype">string</span>&amp; name);</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">void</span>                  setPnp(uint8_t sig, uint16_t vid, uint16_t pid, uint16_t version);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordtype">void</span>                  setHidInfo(uint8_t country, uint8_t flags);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordtype">void</span>                  setBatteryLevel(uint8_t level, <span class="keywordtype">bool</span> notify = false);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    NimBLECharacteristic* getBatteryLevel();</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    NimBLECharacteristic* getReportMap();</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    NimBLECharacteristic* getHidControl();</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    NimBLECharacteristic* getInputReport(uint8_t reportId);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    NimBLECharacteristic* getOutputReport(uint8_t reportId);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    NimBLECharacteristic* getFeatureReport(uint8_t reportId);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    NimBLECharacteristic* getProtocolMode();</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    NimBLECharacteristic* getBootInput();</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    NimBLECharacteristic* getBootOutput();</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    NimBLECharacteristic* getPnp();</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    NimBLECharacteristic* getHidInfo();</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    NimBLEService*        getDeviceInfoService();</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    NimBLEService*        getHidService();</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    NimBLEService*        getBatteryService();</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  private:</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    NimBLEService* m_deviceInfoSvc{<span class="keyword">nullptr</span>}; <span class="comment">// 0x180a</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    NimBLEService* m_hidSvc{<span class="keyword">nullptr</span>};        <span class="comment">// 0x1812</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    NimBLEService* m_batterySvc{<span class="keyword">nullptr</span>};    <span class="comment">// 0x180f</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    NimBLECharacteristic* m_manufacturerChr{<span class="keyword">nullptr</span>}; <span class="comment">// 0x2a29</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    NimBLECharacteristic* m_pnpChr{<span class="keyword">nullptr</span>};          <span class="comment">// 0x2a50</span></div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    NimBLECharacteristic* m_hidInfoChr{<span class="keyword">nullptr</span>};      <span class="comment">// 0x2a4a</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    NimBLECharacteristic* m_reportMapChr{<span class="keyword">nullptr</span>};    <span class="comment">// 0x2a4b</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    NimBLECharacteristic* m_hidControlChr{<span class="keyword">nullptr</span>};   <span class="comment">// 0x2a4c</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    NimBLECharacteristic* m_protocolModeChr{<span class="keyword">nullptr</span>}; <span class="comment">// 0x2a4e</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    NimBLECharacteristic* m_batteryLevelChr{<span class="keyword">nullptr</span>}; <span class="comment">// 0x2a19</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    NimBLECharacteristic* locateReportCharacteristicByIdAndType(uint8_t reportId, uint8_t reportType);</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>};</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="preprocessor">#endif </span><span class="comment">// CONFIG_BT_NIMBLE_ENABLED &amp;&amp; MYNEWT_VAL(BLE_ROLE_BROADCASTER) &amp;&amp; MYNEWT_VAL(BLE_ROLE_PERIPHERAL)</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="preprocessor">#endif </span><span class="comment">// NIMBLE_CPP_HIDDEVICE_H_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

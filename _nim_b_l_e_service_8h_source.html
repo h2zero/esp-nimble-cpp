@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">esp-nimble-cpp<span id="projectnumber">&#160;2.3.3</span>
+   <div id="projectname">esp-nimble-cpp<span id="projectnumber">&#160;2.4.0</span>
    </div>
   </td>
  </tr>
@@ -132,40 +132,46 @@ $(document).ready(function(){initNavTree('_nim_b_l_e_service_8h_source.html','')
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    NimBLEService(<span class="keyword">const</span> <a class="code hl_class" href="class_nim_b_l_e_u_u_i_d.html">NimBLEUUID</a>&amp; uuid);</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    ~NimBLEService();</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    NimBLEServer*         getServer() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    std::string           toString() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordtype">void</span>                  dump() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">bool</span>                  isStarted() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keywordtype">bool</span>                  start();</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    NimBLECharacteristic* createCharacteristic(<span class="keyword">const</span> <span class="keywordtype">char</span>* uuid,</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>                                               uint32_t    properties = NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE,</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                                               uint16_t    max_len    = BLE_ATT_ATTR_MAX_LEN);</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    NimBLECharacteristic* createCharacteristic(<span class="keyword">const</span> <a class="code hl_class" href="class_nim_b_l_e_u_u_i_d.html">NimBLEUUID</a>&amp; uuid,</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                                               uint32_t properties = NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE,</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                                               uint16_t max_len    = BLE_ATT_ATTR_MAX_LEN);</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">void</span>                  addCharacteristic(NimBLECharacteristic* pCharacteristic);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keywordtype">void</span>                  removeCharacteristic(NimBLECharacteristic* pCharacteristic, <span class="keywordtype">bool</span> deleteChr = <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    NimBLECharacteristic* getCharacteristic(<span class="keyword">const</span> <span class="keywordtype">char</span>* uuid, uint16_t instanceId = 0) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    NimBLECharacteristic* getCharacteristic(<span class="keyword">const</span> <a class="code hl_class" href="class_nim_b_l_e_u_u_i_d.html">NimBLEUUID</a>&amp; uuid, uint16_t instanceId = 0) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    NimBLECharacteristic* getCharacteristicByHandle(uint16_t handle) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keyword">const</span> std::vector&lt;NimBLECharacteristic*&gt;&amp; getCharacteristics() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    std::vector&lt;NimBLECharacteristic*&gt;        getCharacteristics(<span class="keyword">const</span> <span class="keywordtype">char</span>* uuid) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    std::vector&lt;NimBLECharacteristic*&gt;        getCharacteristics(<span class="keyword">const</span> <a class="code hl_class" href="class_nim_b_l_e_u_u_i_d.html">NimBLEUUID</a>&amp; uuid) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keyword">friend</span> <span class="keyword">class </span>NimBLEServer;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    std::vector&lt;NimBLECharacteristic*&gt; m_vChars{};</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="comment">// Nimble requires an array of services to be sent to the api</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="comment">// Since we are adding 1 at a time we create an array of 2 and set the type</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="comment">// of the second service to 0 to indicate the end of the array.</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    ble_gatt_svc_def                   m_pSvcDef[2]{};</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>}; <span class="comment">// NimBLEService</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="preprocessor">#endif </span><span class="comment">// CONFIG_BT_NIMBLE_ENABLED &amp;&amp; MYNEWT_VAL(BLE_ROLE_PERIPHERAL)</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="preprocessor">#endif </span><span class="comment">// NIMBLE_CPP_SERVICE_H_</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    NimBLEServer* getServer() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    std::string   toString() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordtype">void</span>          dump() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">bool</span>          isStarted() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    __attribute__((deprecated(<span class="stringliteral">&quot;NimBLEService::start() has no effect. &quot;</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                   <span class="stringliteral">&quot;Services are started when the server is started.&quot;</span>)))</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    bool start() { <span class="keywordflow">return</span> <span class="keyword">true</span>; }</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    NimBLECharacteristic* createCharacteristic(<span class="keyword">const</span> <span class="keywordtype">char</span>* uuid,</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                                               uint32_t    properties = NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE,</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>                                               uint16_t    max_len    = BLE_ATT_ATTR_MAX_LEN);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    NimBLECharacteristic* createCharacteristic(<span class="keyword">const</span> <a class="code hl_class" href="class_nim_b_l_e_u_u_i_d.html">NimBLEUUID</a>&amp; uuid,</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                                               uint32_t properties = NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE,</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                                               uint16_t max_len    = BLE_ATT_ATTR_MAX_LEN);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordtype">void</span>                  addCharacteristic(NimBLECharacteristic* pCharacteristic);</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordtype">void</span>                  removeCharacteristic(NimBLECharacteristic* pCharacteristic, <span class="keywordtype">bool</span> deleteChr = <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    NimBLECharacteristic* getCharacteristic(<span class="keyword">const</span> <span class="keywordtype">char</span>* uuid, uint16_t instanceId = 0) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    NimBLECharacteristic* getCharacteristic(<span class="keyword">const</span> <a class="code hl_class" href="class_nim_b_l_e_u_u_i_d.html">NimBLEUUID</a>&amp; uuid, uint16_t instanceId = 0) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    NimBLECharacteristic* getCharacteristicByHandle(uint16_t handle) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keyword">const</span> std::vector&lt;NimBLECharacteristic*&gt;&amp; getCharacteristics() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    std::vector&lt;NimBLECharacteristic*&gt;        getCharacteristics(<span class="keyword">const</span> <span class="keywordtype">char</span>* uuid) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    std::vector&lt;NimBLECharacteristic*&gt;        getCharacteristics(<span class="keyword">const</span> <a class="code hl_class" href="class_nim_b_l_e_u_u_i_d.html">NimBLEUUID</a>&amp; uuid) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keyword">friend</span> <span class="keyword">class </span>NimBLEServer;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keywordtype">bool</span> start_internal();</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordtype">void</span> clearServiceDefinitions();</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    std::vector&lt;NimBLECharacteristic*&gt; m_vChars{};</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="comment">// Nimble requires an array of services to be sent to the api</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="comment">// Since we are adding 1 at a time we create an array of 2 and set the type</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="comment">// of the second service to 0 to indicate the end of the array.</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    ble_gatt_svc_def                   m_pSvcDef[2]{};</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>}; <span class="comment">// NimBLEService</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="preprocessor">#endif </span><span class="comment">// CONFIG_BT_NIMBLE_ENABLED &amp;&amp; MYNEWT_VAL(BLE_ROLE_PERIPHERAL)</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="preprocessor">#endif </span><span class="comment">// NIMBLE_CPP_SERVICE_H_</span></div>
 <div class="ttc" id="aclass_nim_b_l_e_u_u_i_d_html"><div class="ttname"><a href="class_nim_b_l_e_u_u_i_d.html">NimBLEUUID</a></div><div class="ttdoc">A model of a BLE UUID.</div><div class="ttdef"><b>Definition</b> NimBLEUUID.h:41</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
