@@ -152,13 +152,17 @@ int NimBLERemoteService::characteristicDiscCB(uint16_t              conn_handle,
 
     if (error->status == 0) {
         // insert in handle order
+        auto pNewChar = new NimBLERemoteCharacteristic(pSvc, chr);
         for (auto it = pSvc->m_vChars.begin(); it != pSvc->m_vChars.end(); ++it) {
             if ((*it)->getHandle() > chr->def_handle) {
-                pTaskData->m_pBuf = (*pSvc->m_vChars.insert(it, new NimBLERemoteCharacteristic(pSvc, chr)));
+                pSvc->m_vChars.insert(it, pNewChar);
+                pTaskData->m_pBuf = pNewChar;
                 return 0;
             }
         }
-        pTaskData->m_pBuf = pSvc->m_vChars.emplace_back(new NimBLERemoteCharacteristic(pSvc, chr));
+
+        pSvc->m_vChars.push_back(pNewChar);
+        pTaskData->m_pBuf = pNewChar;
         return 0;
     }
 
