@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">esp-nimble-cpp<span id="projectnumber">&#160;2.4.0</span>
+   <div id="projectname">esp-nimble-cpp<span id="projectnumber">&#160;2.5.0</span>
    </div>
   </td>
  </tr>
@@ -128,10 +128,10 @@ $(document).ready(function(){initNavTree('_nim_b_l_e_device_8h_source.html','');
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">      (CONFIG_BTDM_BLE_SCAN_DUPL || CONFIG_BT_LE_SCAN_DUPL || CONFIG_BT_CTRL_BLE_SCAN_DUPL)</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor"># endif</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor"># if defined(CONFIG_NIMBLE_CPP_IDF)</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#  include &lt;host/ble_gap.h&gt;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor"># ifdef USING_NIMBLE_ARDUINO_HEADERS</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#  include &quot;nimble/nimble/host/include/host/ble_gap.h&quot;</span></div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor"># else</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#  include &lt;nimble/nimble/host/include/host/ble_gap.h&gt;</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#  include &quot;host/ble_gap.h&quot;</span></div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor"># endif</span></div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment">/****  FIX COMPILATION ****/</span></div>
