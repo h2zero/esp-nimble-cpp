@@ -889,8 +889,21 @@ bool NimBLEServer::resetGATT() {
     NimBLEDevice::stopAdvertising();
 # endif
 
+    // esp-idf nimble clears the device name and
+    // appearance during ble_gatts_reset()
+#ifndef CONFIG_USING_NIMBLE_COMPONENT
+    std::string name(ble_svc_gap_device_name());
+    uint16_t appearance = ble_svc_gap_device_appearance();
+#endif
+
     ble_gatts_reset();
     ble_svc_gap_init();
+
+#ifndef CONFIG_USING_NIMBLE_COMPONENT
+    ble_svc_gap_device_name_set(name.c_str());
+    ble_svc_gap_device_appearance_set(appearance);
+#endif
+
     ble_svc_gatt_init();
 
     for (auto svcIt = m_svcVec.begin(); svcIt != m_svcVec.end();) {
