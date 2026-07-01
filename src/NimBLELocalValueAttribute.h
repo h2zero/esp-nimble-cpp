@@ -112,8 +112,9 @@ class NimBLELocalValueAttribute : public NimBLELocalAttribute, public NimBLEValu
      * @brief Callback function to support a read request.
      * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
      * @details This function is called by NimBLEServer when a read request is received.
+     * @return 0 on success, or a BLE_ATT_ERR_* code to reject the read.
      */
-    virtual void readEvent(NimBLEConnInfo& connInfo) = 0;
+    virtual int readEvent(NimBLEConnInfo& connInfo) = 0;
 
     /**
      * @brief Callback function to support a write request.
@@ -121,8 +122,9 @@ class NimBLELocalValueAttribute : public NimBLELocalAttribute, public NimBLEValu
      * @param [in] len The length of the value.
      * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
      * @details This function is called by NimBLEServer when a write request is received.
+     * @return 0 on success, or a BLE_ATT_ERR_* code to reject the write.
      */
-    virtual void writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) = 0;
+    virtual int writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) = 0;
 
     /**
      * @brief Get a pointer to value of the attribute.

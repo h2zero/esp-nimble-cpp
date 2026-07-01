@@ -422,8 +422,8 @@ void NimBLECharacteristic::updatePeerStatus(const NimBLEConnInfo& peerInfo) cons
  * @brief Handle a read event from a client.
  * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
  */
-void NimBLECharacteristic::readEvent(NimBLEConnInfo& connInfo) {
-    m_pCallbacks->onRead(this, connInfo);
+int NimBLECharacteristic::readEvent(NimBLEConnInfo& connInfo) {
+    return m_pCallbacks->onReadStatus(this, connInfo);
 } // readEvent
 
 /**
@@ -432,9 +432,9 @@ void NimBLECharacteristic::readEvent(NimBLEConnInfo& connInfo) {
  * @param [in] len The length of the data written by the client.
  * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
  */
-void NimBLECharacteristic::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) {
+int NimBLECharacteristic::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) {
     setValue(val, len);
-    m_pCallbacks->onWrite(this, connInfo);
+    return m_pCallbacks->onWriteStatus(this, connInfo);
 } // writeEvent
 
 /**

@@ -742,7 +742,10 @@ int NimBLEServer::handleGattEvent(uint16_t connHandle, uint16_t attrHandle, ble_
             // Don't call readEvent if the buffer len is 0 (this is a follow up to a previous read),
             // or if this is an internal read (handle is NONE)
             if (ctxt->om->om_len > 0 && connHandle != BLE_HS_CONN_HANDLE_NONE) {
-                pAtt->readEvent(peerInfo);
+                int appRc = pAtt->readEvent(peerInfo);
+                if (appRc != 0) {
+                    return appRc; // application rejected the read
+                }
             }
 
             ble_npl_hw_enter_critical();
@@ -773,8 +776,7 @@ int NimBLEServer::handleGattEvent(uint16_t connHandle, uint16_t attrHandle, ble_
                 next  = SLIST_NEXT(next, om_next);
             }
 
-            pAtt->writeEvent(buf, len, peerInfo);
-            return 0;
+            return pAtt->writeEvent(buf, len, peerInfo);
         }
 
         default:
