@@ -433,8 +433,16 @@ int NimBLECharacteristic::readEvent(NimBLEConnInfo& connInfo) {
  * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
  */
 int NimBLECharacteristic::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) {
+    // Commit before the callback so getValue() reflects the new value inside it
+    // (onWriteStatus defaults to calling the legacy onWrite), but snapshot first
+    // so a rejected write can be rolled back and never becomes observable state.
+    NimBLEAttValue previous = m_value;
     setValue(val, len);
-    return m_pCallbacks->onWriteStatus(this, connInfo);
+    const int rc = m_pCallbacks->onWriteStatus(this, connInfo);
+    if (rc != 0) {
+        m_value = previous;
+    }
+    return rc;
 } // writeEvent
 
 /**
