@@ -106,7 +106,7 @@ std::string NimBLEEddystoneTLM::toString() {
     uint32_t absTemp  = temp < 0 ? -static_cast<int32_t>(temp) : temp;
     uint8_t  intTemp  = absTemp / 256;
     uint8_t  frac     = absTemp % 256 * 100 / 256;
-    snprintf(val, sizeof(val), "%s%d.%d", (temp < 0 ? "-" : ""), intTemp, frac);
+    snprintf(val, sizeof(val), "%s%d.%02d", (temp < 0 ? "-" : ""), intTemp, frac);
     out += val;
     out += " C\n";
 
