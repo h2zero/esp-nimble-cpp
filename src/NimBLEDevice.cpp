@@ -1031,6 +1031,11 @@ bool NimBLEDevice::deinit(bool clearAll) {
     if (m_initialized) {
         rc = nimble_port_stop();
         if (rc == 0) {
+# if MYNEWT_VAL(BLE_ROLE_OBSERVER)
+            if (NimBLEDevice::m_pScan != nullptr) {
+                NimBLEDevice::m_pScan->onHostDeinit();
+            }
+# endif
             nimble_port_deinit();
 # ifndef USING_NIMBLE_ARDUINO_HEADERS
 #  if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
@@ -1042,6 +1047,9 @@ bool NimBLEDevice::deinit(bool clearAll) {
 # endif
             m_initialized = false;
             m_synced      = false;
+        } else {
+            NIMBLE_LOGE(LOG_TAG, "nimble_port_stop() failed with error: %d", rc);
+            return false;
         }
     }
 
