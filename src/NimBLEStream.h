@@ -55,6 +55,7 @@ class Stream : public Print {
     virtual int   available() = 0;
     virtual int   read()      = 0;
     virtual int   peek()      = 0;
+    virtual int   availableForWrite() { return 0; }
     virtual void  flush() {}
     void          setTimeout(unsigned long timeout) { m_timeout = timeout; }
     unsigned long getTimeout() const { return m_timeout; }
@@ -86,7 +87,7 @@ class NimBLEStream : public Stream {
         return write(static_cast<uint8_t>(data));
     }
 
-    int availableForWrite();
+    int availableForWrite() override;
 
     // Read up to len bytes into buffer (non-blocking)
     size_t read(uint8_t* buffer, size_t len);
