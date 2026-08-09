@@ -271,8 +271,8 @@ class NimBLECharacteristic : public NimBLELocalValueAttribute {
     friend class NimBLEService;
 
     void setService(NimBLEService* pService);
-    void readEvent(NimBLEConnInfo& connInfo) override;
-    void writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) override;
+    int  readEvent(NimBLEConnInfo& connInfo) override;
+    int  writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) override;
     bool sendValue(const uint8_t* value,
                    size_t         length,
                    bool           is_notification = true,
@@ -319,6 +319,35 @@ class NimBLECharacteristicCallbacks {
     virtual ~NimBLECharacteristicCallbacks() {}
     virtual void onRead(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo);
     virtual void onWrite(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo);
+
+    /**
+     * @brief Read request callback that can reject the read with an ATT error.
+     * @param [in] pCharacteristic The characteristic that is the source of the event.
+     * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
+     * @return 0 to accept the read, or a BLE_ATT_ERR_* code to reject it.
+     * @details Defaults to calling onRead() and accepting. Override this instead of onRead()
+     * when you need to reject a read from the application.
+     */
+    virtual int onReadStatus(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo) {
+        onRead(pCharacteristic, connInfo);
+        return 0;
+    }
+
+    /**
+     * @brief Write request callback that can reject the write with an ATT error.
+     * @param [in] pCharacteristic The characteristic that is the source of the event.
+     * @param [in] connInfo A reference to a NimBLEConnInfo instance containing the peer info.
+     * @return 0 to accept the write, or a BLE_ATT_ERR_* code to reject it.
+     * @details Defaults to calling onWrite() and accepting. Override this instead of onWrite()
+     * when you need to reject a write from the application. A rejection only reaches the peer
+     * when it used write-with-response; a write-without-response (ATT Write Command) is
+     * unacknowledged, so the code is dropped by the stack.
+     */
+    virtual int onWriteStatus(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo) {
+        onWrite(pCharacteristic, connInfo);
+        return 0;
+    }
+
     virtual void onStatus(NimBLECharacteristic* pCharacteristic, int code); // deprecated
     virtual void onStatus(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo, int code);
     virtual void onSubscribe(NimBLECharacteristic* pCharacteristic, NimBLEConnInfo& connInfo, uint16_t subValue);
