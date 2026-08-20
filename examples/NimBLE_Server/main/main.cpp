@@ -16,7 +16,7 @@ static NimBLEServer* pServer;
  **                       Remove as you see fit for your needs                        */
 class ServerCallbacks : public NimBLEServerCallbacks {
     void onConnect(NimBLEServer* pServer, NimBLEConnInfo& connInfo) override {
-        printf("Client address: %s\n", connInfo.getAddress().toString().c_str());
+        printf("Client connected:\n%s", connInfo.toString().c_str());
 
         /**
          *  We can use the connection handle here to ask for different connection parameters.
@@ -183,10 +183,6 @@ extern "C" void app_main(void) {
                                               20);
     pC01Ddsc->setValue("Send it back!");
     pC01Ddsc->setCallbacks(&dscCallbacks);
-
-    /** Start the services when finished creating all Characteristics and Descriptors */
-    pDeadService->start();
-    pBaadService->start();
 
     /** Create an advertising instance and add the services to the advertised data */
     NimBLEAdvertising* pAdvertising = NimBLEDevice::getAdvertising();

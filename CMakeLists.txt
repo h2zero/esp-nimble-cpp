@@ -37,6 +37,7 @@ idf_component_register(
     "esp32c3"
     "esp32c5"
     "esp32c6"
+    "esp32c61"
     "esp32h2"
     "esp32p4"
   INCLUDE_DIRS
@@ -65,6 +66,7 @@ idf_component_register(
     "src/NimBLEScan.cpp"
     "src/NimBLEServer.cpp"
     "src/NimBLEService.cpp"
+    "src/NimBLEStream.cpp"
     "src/NimBLEUtils.cpp"
     "src/NimBLEUUID.cpp"
   REQUIRES

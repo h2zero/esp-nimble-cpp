@@ -21,8 +21,13 @@
 #include "syscfg/syscfg.h"
 #if CONFIG_BT_NIMBLE_ENABLED
 
-# ifdef NIMBLE_CPP_ARDUINO_STRING_AVAILABLE
-#  include <Arduino.h>
+/* Enables the use of Arduino String class for attribute values */
+# ifndef NIMBLE_CPP_ARDUINO_STRING_AVAILABLE
+#  define NIMBLE_CPP_ARDUINO_STRING_AVAILABLE (__has_include(<Arduino.h>))
+# endif
+
+# if NIMBLE_CPP_ARDUINO_STRING_AVAILABLE
+#  include <WString.h>
 # endif
 
 # include <string>
@@ -71,6 +76,14 @@ struct Has_c_str_length : std::false_type {};
 
 template <typename T>
 struct Has_c_str_length<T, decltype(void(std::declval<T&>().c_str())), decltype(void(std::declval<T&>().length()))>
+    : std::true_type {};
+
+/* Used to determine if the type passed to a template has a value_type member (std::vector, std::array, std::string, etc.). */
+template <typename T, typename = void>
+struct Has_value_type : std::false_type {};
+
+template <typename T>
+struct Has_value_type<T, decltype(void(sizeof(typename T::value_type)))>
     : std::true_type {};
 
 /**
@@ -137,7 +150,7 @@ class NimBLEAttValue {
     NimBLEAttValue(const std::vector<uint8_t> vec, uint16_t max_len = BLE_ATT_ATTR_MAX_LEN)
         : NimBLEAttValue(&vec[0], vec.size(), max_len) {}
 
-# ifdef NIMBLE_CPP_ARDUINO_STRING_AVAILABLE
+# if NIMBLE_CPP_ARDUINO_STRING_AVAILABLE
     /**
      * @brief Construct with an initial value from an Arduino String.
      * @param str An Arduino String containing to the initial value to set.
@@ -241,6 +254,23 @@ class NimBLEAttValue {
 
 # if __cplusplus < 201703L
     /**
+     * @brief Template to set value to the value of a char array using strnlen.
+     * @param [in] s A reference to a char array.
+     * @details Only used for char array types to correctly determine length via strnlen.
+     */
+    template <typename T>
+#  ifdef _DOXYGEN_
+    bool
+#  else
+    typename std::enable_if<std::is_array<T>::value &&
+                                std::is_same<typename std::remove_extent<T>::type, char>::value,
+                            bool>::type
+#  endif
+    setValue(const T& s) {
+        return setValue(reinterpret_cast<const uint8_t*>(s), strnlen(s, sizeof(T)));
+    }
+
+    /**
      * @brief Template to set value to the value of <type\>val.
      * @param [in] v The <type\>value to set.
      * @details Only used for types without a `c_str()` and `length()` or `data()` and `size()` method.
@@ -250,7 +280,10 @@ class NimBLEAttValue {
 #  ifdef _DOXYGEN_
     bool
 #  else
-    typename std::enable_if<!std::is_pointer<T>::value && !Has_c_str_length<T>::value && !Has_data_size<T>::value, bool>::type
+    typename std::enable_if<!std::is_pointer<T>::value && !Has_c_str_length<T>::value && !Has_data_size<T>::value &&
+                                !(std::is_array<T>::value &&
+                                  std::is_same<typename std::remove_extent<T>::type, char>::value),
+                            bool>::type
 #  endif
     setValue(const T& v) {
         return setValue(reinterpret_cast<const uint8_t*>(&v), sizeof(T));
@@ -274,13 +307,32 @@ class NimBLEAttValue {
     /**
      * @brief Template to set value to the value of <type\>val.
      * @param [in] v The <type\>value to set.
-     * @details Only used if the <type\> has a `data()` and `size()` method.
+     * @details Only used if the <type\> has a `data()` and `size()` method with `value_type`.
+     * Correctly calculates byte size for containers with multi-byte element types.
      */
     template <typename T>
 #  ifdef _DOXYGEN_
     bool
 #  else
-    typename std::enable_if<Has_data_size<T>::value, bool>::type
+    typename std::enable_if<Has_data_size<T>::value && Has_value_type<T>::value, bool>::type
+#  endif
+    setValue(const T& v) {
+        return setValue(
+            reinterpret_cast<const uint8_t*>(v.data()),
+            v.size() * sizeof(typename T::value_type)
+        );
+    }
+
+    /**
+     * @brief Template to set value to the value of <type\>val.
+     * @param [in] v The <type\>value to set.
+     * @details Only used if the <type\> has a `data()` and `size()` method without `value_type`.
+     */
+    template <typename T>
+#  ifdef _DOXYGEN_
+    bool
+#  else
+    typename std::enable_if<Has_data_size<T>::value && !Has_value_type<T>::value, bool>::type
 #  endif
     setValue(const T& v) {
         return setValue(reinterpret_cast<const uint8_t*>(v.data()), v.size());
@@ -295,9 +347,16 @@ class NimBLEAttValue {
     template <typename T>
     typename std::enable_if<!std::is_pointer<T>::value, bool>::type setValue(const T& s) {
         if constexpr (Has_data_size<T>::value) {
-            return setValue(reinterpret_cast<const uint8_t*>(s.data()), s.size());
+            if constexpr (Has_value_type<T>::value) {
+                return setValue(reinterpret_cast<const uint8_t*>(s.data()), s.size() * sizeof(typename T::value_type));
+            } else {
+                return setValue(reinterpret_cast<const uint8_t*>(s.data()), s.size());
+            }
         } else if constexpr (Has_c_str_length<T>::value) {
             return setValue(reinterpret_cast<const uint8_t*>(s.c_str()), s.length());
+        } else if constexpr (std::is_array<T>::value &&
+                             std::is_same<typename std::remove_extent<T>::type, char>::value) {
+            return setValue(reinterpret_cast<const uint8_t*>(s), strnlen(s, sizeof(s)));
         } else {
             return setValue(reinterpret_cast<const uint8_t*>(&s), sizeof(s));
         }
@@ -367,7 +426,7 @@ class NimBLEAttValue {
     /** @brief Inequality operator */
     bool operator!=(const NimBLEAttValue& source) const { return !(*this == source); }
 
-# ifdef NIMBLE_CPP_ARDUINO_STRING_AVAILABLE
+# if NIMBLE_CPP_ARDUINO_STRING_AVAILABLE
     /** @brief Operator; Get the value as an Arduino String value. */
     operator String() const { return String(reinterpret_cast<char*>(m_attr_value)); }
 # endif

@@ -36,7 +36,7 @@ static uint8_t secondaryPhy = BLE_HCI_LE_PHY_1M;
 /** Handler class for server events */
 class ServerCallbacks : public NimBLEServerCallbacks {
     void onConnect(NimBLEServer* pServer, NimBLEConnInfo& connInfo) override {
-        printf("Client connected:: %s\n", connInfo.getAddress().toString().c_str());
+        printf("Client connected:\n%s", connInfo.toString().c_str());
     }
 
     void onDisconnect(NimBLEServer* pServer, NimBLEConnInfo& connInfo, int reason) override {
@@ -79,9 +79,6 @@ extern "C" void app_main(void) {
                                        NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::NOTIFY);
 
     pCharacteristic->setValue("Hello World");
-
-    /** Start the service */
-    pService->start();
 
     /**
      *  Create an extended advertisement with the instance ID 0 and set the PHY's.
