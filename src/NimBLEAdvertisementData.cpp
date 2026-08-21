@@ -14,9 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "NimBLEAdvertisementData.h"
-#if (CONFIG_BT_NIMBLE_ENABLED && MYNEWT_VAL(BLE_ROLE_BROADCASTER) && !MYNEWT_VAL(BLE_EXT_ADV)) || defined(_DOXYGEN_)
+#if (CONFIG_BT_ENABLED && CONFIG_BT_NIMBLE_ROLE_BROADCASTER && !CONFIG_BT_NIMBLE_EXT_ADV) || defined(_DOXYGEN_)
 
 # include "NimBLEDevice.h"
 # include "NimBLEUtils.h"
@@ -32,14 +31,31 @@
 static const char* LOG_TAG = "NimBLEAdvertisementData";
 
 /**
+ * @brief Set the advertisement flags.
+ * @param [in] flag The flags to be set in the advertisement.
+ * * BLE_HS_ADV_F_DISC_LTD
+ * * BLE_HS_ADV_F_DISC_GEN
+ * * BLE_HS_ADV_F_BREDR_UNSUP - must always use with NimBLE 
+ * A flag value of 0 will remove the flags from the advertisement.
+ */
+bool NimBLEAdvertisementData::setCODData(const NimClassOfDeviceType::bluetooth_cod_t cod) {
+    int dataLoc = getDataLocation(BLE_HS_ADV_TYPE_CLASS_OF_DEVICE);  
+    if (dataLoc != -1) {
+        removeData(BLE_HS_ADV_TYPE_CLASS_OF_DEVICE);
+    }
+    return addData((const uint8_t*)((NimClassOfDeviceType::makeATT_Payload_CodeClassOfDevice(cod)).data()),5);
+} // SetCOD
+
+/**
  * @brief Add data to the payload to be advertised.
  * @param [in] data The data to be added to the payload.
  * @param [in] length The size of data to be added to the payload.
  */
 bool NimBLEAdvertisementData::addData(const uint8_t* data, size_t length) {
     if (m_payload.size() + length > BLE_HS_ADV_MAX_SZ) {
-        NIMBLE_LOGE(LOG_TAG, "Data length exceeded");
-        return false;
+
+        NIMBLE_LOGE(LOG_TAG, "Data length exceeded %i mx lenth id %i",m_payload.size() + length, BLE_HS_ADV_MAX_SZ);
+        NIMBLE_LOGE(LOG_TAG, "Current data %s",  NimBLEUtils::dataToHexString(m_payload.data(),m_payload.size()).c_str());
     }
 
     m_payload.insert(m_payload.end(), data, data + length);

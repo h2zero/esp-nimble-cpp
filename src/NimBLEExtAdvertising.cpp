@@ -616,11 +616,6 @@ bool NimBLEExtAdvertisement::setFlags(uint8_t flag) {
  * @return True if successful.
  */
 bool NimBLEExtAdvertisement::setManufacturerData(const uint8_t* data, size_t length) {
-    if (length > 0xFF - 1) {
-        NIMBLE_LOGE(LOG_TAG, "Manufacturer data too long!");
-        return false;
-    }
-
     uint8_t header[2];
     header[0] = length + 1;
     header[1] = BLE_HS_ADV_TYPE_MFG_DATA;
@@ -657,11 +652,6 @@ bool NimBLEExtAdvertisement::setManufacturerData(const std::vector<uint8_t>& dat
  * @return True if successful.
  */
 bool NimBLEExtAdvertisement::setURI(const std::string& uri) {
-    if (uri.length() > 0xFF - 1) {
-        NIMBLE_LOGE(LOG_TAG, "URI too long!");
-        return false;
-    }
-
     uint8_t header[2];
     header[0] = uri.length() + 1;
     header[1] = BLE_HS_ADV_TYPE_URI;
@@ -680,11 +670,6 @@ bool NimBLEExtAdvertisement::setURI(const std::string& uri) {
  * @return True if successful.
  */
 bool NimBLEExtAdvertisement::setName(const std::string& name, bool isComplete) {
-    if (name.length() > 0xFF - 1) {
-        NIMBLE_LOGE(LOG_TAG, "Name too long!");
-        return false;
-    }
-
     uint8_t header[2];
     header[0] = name.length() + 1;
     header[1] = isComplete ? BLE_HS_ADV_TYPE_COMP_NAME : BLE_HS_ADV_TYPE_INCOMP_NAME;
@@ -932,12 +917,8 @@ bool NimBLEExtAdvertisement::setServices(bool complete, uint8_t size, const std:
  */
 bool NimBLEExtAdvertisement::setServiceData(const NimBLEUUID& uuid, const uint8_t* data, size_t length) {
     uint8_t uuidBytes = uuid.bitSize() / 8;
-    if (length + uuidBytes + 2 > 0xFF) {
-        NIMBLE_LOGE(LOG_TAG, "Service data too long!");
-        return false;
-    }
+    uint8_t sDataLen  = 2 + uuidBytes + length;
 
-    uint8_t sDataLen = 2 + uuidBytes + length;
     if (m_payload.size() + sDataLen > MYNEWT_VAL(BLE_EXT_ADV_MAX_SIZE)) {
         return false;
     }
@@ -1108,5 +1089,21 @@ std::string NimBLEExtAdvertisement::toString() const {
 
     return str;
 } // toString
+
+/**
+ * @brief Set the advertisement flags.
+ * @param [in] flag The flags to be set in the advertisement.
+ * * BLE_HS_ADV_F_DISC_LTD
+ * * BLE_HS_ADV_F_DISC_GEN
+ * * BLE_HS_ADV_F_BREDR_UNSUP - must always use with NimBLE 
+ * A flag value of 0 will remove the flags from the advertisement.
+ */
+bool NimBLEExtAdvertisement::setCODData(const NimClassOfDeviceType::bluetooth_cod_t cod) {
+    int dataLoc = getDataLocation(BLE_HS_ADV_TYPE_CLASS_OF_DEVICE);  
+    if (dataLoc != -1) {
+        removeData(BLE_HS_ADV_TYPE_CLASS_OF_DEVICE);
+    }
+    return addData((const uint8_t*)((NimClassOfDeviceType::makeATT_Payload_CodeClassOfDevice(cod)).data()),5);
+} // SetCOD
 
 #endif // CONFIG_BT_NIMBLE_ENABLED && MYNEWT_VAL(BLE_ROLE_BROADCASTER) && MYNEWT_VAL(BLE_EXT_ADV)
