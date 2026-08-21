@@ -983,7 +983,15 @@ bool NimBLEDevice::init(const std::string& deviceName) {
 #   endif
 #  endif
 # endif
+# ifdef ESP_PLATFORM
+        esp_err_t rc = nimble_port_init();
+        NIMBLE_LOGE(LOG_TAG, "nimble_port_init rc=%d, npl_funcs=%p", rc, npl_funcs);
+        if (rc != ESP_OK) {
+            return false;
+        }
+# else
         nimble_port_init();
+# endif
 
         // Setup callbacks for host events
         ble_hs_cfg.reset_cb        = NimBLEDevice::onReset;
