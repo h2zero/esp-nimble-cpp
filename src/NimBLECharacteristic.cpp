@@ -434,8 +434,29 @@ void NimBLECharacteristic::readEvent(NimBLEConnInfo& connInfo) {
  */
 void NimBLECharacteristic::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) {
     setValue(val, len);
+    m_writeError = 0;
     m_pCallbacks->onWrite(this, connInfo);
 } // writeEvent
+
+/**
+ * @brief Set the ATT error code to return for the current write operation.
+ * @param [in] attError The ATT error code; 0 accepts the write. Use the
+ * Bluetooth-spec vendor-specific range 0x80-0x9F for application errors.
+ * Call this from your NimBLECharacteristicCallbacks::onWrite() implementation
+ * to reject the write; the stack will then send an ATT Error Response instead
+ * of a success response. Ignored for Write Commands (no response exists).
+ */
+void NimBLECharacteristic::setWriteError(uint8_t attError) {
+    m_writeError = attError;
+} // setWriteError
+
+/**
+ * @brief Get the write error code set by the onWrite callback.
+ * @return The ATT error code for the current write operation, 0 if none was set.
+ */
+int NimBLECharacteristic::getWriteError() const {
+    return m_writeError;
+} // getWriteError
 
 /**
  * @brief Set the callback handlers for this characteristic.
