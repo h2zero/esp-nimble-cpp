@@ -54,6 +54,7 @@ NimBLEServer::NimBLEServer()
     : m_gattsStarted{false},
       m_svcChanged{false},
       m_deleteCallbacks{false},
+      m_registerServicesFirst{false},
 # if !MYNEWT_VAL(BLE_EXT_ADV)
       m_advertiseOnDisconnect{false},
 # endif
@@ -365,6 +366,20 @@ void NimBLEServer::advertiseOnDisconnect(bool enable) {
     m_advertiseOnDisconnect = enable;
 } // advertiseOnDisconnect
 # endif
+
+/**
+ * @brief Register the application's services before the standard GAP/GATT services.
+ * @param [in] enable true == register the application services first (they take the
+ * low attribute handles, starting at 0x0001, and GAP/GATT are placed after them);
+ * false (default) == the standard behavior, GAP/GATT register first and take the low
+ * handles.
+ * @details Must be called before the services are started (i.e. before
+ * NimBLEServer::start()). Useful when a peripheral must expose a fixed attribute-table
+ * layout that another device relies on by hardcoded handle rather than discovery.
+ */
+void NimBLEServer::registerServicesFirst(bool enable) {
+    m_registerServicesFirst = enable;
+} // registerServicesFirst
 
 /**
  * @brief Return the number of connected clients.
@@ -897,14 +912,24 @@ bool NimBLEServer::resetGATT() {
 #endif
 
     ble_gatts_reset();
-    ble_svc_gap_init();
 
+    // Register the standard GAP (0x1800) and GATT (0x1801) services, restoring the
+    // device name/appearance that ble_gatts_reset() clears. By default this happens
+    // first, so GAP/GATT take the low attribute handles (0x0001+). When
+    // registerServicesFirst() is enabled, it is deferred until after the application
+    // services below, so those take the low handles instead.
+    auto initGapGattServices = [&]() {
+        ble_svc_gap_init();
 #ifndef CONFIG_USING_NIMBLE_COMPONENT
-    ble_svc_gap_device_name_set(name.c_str());
-    ble_svc_gap_device_appearance_set(appearance);
+        ble_svc_gap_device_name_set(name.c_str());
+        ble_svc_gap_device_appearance_set(appearance);
 #endif
+        ble_svc_gatt_init();
+    };
 
-    ble_svc_gatt_init();
+    if (!m_registerServicesFirst) {
+        initGapGattServices();
+    }
 
     for (auto svcIt = m_svcVec.begin(); svcIt != m_svcVec.end();) {
         auto* pSvc = *svcIt;
@@ -947,6 +972,10 @@ bool NimBLEServer::resetGATT() {
 
         pSvc->m_handle = 0;
         ++svcIt;
+    }
+
+    if (m_registerServicesFirst) {
+        initGapGattServices();
     }
 
     return true;
