@@ -966,6 +966,12 @@ bool NimBLEServer::resetGATT() {
         if (pSvc->getRemoved() == 0) {
             if (!pSvc->start_internal()) {
                 NIMBLE_LOGE(LOG_TAG, "Failed to start service: %s", pSvc->getUUID().toString().c_str());
+                // When deferring GAP/GATT (registerServicesFirst), still register
+                // them on the failure path so the mandatory GAP/GATT services (and
+                // the restored name/appearance) are never left out of the database.
+                if (m_registerServicesFirst) {
+                    initGapGattServices();
+                }
                 return false;
             }
         }
