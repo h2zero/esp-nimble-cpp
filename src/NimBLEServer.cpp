@@ -54,7 +54,7 @@ NimBLEServer::NimBLEServer()
     : m_gattsStarted{false},
       m_svcChanged{false},
       m_deleteCallbacks{false},
-      m_registerServicesFirst{false},
+      m_registerAppServicesFirst{false},
 # if !MYNEWT_VAL(BLE_EXT_ADV)
       m_advertiseOnDisconnect{false},
 # endif
@@ -377,9 +377,9 @@ void NimBLEServer::advertiseOnDisconnect(bool enable) {
  * NimBLEServer::start()). Useful when a peripheral must expose a fixed attribute-table
  * layout that another device relies on by hardcoded handle rather than discovery.
  */
-void NimBLEServer::registerServicesFirst(bool enable) {
-    m_registerServicesFirst = enable;
-} // registerServicesFirst
+void NimBLEServer::registerAppServicesFirst(bool enable) {
+    m_registerAppServicesFirst = enable;
+} // registerAppServicesFirst
 
 /**
  * @brief Return the number of connected clients.
@@ -916,7 +916,7 @@ bool NimBLEServer::resetGATT() {
     // Register the standard GAP (0x1800) and GATT (0x1801) services, restoring the
     // device name/appearance that ble_gatts_reset() clears. By default this happens
     // first, so GAP/GATT take the low attribute handles (0x0001+). When
-    // registerServicesFirst() is enabled, it is deferred until after the application
+    // registerAppServicesFirst() is enabled, it is deferred until after the application
     // services below, so those take the low handles instead.
     auto initGapGattServices = [&]() {
         ble_svc_gap_init();
@@ -927,7 +927,7 @@ bool NimBLEServer::resetGATT() {
         ble_svc_gatt_init();
     };
 
-    if (!m_registerServicesFirst) {
+    if (!m_registerAppServicesFirst) {
         initGapGattServices();
     }
 
@@ -966,10 +966,10 @@ bool NimBLEServer::resetGATT() {
         if (pSvc->getRemoved() == 0) {
             if (!pSvc->start_internal()) {
                 NIMBLE_LOGE(LOG_TAG, "Failed to start service: %s", pSvc->getUUID().toString().c_str());
-                // When deferring GAP/GATT (registerServicesFirst), still register
+                // When deferring GAP/GATT (registerAppServicesFirst), still register
                 // them on the failure path so the mandatory GAP/GATT services (and
                 // the restored name/appearance) are never left out of the database.
-                if (m_registerServicesFirst) {
+                if (m_registerAppServicesFirst) {
                     initGapGattServices();
                 }
                 return false;
@@ -980,7 +980,7 @@ bool NimBLEServer::resetGATT() {
         ++svcIt;
     }
 
-    if (m_registerServicesFirst) {
+    if (m_registerAppServicesFirst) {
         initGapGattServices();
     }
 
