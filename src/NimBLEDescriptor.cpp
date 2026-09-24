@@ -120,13 +120,16 @@ std::string NimBLEDescriptor::toString() const {
     return res;
 } // toString
 
-void NimBLEDescriptor::readEvent(NimBLEConnInfo& connInfo) {
+int NimBLEDescriptor::readEvent(NimBLEConnInfo& connInfo) {
+    // Descriptor callbacks have no status-returning variant; always accept.
     m_pCallbacks->onRead(this, connInfo);
+    return 0;
 } // readEvent
 
-void NimBLEDescriptor::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) {
+int NimBLEDescriptor::writeEvent(const uint8_t* val, uint16_t len, NimBLEConnInfo& connInfo) {
     setValue(val, len);
     m_pCallbacks->onWrite(this, connInfo);
+    return 0;
 } // writeEvent
 
 /**
