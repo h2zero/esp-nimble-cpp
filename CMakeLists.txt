@@ -33,6 +33,7 @@ idf_component_register(
   REQUIRED_IDF_TARGETS
     "esp32"
     "esp32s3"
+    "esp32s31"
     "esp32c2"
     "esp32c3"
     "esp32c5"
