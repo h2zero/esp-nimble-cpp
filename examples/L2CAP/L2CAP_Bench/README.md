@@ -108,3 +108,11 @@ This benchmark deliberately reports that failure; it does not silently pace or
 retry the run. Experimental resource-window, alignment and native diagnostic
 changes are outside this submission. Use echo/request as a bounded-load
 baseline and preserve failed streaming captures when investigating the limit.
+
+The default pool profile also failed an ESP-S3→ESP-S31 single-request echo at
+4996 payload bytes plus framing (one 5000-byte SDU, negotiated MTU 5000). An
+error-only instrumented check returned code 6 (ENOMEM) at the first write. That
+identifies a resource failure, not the exact limiting pool; it is retained as a
+failed case and is not claimed fixed here. Use 4096-byte payloads for the bounded
+baseline. The parser's maximum frame size is not a guarantee that the default
+host/controller buffers can sustain every transfer geometry.
