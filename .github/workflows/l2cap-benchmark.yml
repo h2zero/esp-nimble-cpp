@@ -1,0 +1,32 @@
+name: L2CAP benchmark
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [master]
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: python -m pip install pyserial
+      - run: python -m unittest discover -s tools/l2cap-bench -p 'test*.py'
+  firmware:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [esp32s3, esp32s31]
+    container: espressif/idf@sha256:81893c71bb5e570088901f21def8684c25cd2a9020281bd01b843a7655edb18c
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          path: esp-nimble-cpp
+      - name: Compile benchmark firmware
+        env:
+          IDF_TARGET: ${{ matrix.target }}
+        shell: bash
+        run: |
+          . "${IDF_PATH}/export.sh"
+          cd esp-nimble-cpp/examples/L2CAP/L2CAP_Bench
+          idf.py --preview -D "SDKCONFIG_DEFAULTS=sdkconfig.defaults;sdkconfig.defaults.$IDF_TARGET" build

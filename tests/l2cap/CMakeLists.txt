@@ -26,3 +26,7 @@ target_link_libraries(l2cap_inline_tests PRIVATE Threads::Threads)
 add_test(NAME l2cap_inline_errors COMMAND l2cap_inline_tests errors)
 
 add_test(NAME l2cap_inline_lifecycle COMMAND l2cap_inline_tests lifecycle)
+
+add_executable(l2cap_bench_protocol_tests BenchProtocolTests.cpp)
+target_compile_features(l2cap_bench_protocol_tests PRIVATE cxx_std_17)
+add_test(NAME l2cap_bench_protocol COMMAND l2cap_bench_protocol_tests)

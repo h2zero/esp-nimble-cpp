@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.16)
+get_filename_component(NIMBLE_CPP_ROOT "../../.." ABSOLUTE)
+set(EXTRA_COMPONENT_DIRS "${NIMBLE_CPP_ROOT}")
+set(COMPONENTS main)
+set(SUPPORTED_TARGETS esp32s3 esp32s31)
+include($ENV{IDF_PATH}/tools/cmake/project.cmake)
+project(l2cap_bench)

@@ -55,6 +55,14 @@ When using this library along with Arduino and compiling with *CMake* you must a
 in your project/CMakeLists.txt after the line `include($ENV{IDF_PATH}/tools/cmake/project.cmake)` to prevent Arduino from releasing BLE memory.
 <br>
 
+## L2CAP measurement
+
+The standalone [CoC benchmark](examples/L2CAP/L2CAP_Bench/README.md) for ESP-IDF
+6.1 supports ESP32-S3/S31, ESP and macOS peers, request/response and streaming,
+and repeated reconnects. Its [serial runner](tools/l2cap-bench/README.md)
+retains accepted link parameters and validates complete per-frame evidence.
+Native channel regression tests are documented in [tests/l2cap](tests/l2cap/README.md).
+
 # Sponsors
 Thank you to all the sponsors who support this project!
 
