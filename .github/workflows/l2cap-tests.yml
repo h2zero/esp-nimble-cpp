@@ -1,0 +1,17 @@
+name: L2CAP native tests
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [master]
+jobs:
+  native:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        cxx_flags: ["", "-fsanitize=address,undefined -fno-omit-frame-pointer"]
+    steps:
+      - uses: actions/checkout@v5
+      - run: cmake -S tests/l2cap -B build/l2cap-tests -DCMAKE_CXX_FLAGS="${{ matrix.cxx_flags }}"
+      - run: cmake --build build/l2cap-tests
+      - run: ctest --test-dir build/l2cap-tests --output-on-failure
