@@ -1,0 +1,39 @@
+name: S31 and server role builds
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  server-build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [esp32s3, esp32s31]
+        broadcaster: [enabled, disabled]
+    # ESP-IDF v6.1; S31 still requires --preview. Stable 5.x jobs stay unchanged.
+    container: espressif/idf@sha256:81893c71bb5e570088901f21def8684c25cd2a9020281bd01b843a7655edb18c
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          path: esp-nimble-cpp
+      - name: Build server role probe
+        env:
+          IDF_TARGET: ${{ matrix.target }}
+          BROADCASTER: ${{ matrix.broadcaster }}
+        shell: bash
+        run: |
+          . "${IDF_PATH}/export.sh"
+          cd esp-nimble-cpp/.github/tests/server-build
+          defaults="sdkconfig.defaults"
+          if [ "$BROADCASTER" = disabled ]; then defaults="$defaults;sdkconfig.no-broadcaster"; fi
+          idf.py --preview -D "SDKCONFIG_DEFAULTS=$defaults" build
+          python - "$BROADCASTER" <<'PYTHON'
+          import sys
+          from pathlib import Path
+          enabled = "CONFIG_BT_NIMBLE_ROLE_BROADCASTER=y" in Path("sdkconfig").read_text().splitlines()
+          assert enabled == (sys.argv[1] == "enabled"), "role override was not applied"
+          PYTHON
