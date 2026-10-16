@@ -271,5 +271,7 @@ inline QueueHandle_t nimble_port_get_dflt_eventq() {
     return q;
 }
 inline void ble_npl_eventq_put(QueueHandle_t q, ble_npl_event* e) {
-    assert(xQueueSend(q, &e, 0) == pdTRUE);
+    const auto queued = xQueueSend(q, &e, 0);
+    assert(queued == pdTRUE);
+    (void)queued;
 }
