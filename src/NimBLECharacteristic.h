@@ -76,6 +76,22 @@ class NimBLECharacteristic : public NimBLELocalValueAttribute {
 
     NimBLECharacteristicCallbacks* getCallbacks() const;
 
+    /**
+     * @brief Set the ATT error code to return for the current write operation.
+     * @param [in] attError The ATT error code; 0 accepts the write. Use the
+     * Bluetooth-spec vendor-specific range 0x80-0x9F for application errors.
+     * Call this from your NimBLECharacteristicCallbacks::onWrite() implementation
+     * to reject the write; the stack will then send an ATT Error Response instead
+     * of a success response. Ignored for Write Commands (no response exists).
+     */
+    void setWriteError(uint8_t attError);
+
+    /**
+     * @brief Get the write error code set by the onWrite callback.
+     * @return The ATT error code for the current write operation, 0 if none was set.
+     */
+    int getWriteError() const;
+
     /*********************** Template Functions ************************/
 
 # if __cplusplus < 201703L
@@ -305,6 +321,7 @@ class NimBLECharacteristic : public NimBLELocalValueAttribute {
     NimBLEService*                 m_pService{nullptr};
     std::vector<NimBLEDescriptor*> m_vDescriptors{};
     mutable SubPeerArray           m_subPeers{};
+    int                            m_writeError = 0;
 }; // NimBLECharacteristic
 
 /**

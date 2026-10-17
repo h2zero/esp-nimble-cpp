@@ -18,6 +18,7 @@
 #include "NimBLEServer.h"
 #if CONFIG_BT_NIMBLE_ENABLED && MYNEWT_VAL(BLE_ROLE_PERIPHERAL)
 
+# include "NimBLECharacteristic.h"
 # include "NimBLEDevice.h"
 # include "NimBLELog.h"
 
@@ -774,7 +775,8 @@ int NimBLEServer::handleGattEvent(uint16_t connHandle, uint16_t attrHandle, ble_
             }
 
             pAtt->writeEvent(buf, len, peerInfo);
-            return 0;
+            // Only characteristics carry the write error slot; descriptor writes keep succeeding.
+            return ctxt->op == BLE_GATT_ACCESS_OP_WRITE_CHR ? static_cast<NimBLECharacteristic*>(pAtt)->getWriteError() : 0;
         }
 
         default:
