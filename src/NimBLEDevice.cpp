@@ -1030,7 +1030,17 @@ bool NimBLEDevice::deinit(bool clearAll) {
     int rc = 0;
     if (m_initialized) {
         rc = nimble_port_stop();
+        if (rc != 0) { return false; }
         if (rc == 0) {
+# if MYNEWT_VAL(BLE_ROLE_PERIPHERAL) && MYNEWT_VAL(BLE_L2CAP_COC_MAX_NUM)
+            // The stopped host cannot enqueue new channel jobs. Destroy CoC
+            // events while the NPL function table and event pool still exist;
+            // nimble_port_deinit() releases both on ESP-IDF.
+            if (clearAll && m_pL2CAPServer != nullptr) {
+                delete m_pL2CAPServer;
+                m_pL2CAPServer = nullptr;
+            }
+# endif
 # if MYNEWT_VAL(BLE_ROLE_OBSERVER)
             if (NimBLEDevice::m_pScan != nullptr) {
                 NimBLEDevice::m_pScan->onHostDeinit();
