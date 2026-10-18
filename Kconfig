@@ -197,4 +197,65 @@ config NIMBLE_CPP_DEBUG_ASSERT_ENABLED
         Enabling this option will add debug asserts to the NimBLE CPP library.
         This will use approximately 1kB of flash memory.
 
+config NIMBLE_CPP_L2CAP_SDU_BUFFER_COUNT
+    int "L2CAP SDU buffer count."
+    range 2 32
+    default 5
+    help
+        Number of full-SDU mbufs allocated per NimBLEL2CAPChannel instance for
+        local CoC send/receive work. Each buffer is sized to the channel MTU, so
+        increasing this directly increases per-channel heap consumption.
+
+        Higher values improve tolerance for bursty traffic, overlapping send and
+        receive work, deferred read callback lag, and other short periods where
+        the channel needs more than one full SDU buffer ready at once.
+
+        Lower values reduce memory footprint, but make the channel more fragile
+        under load. If this value is too small for the negotiated MTU and the way
+        the application consumes callbacks, local allocations may fail and large
+        SDUs can start timing out or disconnecting even though CoC MTU negotiation
+        itself succeeded.
+
+        The default value of 5 preserves the currently validated behavior. Reduce
+        it only when memory is tight and the application traffic pattern is known
+        to be light; increase it if callbacks may lag or if multiple large SDUs
+        must be in flight locally.
+
+config NIMBLE_CPP_L2CAP_DEFERRED_READ_CALLBACKS
+    bool "Defer L2CAP read callbacks to a worker task."
+    default "n"
+    help
+        When enabled, NimBLEL2CAPChannel rearms receive first on the NimBLE host task
+        and then dispatches onConnect() and onRead() callbacks on a shared worker task.
+        Disconnect callbacks always run on that worker, outside the NimBLE host lock.
+        This reduces the risk of doing heavy application work directly on the NimBLE host path.
+
+if NIMBLE_CPP_L2CAP_DEFERRED_READ_CALLBACKS
+
+config NIMBLE_CPP_L2CAP_CALLBACK_TASK_STACK_SIZE
+    int "L2CAP callback worker stack size."
+    range 2048 32768
+    default 4096
+    help
+        Stack size in bytes for the shared worker task used to invoke deferred
+        L2CAP read callbacks.
+
+config NIMBLE_CPP_L2CAP_CALLBACK_TASK_PRIORITY
+    int "L2CAP callback worker task priority."
+    range 1 24
+    default 5
+    help
+        FreeRTOS priority for the shared worker task used to invoke deferred
+        L2CAP read callbacks.
+
+config NIMBLE_CPP_L2CAP_CALLBACK_QUEUE_LENGTH
+    int "L2CAP callback queue length."
+    range 4 128
+    default 16
+    help
+        Number of queued deferred L2CAP read callbacks. Overflow aborts the
+        connection; additional reserved slots guarantee lifecycle delivery.
+
+endif
+
 endmenu

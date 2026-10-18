@@ -1,0 +1,42 @@
+name: L2CAP CoC build
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [master]
+permissions:
+  contents: read
+
+jobs:
+  coc:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        idf: [v5.4.3, v5.5.1]
+        callbacks: [inline, deferred]
+    container: espressif/idf:${{ matrix.idf }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+          path: esp-nimble-cpp
+      - name: Compile and link CoC implementation
+        env:
+          IDF_TARGET: esp32s3
+          CALLBACKS: ${{ matrix.callbacks }}
+        shell: bash
+        run: |
+          . "${IDF_PATH}/export.sh"
+          cd esp-nimble-cpp/.github/tests/l2cap-build
+          defaults="sdkconfig.defaults"
+          if [ "$CALLBACKS" = deferred ]; then defaults="$defaults;sdkconfig.deferred"; fi
+          idf.py -D "SDKCONFIG_DEFAULTS=$defaults" build
+          python - "$CALLBACKS" <<'PYTHON'
+          import sys
+          from pathlib import Path
+          config = Path("sdkconfig").read_text().splitlines()
+          assert "CONFIG_BT_NIMBLE_L2CAP_COC_MAX_NUM=1" in config
+          enabled = "CONFIG_NIMBLE_CPP_L2CAP_DEFERRED_READ_CALLBACKS=y" in config
+          assert enabled == (sys.argv[1] == "deferred")
+          PYTHON
