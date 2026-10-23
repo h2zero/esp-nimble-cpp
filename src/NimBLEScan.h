@@ -129,11 +129,16 @@ class NimBLEScan {
             snprintf(&out[0],
                      out.size(),
                      "Scan stats:\n"
-                     "  Devices seen      : %" PRIu32 "\n"
-                     "  Duplicate advs    : %" PRIu32 "\n"
-                     "  Scan responses    : %" PRIu32 "\n"
-                     "  SR timing (ms)    : min=%" PRIu32 ", max=%" PRIu32 ", avg=%" PRIu64 "\n"
-                     "  Orphaned SR       : %" PRIu32 "\n"
+                     "  Devices seen      : %" PRIu32
+                     "\n"
+                     "  Duplicate advs    : %" PRIu32
+                     "\n"
+                     "  Scan responses    : %" PRIu32
+                     "\n"
+                     "  SR timing (ms)    : min=%" PRIu32 ", max=%" PRIu32 ", avg=%" PRIu64
+                     "\n"
+                     "  Orphaned SR       : %" PRIu32
+                     "\n"
                      "  Missed SR         : %" PRIu32 "\n",
                      devCount,
                      dupCount,
@@ -176,6 +181,7 @@ class NimBLEScan {
     ~NimBLEScan();
     static int  handleGapEvent(ble_gap_event* event, void* arg);
     void        onHostSync();
+    void        onHostDeinit();
     static void srTimerCb(ble_npl_event* event);
 
     // Linked list helpers for devices awaiting scan responses
@@ -187,8 +193,9 @@ class NimBLEScan {
     NimBLEScanCallbacks*    m_pScanCallbacks;
     ble_gap_disc_params     m_scanParams;
     NimBLEScanResults       m_scanResults;
-    NimBLETaskData*         m_pTaskData;
+    NimBLEUtils::TaskData*  m_pTaskData;
     ble_npl_callout         m_srTimer{};
+    bool                    m_srTimerInitialized{false};
     ble_npl_time_t          m_srTimeoutTicks{};
     uint8_t                 m_maxResults;
     NimBLEAdvertisedDevice* m_pWaitingListHead{}; // head of linked list for devices awaiting scan responses

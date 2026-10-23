@@ -248,9 +248,9 @@ int NimBLEClient::startConnectionAttempt(const ble_addr_t* peerAddr) {
  */
 bool NimBLEClient::connect(const NimBLEAddress& address, bool deleteAttributes, bool asyncConnect, bool exchangeMTU) {
     NIMBLE_LOGD(LOG_TAG, ">> connect(%s)", address.toString().c_str());
-    NimBLETaskData    taskData(this);
-    const ble_addr_t* peerAddr = address.getBase();
-    int               rc       = 0;
+    NimBLEUtils::TaskData taskData(this);
+    const ble_addr_t*     peerAddr = address.getBase();
+    int                   rc       = 0;
 
     if (!NimBLEDevice::m_synced) {
         NIMBLE_LOGE(LOG_TAG, "Host not synced with controller.");
@@ -347,7 +347,7 @@ bool NimBLEClient::secureConnection(bool async) const {
         return true;
     }
 
-    NimBLETaskData taskData(const_cast<NimBLEClient*>(this), BLE_HS_ENOTCONN);
+    NimBLEUtils::TaskData taskData(const_cast<NimBLEClient*>(this), BLE_HS_ENOTCONN);
     m_pTaskData    = &taskData;
     int retryCount = 1;
     do {
@@ -769,8 +769,8 @@ bool NimBLEClient::retrieveServices(const NimBLEUUID* uuidFilter) {
         return false;
     }
 
-    int            rc = 0;
-    NimBLETaskData taskData(this);
+    int                   rc = 0;
+    NimBLEUtils::TaskData taskData(this);
 
     if (uuidFilter == nullptr) {
         rc = ble_gattc_disc_all_svcs(m_connHandle, NimBLEClient::serviceDiscoveredCB, &taskData);
@@ -809,8 +809,8 @@ int NimBLEClient::serviceDiscoveredCB(uint16_t                     connHandle,
                 error->status,
                 (error->status == 0) ? service->start_handle : -1);
 
-    NimBLETaskData* pTaskData = (NimBLETaskData*)arg;
-    NimBLEClient*   pClient   = (NimBLEClient*)pTaskData->m_pInstance;
+    NimBLEUtils::TaskData* pTaskData = (NimBLEUtils::TaskData*)arg;
+    NimBLEClient*          pClient   = (NimBLEClient*)pTaskData->m_pInstance;
 
     if (error->status == BLE_HS_ENOTCONN) {
         NIMBLE_LOGE(LOG_TAG, "<< Service Discovered; Disconnected");
@@ -1010,9 +1010,9 @@ void NimBLEClient::setConnectRetries(uint8_t numRetries) {
  * @param [in] arg A pointer to the client instance that registered for this callback.
  */
 int NimBLEClient::handleGapEvent(struct ble_gap_event* event, void* arg) {
-    NimBLEClient*   pClient   = (NimBLEClient*)arg;
-    int             rc        = 0;
-    NimBLETaskData* pTaskData = pClient->m_pTaskData; // save a copy in case client is deleted
+    NimBLEClient*          pClient   = (NimBLEClient*)arg;
+    int                    rc        = 0;
+    NimBLEUtils::TaskData* pTaskData = pClient->m_pTaskData; // save a copy in case client is deleted
 
     NIMBLE_LOGD(LOG_TAG, ">> handleGapEvent %s", NimBLEUtils::gapEventToString(event->type));
 
@@ -1179,34 +1179,32 @@ int NimBLEClient::handleGapEvent(struct ble_gap_event* event, void* arg) {
                 return BLE_ATT_ERR_INVALID_HANDLE;
             }
 
-            auto len = event->notify_rx.om->om_len;
-            if (pChr->m_value.setValue(event->notify_rx.om->om_data, len)) {
-                os_mbuf* next;
-                next = SLIST_NEXT(event->notify_rx.om, om_next);
-                while (next != NULL) {
-                    pChr->m_value.append(next->om_data, next->om_len);
-                    if (pChr->m_value.length() != len + next->om_len) {
-                        rc = BLE_ATT_ERR_INVALID_ATTR_VALUE_LEN;
-                        break;
-                    }
-                    len  += next->om_len;
-                    next  = SLIST_NEXT(next, om_next);
-                }
-            } else {
-                rc = BLE_ATT_ERR_INVALID_ATTR_VALUE_LEN;
+            // Build the value locally so the update of the characteristic value is atomic
+            // and the callback gets a stable copy without holding the value lock.
+            const auto totalLen = OS_MBUF_PKTLEN(event->notify_rx.om);
+            if (totalLen > BLE_ATT_ATTR_MAX_LEN) {
+                NIMBLE_LOGE(LOG_TAG, "notification value error; exceeds limit");
+                return BLE_ATT_ERR_INVALID_ATTR_VALUE_LEN;
             }
 
-            if (rc != 0) { // This should never happen
-                NIMBLE_LOGE(LOG_TAG, "notification value error; exceeds limit");
-                return rc;
+            NimBLEAttValue value(totalLen, BLE_ATT_ATTR_MAX_LEN);
+            if (value.data() == nullptr) {
+                NIMBLE_LOGE(LOG_TAG, "Failed to allocate notification value");
+                return BLE_ATT_ERR_INSUFFICIENT_RES;
+            }
+
+            for (os_mbuf* segment = event->notify_rx.om; segment != nullptr; segment = SLIST_NEXT(segment, om_next)) {
+                value.append(segment->om_data, segment->om_len);
+            }
+
+            if (!pChr->m_value.copyFrom(value)) {
+                NIMBLE_LOGE(LOG_TAG, "Failed to copy value to characteristic");
+                return BLE_ATT_ERR_INSUFFICIENT_RES;
             }
 
             if (pChr->m_notifyCallback != nullptr) {
                 // TODO: change this callback to use the NimBLEAttValue class instead of raw data and length
-                pChr->m_notifyCallback(pChr,
-                                       const_cast<uint8_t*>(pChr->m_value.getValue().data()),
-                                       pChr->m_value.length(),
-                                       !event->notify_rx.indication);
+                pChr->m_notifyCallback(pChr, const_cast<uint8_t*>(value.data()), value.length(), !event->notify_rx.indication);
             }
 
             return 0;
