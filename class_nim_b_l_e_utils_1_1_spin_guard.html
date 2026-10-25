@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>esp-nimble-cpp: NimBLETaskData Struct Reference</title>
+<title>esp-nimble-cpp: NimBLEUtils::SpinGuard Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">esp-nimble-cpp<span id="projectnumber">&#160;2.5.0</span>
+   <div id="projectname">esp-nimble-cpp<span id="projectnumber">&#160;2.6.0</span>
    </div>
   </td>
  </tr>
@@ -63,7 +63,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('struct_nim_b_l_e_task_data.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('class_nim_b_l_e_utils_1_1_spin_guard.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -91,71 +91,81 @@ $(document).ready(function(){initNavTree('struct_nim_b_l_e_task_data.html',''); 
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="struct_nim_b_l_e_task_data-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">NimBLETaskData Struct Reference</div></div>
+<a href="class_nim_b_l_e_utils_1_1_spin_guard-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">NimBLEUtils::SpinGuard Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>A structure to hold data for a task that is waiting for a response.  
- <a href="struct_nim_b_l_e_task_data.html#details">More...</a></p>
+<p>A simple spinlock guard for atomic_flag.  
+ <a href="class_nim_b_l_e_utils_1_1_spin_guard.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_nim_b_l_e_utils_8h_source.html">NimBLEUtils.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7b08f7ba2161d6309da1fc40c83027c4" id="r_a7b08f7ba2161d6309da1fc40c83027c4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_nim_b_l_e_task_data.html#a7b08f7ba2161d6309da1fc40c83027c4">NimBLETaskData</a> (void *pInstance=nullptr, int flags=0, void *buf=nullptr)</td></tr>
-<tr class="memdesc:a7b08f7ba2161d6309da1fc40c83027c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="struct_nim_b_l_e_task_data.html" title="A structure to hold data for a task that is waiting for a response.">NimBLETaskData</a> instance.  <br /></td></tr>
-<tr class="separator:a7b08f7ba2161d6309da1fc40c83027c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af2d5d10d7cc8801cf4d001f89bf301c6" id="r_af2d5d10d7cc8801cf4d001f89bf301c6"><td class="memItemLeft" align="right" valign="top"><a id="af2d5d10d7cc8801cf4d001f89bf301c6" name="af2d5d10d7cc8801cf4d001f89bf301c6"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>~NimBLETaskData</b> ()</td></tr>
-<tr class="memdesc:af2d5d10d7cc8801cf4d001f89bf301c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
-<tr class="separator:af2d5d10d7cc8801cf4d001f89bf301c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1512c73ee72786052a25a05086fa0dd5" id="r_a1512c73ee72786052a25a05086fa0dd5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nim_b_l_e_utils_1_1_spin_guard.html#a1512c73ee72786052a25a05086fa0dd5">SpinGuard</a> (std::atomic_flag &amp;flag)</td></tr>
+<tr class="memdesc:a1512c73ee72786052a25a05086fa0dd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="class_nim_b_l_e_utils_1_1_spin_guard.html" title="A simple spinlock guard for atomic_flag.">SpinGuard</a> and acquire the lock.  <br /></td></tr>
+<tr class="separator:a1512c73ee72786052a25a05086fa0dd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01dfd25a0deaddf5b9ab0087f818c933" id="r_a01dfd25a0deaddf5b9ab0087f818c933"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nim_b_l_e_utils_1_1_spin_guard.html#a01dfd25a0deaddf5b9ab0087f818c933">~SpinGuard</a> ()</td></tr>
+<tr class="memdesc:a01dfd25a0deaddf5b9ab0087f818c933"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destruct a <a class="el" href="class_nim_b_l_e_utils_1_1_spin_guard.html" title="A simple spinlock guard for atomic_flag.">SpinGuard</a> and release the lock.  <br /></td></tr>
+<tr class="separator:a01dfd25a0deaddf5b9ab0087f818c933"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A structure to hold data for a task that is waiting for a response. </p>
-<p>This structure is used in conjunction with <a class="el" href="class_nim_b_l_e_utils.html#a6b3a170f26ce51f353ff960f59739181" title="Blocks the calling task until released or timeout.">NimBLEUtils::taskWait()</a> and <a class="el" href="class_nim_b_l_e_utils.html#a7b2de1e3827f9f6750550623dc6d9288" title="Release a task.">NimBLEUtils::taskRelease()</a>. All items are optional, the m_pHandle will be set in taskWait(). </p>
+<div class="textblock"><p>A simple spinlock guard for atomic_flag. </p>
+<p>Acquires the lock on construction and releases it on destruction. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a7b08f7ba2161d6309da1fc40c83027c4" name="a7b08f7ba2161d6309da1fc40c83027c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7b08f7ba2161d6309da1fc40c83027c4">&#9670;&#160;</a></span>NimBLETaskData()</h2>
+<a id="a1512c73ee72786052a25a05086fa0dd5" name="a1512c73ee72786052a25a05086fa0dd5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1512c73ee72786052a25a05086fa0dd5">&#9670;&#160;</a></span>SpinGuard()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">NimBLEUtils::SpinGuard::SpinGuard </td>
+          <td>(</td>
+          <td class="paramtype">std::atomic_flag &amp;&#160;</td>
+          <td class="paramname"><em>flag</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct a <a class="el" href="class_nim_b_l_e_utils_1_1_spin_guard.html" title="A simple spinlock guard for atomic_flag.">SpinGuard</a> and acquire the lock. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">flag</td><td>The atomic_flag to guard.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Spins until the lock is acquired. </p>
+
+</div>
+</div>
+<a id="a01dfd25a0deaddf5b9ab0087f818c933" name="a01dfd25a0deaddf5b9ab0087f818c933"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01dfd25a0deaddf5b9ab0087f818c933">&#9670;&#160;</a></span>~SpinGuard()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">NimBLETaskData::NimBLETaskData </td>
+          <td class="memname">NimBLEUtils::SpinGuard::~SpinGuard </td>
           <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>pInstance</em> = <code>nullptr</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>flags</em> = <code>0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>buf</em> = <code>nullptr</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Construct a <a class="el" href="struct_nim_b_l_e_task_data.html" title="A structure to hold data for a task that is waiting for a response.">NimBLETaskData</a> instance. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">pInstance</td><td>An instance of the class that will be waiting. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">flags</td><td>General purpose flags for the caller. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">buf</td><td>A buffer for data. </td></tr>
-  </table>
-  </dd>
-</dl>
+<p>Destruct a <a class="el" href="class_nim_b_l_e_utils_1_1_spin_guard.html" title="A simple spinlock guard for atomic_flag.">SpinGuard</a> and release the lock. </p>
+<p>Releases the lock acquired by the constructor. </p>
 
 </div>
 </div>
@@ -164,7 +174,7 @@ Public Member Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="struct_nim_b_l_e_task_data.html">NimBLETaskData</a></li>
+    <li class="navelem"><a class="el" href="class_nim_b_l_e_utils.html">NimBLEUtils</a></li><li class="navelem"><a class="el" href="class_nim_b_l_e_utils_1_1_spin_guard.html">SpinGuard</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

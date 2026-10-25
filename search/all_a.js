@@ -1,10 +1,15 @@
 var searchData=
 [
-  ['enablescanresponse_0',['enableScanResponse',['../class_nim_b_l_e_advertising.html#a6badd669ddf4ff8507561d5041d093d6',1,'NimBLEAdvertising']]],
-  ['enabling_20extended_20advertising_1',['Enabling extended advertising',['../md__bluetooth_015_01features.html#enabling-extended-advertising',1,'']]],
-  ['end_2',['end',['../class_nim_b_l_e_att_value.html#a91cbe0ba44781943390a80514383ee58',1,'NimBLEAttValue']]],
-  ['equals_3',['equals',['../class_nim_b_l_e_address.html#a826fe8850cbc7d54f0696b8af4637169',1,'NimBLEAddress::equals()'],['../class_nim_b_l_e_u_u_i_d.html#a3d9763ff434905457ed69118e93a35fd',1,'NimBLEUUID::equals()']]],
-  ['esp_20idf_20installation_4',['ESP-IDF Installation',['../index.html#esp-idf-installation',1,'']]],
-  ['example_5',['Example',['../md__migration__guide.html#example',1,'']]],
-  ['extended_20advertising_6',['extended advertising',['../md__bluetooth_015_01features.html#about-extended-advertising',1,'About extended advertising'],['../md__bluetooth_015_01features.html#enabling-extended-advertising',1,'Enabling extended advertising']]]
+  ['data_0',['data',['../class_nim_b_l_e_att_value.html#a86acbb5ab3a35b3d5692c2e05fdccadd',1,'NimBLEAttValue']]],
+  ['datatohexstring_1',['dataToHexString',['../class_nim_b_l_e_utils.html#a53f0b19687b0706ec48d6b630e209acb',1,'NimBLEUtils']]],
+  ['deinit_2',['deinit',['../class_nim_b_l_e_device.html#a66362258c033860e8448032913be355f',1,'NimBLEDevice']]],
+  ['delete_20client_20instances_20unless_20necessary_20or_20unused_3',['Do not delete client instances unless necessary or unused',['../md__usage__tips.html#do-not-delete-client-instances-unless-necessary-or-unused',1,'']]],
+  ['deprecated_20list_4',['Deprecated List',['../deprecated.html',1,'']]],
+  ['descriptor_20callbacks_5',['Descriptor callbacks',['../md__migration__guide.html#descriptor-callbacks',1,'']]],
+  ['descriptors_6',['Descriptors',['../md__migration__guide.html#descriptors',1,'']]],
+  ['device_7',['device',['../md_1_8x__to2_8x__migration__guide.html#advertised-device',1,'Advertised Device'],['../md_1_8x__to2_8x__migration__guide.html#ble-device',1,'BLE Device']]],
+  ['device_20local_20name_8',['Device &apos;Local Name&apos;',['../md__usage__tips.html#device-local-name',1,'']]],
+  ['device_20name_9',['GATT Device Name',['../md__usage__tips.html#gatt-device-name',1,'']]],
+  ['do_20not_20delete_20client_20instances_20unless_20necessary_20or_20unused_10',['Do not delete client instances unless necessary or unused',['../md__usage__tips.html#do-not-delete-client-instances-unless-necessary-or-unused',1,'']]],
+  ['due_20to_20low_20max_5fcccds_11',['Persisted bonds can be lost due to low MAX_CCCDS',['../md__usage__tips.html#persisted-bonds-can-be-lost-due-to-low-max_cccds',1,'']]]
 ];

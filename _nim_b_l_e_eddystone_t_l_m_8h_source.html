@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">esp-nimble-cpp<span id="projectnumber">&#160;2.5.0</span>
+   <div id="projectname">esp-nimble-cpp<span id="projectnumber">&#160;2.6.0</span>
    </div>
   </td>
  </tr>
@@ -131,8 +131,8 @@ $(document).ready(function(){initNavTree('_nim_b_l_e_eddystone_t_l_m_8h_source.h
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keyword">struct </span>BeaconData {</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        uint8_t  frameType{EDDYSTONE_TLM_FRAME_TYPE};</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        uint8_t  version{0};</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        uint16_t volt{3300};</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        uint16_t temp{23 * 256};</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        uint16_t volt{0xE40C}; <span class="comment">// Big-endian (wire format) encoding of 3300 mV; getVolt() swaps back to host order.</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        uint16_t temp{0x0017}; <span class="comment">// Big-endian (wire format) encoding of 23.0C (23 * 256); getTemp() swaps back to host order.</span></div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        uint32_t advCount{0};</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        uint32_t tmil{0};</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    } __attribute__((packed));</div>

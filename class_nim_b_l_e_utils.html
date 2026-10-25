@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">esp-nimble-cpp<span id="projectnumber">&#160;2.5.0</span>
+   <div id="projectname">esp-nimble-cpp<span id="projectnumber">&#160;2.6.0</span>
    </div>
   </td>
  </tr>
@@ -90,6 +90,7 @@ $(document).ready(function(){initNavTree('class_nim_b_l_e_utils.html',''); initR
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="class_nim_b_l_e_utils-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">NimBLEUtils Class Reference</div></div>
@@ -101,6 +102,15 @@ $(document).ready(function(){initNavTree('class_nim_b_l_e_utils.html',''); initR
 
 <p><code>#include &lt;<a class="el" href="_nim_b_l_e_utils_8h_source.html">NimBLEUtils.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nim_b_l_e_utils_1_1_spin_guard.html">SpinGuard</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple spinlock guard for atomic_flag.  <a href="class_nim_b_l_e_utils_1_1_spin_guard.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_nim_b_l_e_utils_1_1_task_data.html">TaskData</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A structure to hold data for a task that is waiting for a response.  <a href="struct_nim_b_l_e_utils_1_1_task_data.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:afb2df39418324f93a2477e314883ccae" id="r_afb2df39418324f93a2477e314883ccae"><td class="memItemLeft" align="right" valign="top">static const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nim_b_l_e_utils.html#afb2df39418324f93a2477e314883ccae">gapEventToString</a> (uint8_t eventType)</td></tr>
@@ -118,12 +128,12 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a6d47cf1adecd01d0102e0feec8232538" id="r_a6d47cf1adecd01d0102e0feec8232538"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_nim_b_l_e_address.html">NimBLEAddress</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nim_b_l_e_utils.html#a6d47cf1adecd01d0102e0feec8232538">generateAddr</a> (bool nrpa)</td></tr>
 <tr class="memdesc:a6d47cf1adecd01d0102e0feec8232538"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a random BLE address.  <br /></td></tr>
 <tr class="separator:a6d47cf1adecd01d0102e0feec8232538"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b3a170f26ce51f353ff960f59739181" id="r_a6b3a170f26ce51f353ff960f59739181"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nim_b_l_e_utils.html#a6b3a170f26ce51f353ff960f59739181">taskWait</a> (const <a class="el" href="struct_nim_b_l_e_task_data.html">NimBLETaskData</a> &amp;taskData, uint32_t timeout)</td></tr>
-<tr class="memdesc:a6b3a170f26ce51f353ff960f59739181"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blocks the calling task until released or timeout.  <br /></td></tr>
-<tr class="separator:a6b3a170f26ce51f353ff960f59739181"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b2de1e3827f9f6750550623dc6d9288" id="r_a7b2de1e3827f9f6750550623dc6d9288"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nim_b_l_e_utils.html#a7b2de1e3827f9f6750550623dc6d9288">taskRelease</a> (const <a class="el" href="struct_nim_b_l_e_task_data.html">NimBLETaskData</a> &amp;taskData, int rc=0)</td></tr>
-<tr class="memdesc:a7b2de1e3827f9f6750550623dc6d9288"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release a task.  <br /></td></tr>
-<tr class="separator:a7b2de1e3827f9f6750550623dc6d9288"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e1381fcc3e6cd4bfe45dce116041591" id="r_a3e1381fcc3e6cd4bfe45dce116041591"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nim_b_l_e_utils.html#a3e1381fcc3e6cd4bfe45dce116041591">taskWait</a> (const <a class="el" href="struct_nim_b_l_e_utils_1_1_task_data.html">TaskData</a> &amp;taskData, uint32_t timeout)</td></tr>
+<tr class="memdesc:a3e1381fcc3e6cd4bfe45dce116041591"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blocks the calling task until released or timeout.  <br /></td></tr>
+<tr class="separator:a3e1381fcc3e6cd4bfe45dce116041591"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96edbff228a4c09f3f14aa903bf63f23" id="r_a96edbff228a4c09f3f14aa903bf63f23"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nim_b_l_e_utils.html#a96edbff228a4c09f3f14aa903bf63f23">taskRelease</a> (const <a class="el" href="struct_nim_b_l_e_utils_1_1_task_data.html">TaskData</a> &amp;taskData, int rc=0)</td></tr>
+<tr class="memdesc:a96edbff228a4c09f3f14aa903bf63f23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release a task.  <br /></td></tr>
+<tr class="separator:a96edbff228a4c09f3f14aa903bf63f23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A BLE Utility class with methods for debugging and general purpose use. </p>
@@ -314,8 +324,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a7b2de1e3827f9f6750550623dc6d9288" name="a7b2de1e3827f9f6750550623dc6d9288"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7b2de1e3827f9f6750550623dc6d9288">&#9670;&#160;</a></span>taskRelease()</h2>
+<a id="a96edbff228a4c09f3f14aa903bf63f23" name="a96edbff228a4c09f3f14aa903bf63f23"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96edbff228a4c09f3f14aa903bf63f23">&#9670;&#160;</a></span>taskRelease()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -326,7 +336,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void NimBLEUtils::taskRelease </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="struct_nim_b_l_e_task_data.html">NimBLETaskData</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="struct_nim_b_l_e_utils_1_1_task_data.html">TaskData</a> &amp;&#160;</td>
           <td class="paramname"><em>taskData</em>, </td>
         </tr>
         <tr>
@@ -359,8 +369,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a6b3a170f26ce51f353ff960f59739181" name="a6b3a170f26ce51f353ff960f59739181"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b3a170f26ce51f353ff960f59739181">&#9670;&#160;</a></span>taskWait()</h2>
+<a id="a3e1381fcc3e6cd4bfe45dce116041591" name="a3e1381fcc3e6cd4bfe45dce116041591"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e1381fcc3e6cd4bfe45dce116041591">&#9670;&#160;</a></span>taskWait()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -371,7 +381,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">bool NimBLEUtils::taskWait </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="struct_nim_b_l_e_task_data.html">NimBLETaskData</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="struct_nim_b_l_e_utils_1_1_task_data.html">TaskData</a> &amp;&#160;</td>
           <td class="paramname"><em>taskData</em>, </td>
         </tr>
         <tr>

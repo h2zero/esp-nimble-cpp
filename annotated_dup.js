@@ -7,7 +7,6 @@ var annotated_dup =
     [ "NimBLEConnInfo", "class_nim_b_l_e_conn_info.html", "class_nim_b_l_e_conn_info" ],
     [ "NimBLEDevice", "class_nim_b_l_e_device.html", null ],
     [ "NimBLEDeviceCallbacks", "class_nim_b_l_e_device_callbacks.html", "class_nim_b_l_e_device_callbacks" ],
-    [ "NimBLETaskData", "struct_nim_b_l_e_task_data.html", "struct_nim_b_l_e_task_data" ],
-    [ "NimBLEUtils", "class_nim_b_l_e_utils.html", null ],
+    [ "NimBLEUtils", "class_nim_b_l_e_utils.html", "class_nim_b_l_e_utils" ],
     [ "NimBLEUUID", "class_nim_b_l_e_u_u_i_d.html", "class_nim_b_l_e_u_u_i_d" ]
 ];

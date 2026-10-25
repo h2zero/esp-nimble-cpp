@@ -13,6 +13,7 @@ var class_nim_b_l_e_att_value =
     [ "begin", "class_nim_b_l_e_att_value.html#aec41d0fe983f8c4ded137d7d5017bcb7", null ],
     [ "c_str", "class_nim_b_l_e_att_value.html#a4d18b6e6839afc943f11200e76414c17", null ],
     [ "capacity", "class_nim_b_l_e_att_value.html#a49a8a126d0b534c999c4a341cdcf7ba2", null ],
+    [ "copyFrom", "class_nim_b_l_e_att_value.html#a996a1240c8382d5cd5a10cab1ea3a844", null ],
     [ "data", "class_nim_b_l_e_att_value.html#a86acbb5ab3a35b3d5692c2e05fdccadd", null ],
     [ "end", "class_nim_b_l_e_att_value.html#a91cbe0ba44781943390a80514383ee58", null ],
     [ "getValue", "class_nim_b_l_e_att_value.html#ab16b9901e6ff9374c7d2e1afa5aa4671", null ],

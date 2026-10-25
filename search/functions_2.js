@@ -2,5 +2,6 @@ var searchData=
 [
   ['c_5fstr_0',['c_str',['../class_nim_b_l_e_att_value.html#a4d18b6e6839afc943f11200e76414c17',1,'NimBLEAttValue']]],
   ['capacity_1',['capacity',['../class_nim_b_l_e_att_value.html#a49a8a126d0b534c999c4a341cdcf7ba2',1,'NimBLEAttValue']]],
-  ['cleardata_2',['cleardata',['../class_nim_b_l_e_advertisement_data.html#ac0f2238cf17bf3e8bbef8b0ef0d61dcf',1,'NimBLEAdvertisementData::clearData()'],['../class_nim_b_l_e_advertising.html#af7cee42f24ad38872936a0bbc9e2ac1e',1,'NimBLEAdvertising::clearData()']]]
+  ['cleardata_2',['cleardata',['../class_nim_b_l_e_advertisement_data.html#ac0f2238cf17bf3e8bbef8b0ef0d61dcf',1,'NimBLEAdvertisementData::clearData()'],['../class_nim_b_l_e_advertising.html#af7cee42f24ad38872936a0bbc9e2ac1e',1,'NimBLEAdvertising::clearData()']]],
+  ['copyfrom_3',['copyFrom',['../class_nim_b_l_e_att_value.html#a996a1240c8382d5cd5a10cab1ea3a844',1,'NimBLEAttValue']]]
 ];
