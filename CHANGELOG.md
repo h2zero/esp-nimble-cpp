@@ -1,6 +1,26 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.6.0] 2026-10-25
+
+## Fixed
+- Corrupted remote attribute reads when data spans multiple mbufs.
+- GAP device name is now restored after GATT reset.
+- `NimBLEAttValue` will now preserve the original capacity if realloc fails.
+- `NimBLEEddystoneTLM` Byte order corrected between setters and getters.
+- Use after free error in `NimBLEDevice::whiteListRemove`.
+- Scan response timer causing a crash on stack reinit.
+- `NimBLEAttValue` Thread safety corrected by using a mutex instead of critcal sections.
+- `NimBLEDevice::deinit` now waits for all resources to be unused before freeing them.
+
+## Changed
+- Replaced the use of task notifications with semaphores to avoid potential conflicts.
+- `NimBLEStream::availableForWrite` now returns `int` instead of `size_t` to be compatible with Arduino.
+
+## Added
+- `NimBLEServer::registerServicesFirst` to place app services before mandatory GATT services in the database.
+- `NimBLEAttValue::copyFrom` to provide an error for allocation failure when copying a value.
+
 ## [2.5.0] 2026-04-01
 
 ## Fixed
