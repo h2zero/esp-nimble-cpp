@@ -53,7 +53,7 @@ bool connectToServer() {
     NimBLEClient* pClient = nullptr;
 
     pClient = NimBLEDevice::createClient();
-    pClient->setClientCallbacks(&clientCallbacks, false);
+    pClient->setCallbacks(clientCallbacks);
 
     /**
      * Set the PHY's to use for this connection. This is a bitmask that represents the PHY's:
@@ -107,7 +107,7 @@ extern "C" void app_main(void) {
 
     /** Create aNimBLE Scan instance and set the callbacks for scan events */
     NimBLEScan* pScan = NimBLEDevice::getScan();
-    pScan->setScanCallbacks(&scanCallbacks);
+    pScan->setCallbacks(scanCallbacks);
 
     /** Set scan interval (how often) and window (how long) in milliseconds */
     pScan->setInterval(97);

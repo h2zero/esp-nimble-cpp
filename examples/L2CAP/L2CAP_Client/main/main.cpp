@@ -48,7 +48,6 @@ class MyClientCallbacks: public BLEClientCallbacks {
     void onConnect(BLEClient* pClient) {
         printf("GAP connected\n");
         pClient->setDataLen(251);
-
         theChannel = BLEL2CAPChannel::connect(pClient, L2CAP_PSM, L2CAP_MTU, new L2CAPChannelCallbacks());
     }
 
@@ -59,7 +58,7 @@ class MyClientCallbacks: public BLEClientCallbacks {
         vTaskDelay(1000 / portTICK_PERIOD_MS);
         BLEDevice::getScan()->start(5 * 1000, true);
     }
-};
+} myClientCallbacks;
 
 class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
 
@@ -74,7 +73,7 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
             theDevice = advertisedDevice;
         }
     }
-};
+} myAdvertisedDeviceCallbacks;
 
 void statusTask(void *pvParameters) {
     while (true) {
@@ -141,9 +140,7 @@ void connectTask(void *pvParameters) {
         if (!theClient) {
             theClient = BLEDevice::createClient();
             theClient->setConnectionParams(6, 6, 0, 42);
-
-            auto callbacks = new MyClientCallbacks();
-            theClient->setClientCallbacks(callbacks);
+            theClient->setCallbacks(myClientCallbacks);
 
             auto success = theClient->connect(theDevice);
             if (!success) {
@@ -239,8 +236,7 @@ void app_main(void) {
     BLEDevice::setMTU(BLE_ATT_MTU_MAX);
 
     auto scan = BLEDevice::getScan();
-    auto callbacks = new MyAdvertisedDeviceCallbacks();
-    scan->setScanCallbacks(callbacks);
+    scan->setCallbacks(myAdvertisedDeviceCallbacks);
     scan->setInterval(1349);
     scan->setWindow(449);
     scan->setActiveScan(true);

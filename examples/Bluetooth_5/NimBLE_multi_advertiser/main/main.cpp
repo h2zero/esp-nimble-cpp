@@ -89,7 +89,7 @@ extern "C" void app_main(void) {
 
     /** Create a server for our legacy advertiser */
     NimBLEServer* pServer = NimBLEDevice::createServer();
-    pServer->setCallbacks(&serverCallbacks);
+    pServer->setCallbacks(serverCallbacks);
 
     NimBLEService*        pService = pServer->createService(SERVICE_UUID);
     NimBLECharacteristic* pCharacteristic =
@@ -137,7 +137,7 @@ extern "C" void app_main(void) {
     NimBLEExtAdvertising* pAdvertising = NimBLEDevice::getAdvertising();
 
     /** Set the callbacks to handle advertising events */
-    pAdvertising->setCallbacks(&advCallbacks);
+    pAdvertising->setCallbacks(advCallbacks);
 
     /**
      *  Set instance data.
