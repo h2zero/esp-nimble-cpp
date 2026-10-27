@@ -121,7 +121,7 @@ bool connectToServer() {
 
         printf("New client created\n");
 
-        pClient->setClientCallbacks(&clientCallbacks, false);
+        pClient->setCallbacks(clientCallbacks);
         /**
          *  Set initial connection parameters:
          *  These settings are safe for 3 clients to connect reliably, can go faster if you have less
@@ -268,7 +268,7 @@ extern "C" void app_main(void) {
     NimBLEScan* pScan = NimBLEDevice::getScan();
 
     /** Set the callbacks to call when scan events occur, no duplicates */
-    pScan->setScanCallbacks(&scanCallbacks, false);
+    pScan->setCallbacks(scanCallbacks, false);
 
     /** Set scan interval (how often) and window (how long) in milliseconds */
     pScan->setInterval(100);

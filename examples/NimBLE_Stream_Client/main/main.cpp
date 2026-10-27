@@ -111,7 +111,7 @@ bool connectToServer() {
             printf("Failed to create client\n");
             return false;
         }
-        pClient->setClientCallbacks(&clientCallbacks, false);
+        pClient->setCallbacks(clientCallbacks);
         pClient->setConnectionParams(12, 24, 0, 200);
         pClient->setConnectTimeout(5000);
     }
@@ -163,7 +163,7 @@ extern "C" void app_main(void) {
 
     // Create the BLE scan instance and set callbacks.
     NimBLEScan* pScan = NimBLEDevice::getScan();
-    pScan->setScanCallbacks(&scanCallbacks, false);
+    pScan->setCallbacks(scanCallbacks, false);
     pScan->setActiveScan(true);
 
     // Start scanning for the server.

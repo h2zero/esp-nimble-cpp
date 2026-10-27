@@ -55,7 +55,7 @@ extern "C" void app_main(void) {
     NimBLEScan* pScan = NimBLEDevice::getScan();
 
     /** Set the callbacks that the scanner will call on events. */
-    pScan->setScanCallbacks(&scanCallbacks);
+    pScan->setCallbacks(scanCallbacks);
 
     /** Use active scanning to obtain scan response data from advertisers */
     pScan->setActiveScan(true);
