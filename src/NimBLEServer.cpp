@@ -54,7 +54,7 @@ NimBLEServer::NimBLEServer()
     : m_gattsStarted{false},
       m_svcChanged{false},
       m_registerAppServicesFirst{false},
-# if !MYNEWT_VAL(BLE_EXT_ADV)
+# if !MYNEWT_VAL(BLE_EXT_ADV) && MYNEWT_VAL(BLE_ROLE_BROADCASTER)
       m_advertiseOnDisconnect{false},
 # endif
       m_pCallbacks{&defaultCallbacks},
@@ -358,7 +358,11 @@ bool NimBLEServer::disconnect(const NimBLEConnInfo& connInfo, uint8_t reason) co
  * @param [in] enable true == advertise, false == don't advertise.
  */
 void NimBLEServer::advertiseOnDisconnect(bool enable) {
+# if MYNEWT_VAL(BLE_ROLE_BROADCASTER)
     m_advertiseOnDisconnect = enable;
+# else
+    (void)enable;
+# endif
 } // advertiseOnDisconnect
 # endif
 
