@@ -8,6 +8,7 @@
 # include "NimBLEClient.h"
 # include "NimBLELog.h"
 # include "NimBLEUtils.h"
+# include <algorithm>
 
 # ifdef USING_NIMBLE_ARDUINO_HEADERS
 #  include "nimble/nimble/host/include/host/ble_gap.h"
@@ -21,9 +22,6 @@
 // Round-up integer division
 # define CEIL_DIVIDE(a, b)               (((a) + (b) - 1) / (b))
 # define ROUND_DIVIDE(a, b)              (((a) + (b) / 2) / (b))
-// Retry
-constexpr uint32_t RetryTimeout = 50;
-constexpr int      RetryCounter = 3;
 
 NimBLEL2CAPChannel::NimBLEL2CAPChannel(uint16_t psm, uint16_t mtu, NimBLEL2CAPChannelCallbacks* callbacks)
     : psm(psm), mtu(mtu), callbacks(callbacks) {
@@ -105,54 +103,30 @@ int NimBLEL2CAPChannel::writeFragment(std::vector<uint8_t>::const_iterator begin
         return -BLE_HS_EBADDATA;
     }
 
-    auto retries = RetryCounter;
-
-    while (retries--) {
-        auto txd = os_mbuf_get_pkthdr(&_coc_mbuf_pool, 0);
-        if (!txd) {
-            NIMBLE_LOGE(LOG_TAG, "Can't os_mbuf_get_pkthdr.");
-            return -BLE_HS_ENOMEM;
-        }
-        auto append = os_mbuf_append(txd, &(*begin), toSend);
-        if (append != 0) {
-            NIMBLE_LOGE(LOG_TAG, "Can't os_mbuf_append: %d", append);
-            return append;
-        }
-
-        auto res = ble_l2cap_send(channel, txd);
-        switch (res) {
-            case 0:
-                NIMBLE_LOGD(LOG_TAG, "L2CAP COC 0x%04X sent %d bytes.", this->psm, toSend);
-                return 0;
-
-            case BLE_HS_ESTALLED:
-                stalled = true;
-                NIMBLE_LOGD(LOG_TAG, "L2CAP COC 0x%04X sent %d bytes.", this->psm, toSend);
-                NIMBLE_LOGW(LOG_TAG,
-                            "ble_l2cap_send returned BLE_HS_ESTALLED. Next send will wait for unstalled event...");
-                return 0;
-
-            case BLE_HS_ENOMEM:
-            case BLE_HS_EAGAIN:
-                /* ble_l2cap_send already consumed and freed txd on these errors */
-                NIMBLE_LOGD(LOG_TAG, "ble_l2cap_send returned %d (consumed buffer). Retrying shortly...", res);
-                ble_npl_time_delay(ble_npl_time_ms_to_ticks32(RetryTimeout));
-                continue;
-
-            case BLE_HS_EBUSY:
-                /* Channel busy; txd not consumed */
-                NIMBLE_LOGD(LOG_TAG, "ble_l2cap_send returned %d (busy). Retrying shortly...", res);
-                os_mbuf_free_chain(txd);
-                ble_npl_time_delay(ble_npl_time_ms_to_ticks32(RetryTimeout));
-                continue;
-
-            default:
-                NIMBLE_LOGE(LOG_TAG, "ble_l2cap_send failed: %d", res);
-                return res;
-        }
+    auto* txd = os_mbuf_get_pkthdr(&_coc_mbuf_pool, 0);
+    if (!txd) {
+        return BLE_HS_ENOMEM;
     }
-    NIMBLE_LOGE(LOG_TAG, "Retries exhausted, dropping %d bytes to send.", toSend);
-    return -BLE_HS_EREJECT;
+    const int append = os_mbuf_append(txd, &*begin, toSend);
+    if (append != 0) {
+        os_mbuf_free_chain(txd);
+        return append;
+    }
+
+    const int rc = ble_l2cap_send(channel, txd);
+    if (rc == BLE_HS_ESTALLED) {
+        // NimBLE owns the SDU and will finish it when credits arrive.
+        stalled = true;
+        return 0;
+    }
+    // These early validation/busy errors retain caller ownership. All other
+    // native send results consume the SDU, including ENOMEM and EAGAIN.
+    if (rc == BLE_HS_EBADDATA || rc == BLE_HS_EBUSY) {
+        os_mbuf_free_chain(txd);
+    }
+    // A native error can follow partial transmission of this SDU. Resubmitting
+    // it could duplicate bytes; let write() abort the incomplete stream.
+    return rc;
 }
 
 # if MYNEWT_VAL(BLE_ROLE_CENTRAL)
@@ -194,8 +168,9 @@ bool NimBLEL2CAPChannel::write(const std::vector<uint8_t>& bytes) {
 
     auto start = bytes.begin();
     while (start != bytes.end()) {
-        auto end = start + mtu < bytes.end() ? start + mtu : bytes.end();
-        if (writeFragment(start, end) < 0) {
+        auto end = start + std::min<size_t>(mtu, bytes.end() - start);
+        if (writeFragment(start, end) != 0) {
+            disconnect();
             return false;
         }
         start = end;
