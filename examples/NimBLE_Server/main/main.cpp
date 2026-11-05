@@ -150,7 +150,7 @@ extern "C" void app_main(void) {
     pServer = NimBLEDevice::createServer();
     pServer->setCallbacks(serverCallbacks);
 
-    NimBLEService*        pDeadService = pServer->createService("DEAD");
+    NimBLEService*        pDeadService = pServer->createService(0xDEAD);
     NimBLECharacteristic* pBeefCharacteristic =
         pDeadService->createCharacteristic("BEEF",
                                            NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE |
@@ -172,7 +172,7 @@ extern "C" void app_main(void) {
     pBeef2904->setFormat(NimBLE2904::FORMAT_UTF8);
     pBeef2904->setCallbacks(dscCallbacks);
 
-    NimBLEService*        pBaadService = pServer->createService("BAAD");
+    NimBLEService*        pBaadService = pServer->createService(0xBAAD);
     NimBLECharacteristic* pFoodCharacteristic =
         pBaadService->createCharacteristic("F00D", NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::NOTIFY);
 
@@ -204,7 +204,7 @@ extern "C" void app_main(void) {
     /** Loop here and send notifications to connected peers */
     for (;;) {
         if (pServer->getConnectedCount()) {
-            NimBLEService* pSvc = pServer->getServiceByUUID("BAAD");
+            NimBLEService* pSvc = pServer->getServiceByUUID(0xBAAD);
             if (pSvc) {
                 NimBLECharacteristic* pChr = pSvc->getCharacteristic("F00D");
                 if (pChr) {
