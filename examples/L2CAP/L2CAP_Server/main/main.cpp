@@ -14,13 +14,13 @@ const size_t HEAP_LEAK_THRESHOLD = 10;  // Warn after 10 consecutive decreases
 class GATTCallbacks: public BLEServerCallbacks {
 
 public:
-    void onConnect(BLEServer* pServer, BLEConnInfo& info) {
+    void onConnect(BLEServer* pServer, BLEConnInfo& info) override {
         /// Booster #1
         pServer->setDataLen(info.getConnHandle(), 251);
         /// Booster #2 (especially for Apple devices)
         BLEDevice::getServer()->updateConnParams(info.getConnHandle(), 12, 12, 0, 200);
     }
-};
+} gattCallbacks;
 
 class L2CAPChannelCallbacks: public BLEL2CAPChannelCallbacks {
 
@@ -36,8 +36,8 @@ public:
     std::vector<uint8_t> buffer;  // Buffer for incomplete frames
 
 public:
-    void onConnect(NimBLEL2CAPChannel* channel) {
-        printf("L2CAP connection established on PSM %d\n", L2CAP_PSM);
+    void onConnect(NimBLEL2CAPChannel* channel, uint16_t negotiatedMTU) override {
+        printf("L2CAP connection established on PSM %d (MTU %u)\n", L2CAP_PSM, negotiatedMTU);
         connected = true;
         totalBytesReceived = 0;
         totalFramesReceived = 0;
@@ -49,7 +49,7 @@ public:
         buffer.clear();
     }
 
-    void onRead(NimBLEL2CAPChannel* channel, std::vector<uint8_t>& data) {
+    void onRead(NimBLEL2CAPChannel* channel, std::vector<uint8_t>& data) override {
         // Append new data to buffer
         buffer.insert(buffer.end(), data.begin(), data.end());
         totalBytesReceived += data.size();
@@ -98,7 +98,7 @@ public:
         }
     }
 
-    void onDisconnect(NimBLEL2CAPChannel* channel) {
+    void onDisconnect(NimBLEL2CAPChannel* channel) override {
         printf("\nL2CAP disconnected\n");
         double elapsedSeconds = startTime > 0 ? (esp_timer_get_time() - startTime) / 1000000.0 : 0.0;
         double bytesPerSecond = elapsedSeconds > 0 ? totalBytesReceived / elapsedSeconds : 0.0;
@@ -143,7 +143,7 @@ void app_main(void) {
     (void)channel;  // prevent unused warning
 
     auto server = BLEDevice::createServer();
-    server->setCallbacks(new GATTCallbacks());
+    server->setCallbacks(gattCallbacks);
 
     auto advertising = BLEDevice::getAdvertising();
     NimBLEAdvertisementData scanData;

@@ -27,31 +27,27 @@ const size_t HEAP_LEAK_THRESHOLD = 10;  // Warn after 10 consecutive decreases
 class L2CAPChannelCallbacks: public BLEL2CAPChannelCallbacks {
 
 public:
-    void onConnect(NimBLEL2CAPChannel* channel) {
-        printf("L2CAP connection established\n");
+    void onConnect(NimBLEL2CAPChannel* channel, uint16_t negotiatedMTU) override {
+        printf("L2CAP connection established (MTU %u)\n", negotiatedMTU);
     }
 
-    void onMTUChange(NimBLEL2CAPChannel* channel, uint16_t mtu) {
-        printf("L2CAP MTU changed to %d\n", mtu);
+    void onRead(NimBLEL2CAPChannel* channel, std::vector<uint8_t>& data) override {
+        printf("L2CAP read %zu bytes\n", data.size());
     }
-
-    void onRead(NimBLEL2CAPChannel* channel, std::vector<uint8_t>& data) {
-        printf("L2CAP read %d bytes\n", data.size());
-    }
-    void onDisconnect(NimBLEL2CAPChannel* channel) {
+    void onDisconnect(NimBLEL2CAPChannel* channel) override {
         printf("L2CAP disconnected\n");
     }
 };
 
 class MyClientCallbacks: public BLEClientCallbacks {
 
-    void onConnect(BLEClient* pClient) {
+    void onConnect(BLEClient* pClient) override {
         printf("GAP connected\n");
         pClient->setDataLen(251);
         theChannel = BLEL2CAPChannel::connect(pClient, L2CAP_PSM, L2CAP_MTU, new L2CAPChannelCallbacks());
     }
 
-    void onDisconnect(BLEClient* pClient, int reason) {
+    void onDisconnect(BLEClient* pClient, int reason) override {
         printf("GAP disconnected (reason: %d)\n", reason);
         theDevice = NULL;
         theChannel = NULL;
@@ -62,7 +58,7 @@ class MyClientCallbacks: public BLEClientCallbacks {
 
 class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
 
-    void onResult(const BLEAdvertisedDevice* advertisedDevice) {
+    void onResult(const BLEAdvertisedDevice* advertisedDevice) override {
         if (theDevice) { return; }
         printf("BLE Advertised Device found: %s\n", advertisedDevice->toString().c_str());
 
