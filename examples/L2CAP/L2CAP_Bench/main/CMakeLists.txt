@@ -1,0 +1,6 @@
+idf_component_register(SRCS "main.cpp" INCLUDE_DIRS "." REQUIRES esp-nimble-cpp console esp_driver_usb_serial_jtag esp_timer espressif__cjson app_update)
+execute_process(COMMAND git -C "${CMAKE_CURRENT_LIST_DIR}/../../../.." rev-parse HEAD OUTPUT_VARIABLE BENCH_LIBRARY_COMMIT OUTPUT_STRIP_TRAILING_WHITESPACE)
+execute_process(COMMAND git -C "$ENV{IDF_PATH}" rev-parse HEAD OUTPUT_VARIABLE BENCH_IDF_COMMIT OUTPUT_STRIP_TRAILING_WHITESPACE)
+file(SHA256 "${SDKCONFIG}" BENCH_CONFIG_HASH)
+configure_file(bench_build.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/bench_build.hpp" @ONLY)
+target_include_directories(${COMPONENT_LIB} PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
