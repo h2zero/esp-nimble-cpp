@@ -40,14 +40,19 @@ static NimBLEScanCallbacks defaultScanCallbacks;
  */
 void NimBLEScan::srTimerCb(ble_npl_event* event) {
     auto pScan = NimBLEDevice::getScan();
-    auto pDev  = pScan->m_pWaitingListHead;
+
+    // Snapshot under the list lock: stop() can null the head from another task.
+    ble_npl_hw_enter_critical();
+    auto           pDev    = pScan->m_pWaitingListHead;
+    ble_npl_time_t devTime = (pDev != nullptr) ? pDev->m_time : 0;
+    ble_npl_hw_exit_critical(0);
 
     if (pDev == nullptr) {
         ble_npl_callout_stop(&pScan->m_srTimer);
         return;
     }
 
-    if (ble_npl_time_get() - pDev->m_time < pScan->m_srTimeoutTicks) {
+    if (ble_npl_time_get() - devTime < pScan->m_srTimeoutTicks) {
         // This can happen if a scan response was received and the device was removed from the waiting list
         // after this was put in the queue. In this case, just reset the timer for this device.
         pScan->resetWaitingTimer();
@@ -199,7 +204,13 @@ void NimBLEScan::clearWaitingList() {
  * @brief Reset the timer for the next waiting device at the head of the FIFO list.
  */
 void NimBLEScan::resetWaitingTimer() {
-    if (m_srTimeoutTicks == 0 || m_pWaitingListHead == nullptr) {
+    // Same snapshot as srTimerCb: the head can be nulled concurrently by stop().
+    ble_npl_hw_enter_critical();
+    NimBLEAdvertisedDevice* head     = m_pWaitingListHead;
+    ble_npl_time_t          headTime = (head != nullptr) ? head->m_time : 0;
+    ble_npl_hw_exit_critical(0);
+
+    if (m_srTimeoutTicks == 0 || head == nullptr) {
         if (m_srTimerInitialized) {
             ble_npl_callout_stop(&m_srTimer);
         }
@@ -214,7 +225,7 @@ void NimBLEScan::resetWaitingTimer() {
     }
 
     ble_npl_time_t now      = ble_npl_time_get();
-    ble_npl_time_t elapsed  = now - m_pWaitingListHead->m_time;
+    ble_npl_time_t elapsed  = now - headTime;
     ble_npl_time_t nextTime = elapsed >= m_srTimeoutTicks ? 1 : m_srTimeoutTicks - elapsed;
     ble_npl_callout_reset(&m_srTimer, nextTime);
 }
